@@ -52,6 +52,7 @@
 			
 			<exclude-mapping path="/myplan/info.do"/>
 			<exclude-mapping path="/myplan/recommend.do"/>
+			<exclude-mapping path="/myplan/**"/>
 			
 			<exclude-mapping path="/notice/list.do"/>
 			<exclude-mapping path="/notice/user/**"/>
