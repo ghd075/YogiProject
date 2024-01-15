@@ -27,7 +27,7 @@
             <h4>공지사항 ${name }</h4>
         </div>
         <div class="card card-dark">
-            <form action="/notice/admin/register.do" method="post" enctype="multipart/form-data" id="noticeForm" name="noticeForm">
+            <form action="/notice/${sessionInfo.memId }/register.do" method="post" enctype="multipart/form-data" id="noticeForm" name="noticeForm">
                 
                 <c:if test="${status eq 'u' }">
                 	<input type="hidden" name="boNo" value="${notice.boNo }" />

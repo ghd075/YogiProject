@@ -2,7 +2,6 @@ package kr.or.ddit.users.board.controller;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +43,7 @@ public class NoticeBoardController {
 	private NoticeService noticeService;
 
 	// 공지사항 리스트 출력
+	@CrossOrigin(origins = "http://localhost")
 	@RequestMapping(value = "/list.do", method = RequestMethod.GET)
 	public String noticeList(
 			@RequestParam(name = "page", required = false, defaultValue = "1") int currentPage,
@@ -52,31 +52,33 @@ public class NoticeBoardController {
 			Model model
 			) {
 		
-		// 중요공지 리스트 가져오기
-		List<NoticeVO> importantNoticeList = noticeService.importantNoticeList();
-		log.info("importantNoticeList : " + importantNoticeList);
-		model.addAttribute("importantNoticeList", importantNoticeList);
+		/** 자료 수집 및 정의 */
+		Map<String,Object> param = new HashMap<>();
+		param.put("currentPage", currentPage);
+		param.put("searchType", searchType);
+		param.put("searchWord", searchWord);
 		
+		/** 서비스 호출 */
 		// 공지사항 게시판 리스트 가져오기
-		PaginationInfoVO<NoticeVO> pagingVO = new PaginationInfoVO<NoticeVO>();
+		noticeService.noticeList(param);
 		
-		// 검색 기능 추가
-		if(StringUtils.isNotBlank(searchWord)) {
-			pagingVO.setSearchType(searchType);
-			pagingVO.setSearchWord(searchWord);
-			model.addAttribute("searchType", searchType);
-			model.addAttribute("searchWord", searchWord);
-		}
+		/** 반환 자료 */
+		PaginationInfoVO<NoticeVO> pagingVO = (PaginationInfoVO<NoticeVO>) param.get("pagingVO");
+		List<NoticeVO> importantNoticeList = (List<NoticeVO>) param.get("importantNoticeList");
+		List<NoticeVO> fileExistNoticeList = (List<NoticeVO>) param.get("fileExistNoticeList");
 		
-		// 현재 페이지 전달 후, start/endRow와 start/endPage 설정
-		pagingVO.setCurrentPage(currentPage);
+		/** 자료 검증 */ 
+		log.info("pagingVO : " + pagingVO.toString());
+		log.info("importantNoticeList : " + importantNoticeList.toString());
+		log.info("importantNoticeList : " + importantNoticeList.toString());
+		log.info("fileExistNoticeList : " + fileExistNoticeList.toString());
 		
-		int totalRecord = noticeService.selectNoticeCount(pagingVO); // 총 게시글 수 가져오기
-		pagingVO.setTotalRecord(totalRecord);
-		List<NoticeVO> dataList = noticeService.selectNoticeList(pagingVO);
-		pagingVO.setDataList(dataList);
-		
+		/** 자료 반환 */ 
+		model.addAttribute("searchType", searchType);
+		model.addAttribute("searchWord", searchWord);
 		model.addAttribute("pagingVO", pagingVO);
+		model.addAttribute("importantNoticeList", importantNoticeList);
+		model.addAttribute("fileExistNoticeList", fileExistNoticeList);
 		
 		return "board/noticeBoardList";
 		
@@ -92,18 +94,24 @@ public class NoticeBoardController {
 		String fileName = null;
 		NoticeFileVO fileVO = noticeService.selectFileInfo(fileNo);
 		if(fileVO != null) {
-			fileName = fileVO.getFileName();
-			
-			String formatName = fileName.substring(fileName.lastIndexOf(".") + 1);
-			MediaType mType = MediaUtils.getMediaType(formatName);
-			HttpHeaders headers = new HttpHeaders();
-			in = new FileInputStream(fileVO.getFileSavepath());
-			
-			fileName = fileName.substring(fileName.indexOf("_") + 1);
-			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-			headers.add("Content-Disposition", "attachment; filename=\""+ new String(fileName.getBytes("UTF-8"), "ISO-8859-1") +"\"");
-			
-			entity = new ResponseEntity<byte[]>(IOUtils.toByteArray(in), headers, HttpStatus.CREATED);
+			try {
+				fileName = fileVO.getFileName();
+				
+				String formatName = fileName.substring(fileName.lastIndexOf(".") + 1);
+				MediaType mType = MediaUtils.getMediaType(formatName);
+				HttpHeaders headers = new HttpHeaders();
+				in = new FileInputStream(fileVO.getFileSavepath());
+				
+				fileName = fileName.substring(fileName.indexOf("_") + 1);
+				headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+				headers.add("Content-Disposition", "attachment; filename=\""+ new String(fileName.getBytes("UTF-8"), "ISO-8859-1") +"\"");
+				
+				entity = new ResponseEntity<byte[]>(IOUtils.toByteArray(in), headers, HttpStatus.CREATED);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				in.close();
+			}
 		}else {
 			entity = new ResponseEntity<byte[]>(HttpStatus.BAD_REQUEST);
 		}
@@ -113,15 +121,27 @@ public class NoticeBoardController {
 	}
 	
 	// 공지사항 상세보기
+	@CrossOrigin(origins = "http://localhost")
 	@RequestMapping(value = "/user/detail.do")
 	public String noticeDetail(int boNo, Model model) {
 		
-		// 게시글 상세보기 VO
-		NoticeVO noticeVO = noticeService.selectNotice(boNo);
-		model.addAttribute("noticeDetail", noticeVO);
+		/** 자료수집 및 정의 */
+		Map<String,Object> param = new HashMap<>();
+		param.put("boNo", boNo);
 		
-		// 이전글/다음글 정보 가져오는 VO
-		List<NoticeVO> prevNextList = noticeService.prevNextInfo(boNo);
+		/** 서비스 호출 */
+		noticeService.noticeDetail(param);
+		
+		/** 반환 자료 */
+		NoticeVO noticeVO = (NoticeVO) param.get("noticeVO");
+		List<NoticeVO> prevNextList = (List<NoticeVO>) param.get("prevNextList");
+		
+		/** 자료검증 */
+		log.info("noticeVO : " + noticeVO);
+		log.info("prevNextList : " + prevNextList);
+		
+		/** 자료반환 */
+		model.addAttribute("noticeDetail", noticeVO);
 		model.addAttribute("prevNextInfo", prevNextList);
 		
 		return "board/noticeBoardDetail";
@@ -181,6 +201,7 @@ public class NoticeBoardController {
 	}
 	
 	// 공지사항 삭제
+	@Transactional
 	@RequestMapping(value = "/admin/delete.do", method = RequestMethod.POST)
 	public String noticeDelete(
 			RedirectAttributes ra,
@@ -204,6 +225,7 @@ public class NoticeBoardController {
 	}
 	
 	// 공지사항 수정
+	@CrossOrigin(origins = "http://localhost")
 	@RequestMapping(value = "/admin/modify.do", method = RequestMethod.GET)
 	public String noticeModifyForm(int boNo, Model model) {
 		NoticeVO noticeVO = noticeService.selectNotice(boNo);
@@ -212,6 +234,7 @@ public class NoticeBoardController {
 		return "board/noticeBoardForm";
 	}
 	
+	@Transactional
 	@RequestMapping(value = "/admin/modify.do", method = RequestMethod.POST)
 	public String noticeModify(
 			HttpServletRequest req,

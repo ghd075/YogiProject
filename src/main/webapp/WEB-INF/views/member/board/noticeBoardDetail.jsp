@@ -43,7 +43,7 @@
                             </div>
                         </li>
                         <li>
-                            <div class="form-control" style="overflow: auto; position: relative;">${noticeDetail.boContent }</div>
+                            <div class="form-control" style="overflow: auto; position: relative; min-height: 380px;">${noticeDetail.boContent }</div>
                         </li>
                         
                        	<c:if test="${not empty prevNextInfo }">
@@ -100,13 +100,15 @@
                     </ul>
                 </div>
                 
-                <form action="/notice/admin/delete.do" method="post" id="deleteForm">
+                <form action="/notice/${sessionInfo.memId }/delete.do" method="post" id="deleteForm">
                 	<input type="hidden" name="boNo" value="${noticeDetail.boNo }" />
                 </form>
                 
                 <div class="form-group">
-                    <button id="noticeDeleteBtn" type="button" class="btn btn-outline-danger">삭제</button>
-                    <button id="noticeModifyBtn" type="button" class="btn btn-outline-warning">수정</button>
+                	<c:if test="${sessionInfo.memCategory eq '03' }">
+	                    <button id="noticeDeleteBtn" type="button" class="btn btn-outline-danger">삭제</button>
+	                    <button id="noticeModifyBtn" type="button" class="btn btn-outline-warning">수정</button>
+                	</c:if>
                     <button id="userListGoBtn" type="button" class="btn btn-outline-success">목록</button>
                 </div>
             </div>
@@ -170,7 +172,7 @@
         // 수정 이동
         var noticeModifyBtn = $("#noticeModifyBtn");
         noticeModifyBtn.click(function(){
-        	location.href = "/notice/admin/modify.do?boNo=${noticeDetail.boNo }";
+        	location.href = "/notice/${sessionInfo.memId }/modify.do?boNo=${noticeDetail.boNo }";
         });
         
         // 삭제 이동

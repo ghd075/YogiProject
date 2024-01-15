@@ -178,6 +178,7 @@
 
 .visibleDiv {
     display: none;
+    /* min-height: 380px; */
 }
 
 .visibleDiv p {
@@ -187,7 +188,7 @@
 }
 
 .imporNoticeFileDown {
-    padding: 20px 0px;
+    padding-bottom : 20px;
 }
 
 .imporNoticeFileDown span,
@@ -225,12 +226,12 @@
     text-align: left;
 }
 
-.noticeListCont span:nth-of-type(2) i {
+/* .noticeListCont span:nth-of-type(2) i {
     position: absolute;
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
-}
+} */
 
 .noticeListCont span:nth-of-type(3){
     width: 100px;
@@ -419,7 +420,7 @@
 }
 
 .prevNextBtnGroup>div {
-    width: 400px;
+    width: 300px;
     height: 100px;
     border-radius: 4px;
     position: relative;
@@ -502,11 +503,11 @@
 }
 
 .noticeDetailContents .form-group:last-of-type button {
-    margin-right: 10px;
+    margin-left: 10px;
 }
 
-.noticeDetailContents .form-group:last-of-type button:last-of-type {
-    margin-right: 0px;
+.noticeDetailContents .form-group:last-of-type button:first-of-type {
+    margin-left: 0px;
 }
 
 .previewImgBox {

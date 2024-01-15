@@ -3,19 +3,6 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.mapper.NoticeBoardMapper">
-
-	<sql id="noticeSearch">
-		<if test="searchType != null and searchType == 'title'">
-			and (bo_title like '%' || #{searchWord} || '%')
-		</if>
-		<if test="searchType != null and searchType == 'writer'">
-			and (bo_writer like '%' || #{searchWord} || '%')
-		</if>
-		<if test="searchType != null and searchType == 'both'">
-			and (bo_title like '%' || #{searchWord} || '%')
-			and (bo_writer like '%' || #{searchWord} || '%')
-		</if>
-	</sql>
 	
 	<resultMap type="noticeVO" id="noticeMap">
 		<id property="boNo" column="bo_no" />
@@ -49,66 +36,101 @@
 	</resultMap>
 
 	<select id="selectNoticeCount" parameterType="pagingVO" resultType="int">
+	
 		select count(bo_no) from notice 
 		where 1=1 
-		<include refid="noticeSearch" />
+		
+		<!-- <include refid="noticeSearch" /> -->
+		<if test="searchType != null and searchType == 'title'">
+			and (bo_title like '%' || #{searchWord} || '%')
+		</if>
+		<if test="searchType != null and searchType == 'writer'">
+			and (bo_writer like '%' || #{searchWord} || '%')
+		</if>
+		<if test="searchType != null and searchType == 'both'">
+			and (bo_title like '%' || #{searchWord} || '%')
+			or (bo_writer like '%' || #{searchWord} || '%')
+		</if>
+		
 	</select>
 	
 	<select id="selectNoticeList" parameterType="pagingVO" resultType="noticeVO">
-		select
-			b.*
-		from (
-			select
-				a.*, row_number() over (order by a.bo_no desc) rnum
-			from (
-				select 
-					bo_no, bo_title, bo_content, bo_writer, bo_date, bo_hit, bo_impor
-				from notice 
-				where 1=1 
-				<include refid="noticeSearch" />
-				order by bo_no desc
-			) a
-		) b
-		<![CDATA[
-			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
-		]]>
+	
+		<include refid="commonMapper.pagingHeader" />
+		
+			select 
+				bo_no
+				, bo_title
+				, bo_content
+				, bo_writer
+				, bo_date
+				, bo_hit
+				, bo_impor
+			from notice n
+			where 1=1 
+			
+			<!-- <include refid="noticeSearch" /> -->
+			<if test="searchType != null and searchType == 'title'">
+				and (bo_title like '%' || #{searchWord} || '%')
+			</if>
+			<if test="searchType != null and searchType == 'writer'">
+				and (bo_writer like '%' || #{searchWord} || '%')
+			</if>
+			<if test="searchType != null and searchType == 'both'">
+				and (bo_title like '%' || #{searchWord} || '%')
+				or (bo_writer like '%' || #{searchWord} || '%')
+			</if>
+			
+		<include refid="commonMapper.pagingFooter" />
+		
 	</select>
 	
 	<select id="importantNoticeList" resultMap="noticeMap">
-		select b.*
-		  from (
-		    select a.*, row_number() over (order by a.bo_no desc) rnum
-		    from (
-		        SELECT
-				    n.bo_no,
-				    n.bo_title,
-				    n.bo_content,
-				    n.bo_writer,
-				    n.bo_date,
-				    n.bo_hit,
-				    n.bo_impor,
-				    LISTAGG(nf.file_no, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_nos,
-				    LISTAGG(nf.file_name, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_names,
-				    LISTAGG(nf.file_size, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_sizes,
-				    LISTAGG(nf.file_fancysize, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_fancysizes,
-				    LISTAGG(nf.file_mime, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_mimes,
-				    LISTAGG(nf.file_savepath, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_savepaths,
-				    LISTAGG(nf.file_downcount, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_downcounts
-				FROM
-				    notice n
-				LEFT OUTER JOIN
-				    noticefile nf ON n.bo_no = nf.bo_no
-				WHERE
-				    1=1 AND n.bo_impor = 'y'
-				GROUP BY
-				    n.bo_no, n.bo_title, n.bo_content, n.bo_writer, n.bo_date, n.bo_hit, n.bo_impor
-				ORDER BY
-				    n.bo_no DESC
-		     ) a
-		  ) b
-		<![CDATA[
-			where b.rnum >= 1 and b.rnum <= 4
-		]]>
+	
+		<include refid="commonMapper.pagingHeader" />
+		
+	        SELECT
+			    n.bo_no,
+			    n.bo_title,
+			    n.bo_content,
+			    n.bo_writer,
+			    n.bo_date,
+			    n.bo_hit,
+			    n.bo_impor,
+			    LISTAGG(nf.file_no, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_nos,
+			    LISTAGG(nf.file_name, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_names,
+			    LISTAGG(nf.file_size, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_sizes,
+			    LISTAGG(nf.file_fancysize, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_fancysizes,
+			    LISTAGG(nf.file_mime, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_mimes,
+			    LISTAGG(nf.file_savepath, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_savepaths,
+			    LISTAGG(nf.file_downcount, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_downcounts
+			FROM
+			    notice n
+			LEFT OUTER JOIN
+			    noticefile nf 
+			ON 
+				n.bo_no = nf.bo_no
+			WHERE
+			    1=1 
+			AND 
+				n.bo_impor = 'y'
+			GROUP BY
+			    n.bo_no, n.bo_title, n.bo_content, n.bo_writer, n.bo_date, n.bo_hit, n.bo_impor
+			ORDER BY
+			    n.bo_no DESC
+				    
+		<include refid="commonMapper.pagingFooters" />
+		     
+	</select>
+	
+	<select id="fileExistNoticeList" resultType="noticeVO">
+		select
+		    DISTINCT a.bo_no
+		from 
+		    notice a
+		    , noticefile b
+		where 1=1
+		and a.bo_no = b.bo_no
 	</select>
 	
 	<insert id="insertNotice" parameterType="noticeVO" useGeneratedKeys="true">
@@ -180,11 +202,28 @@
 	
 	<select id="selectNotice" parameterType="int" resultMap="noticeMap">
 		select 
-		    b.bo_no, bo_title, bo_content, bo_writer, bo_date, bo_hit, bo_impor,
-		    file_no, file_name, file_size, file_fancysize, file_mime, file_savepath, file_downcount 
-		from notice b left outer join noticefile nf on(b.bo_no = nf.bo_no)
-		where 1=1  
-		and b.bo_no = ${boNo}
+		    n.bo_no
+		    , n.bo_title
+		    , n.bo_content
+		    , n.bo_writer
+		    , n.bo_date
+		    , n.bo_hit
+		    , n.bo_impor
+		    , nf.file_no
+		    , nf.file_name
+		    , nf.file_size
+		    , nf.file_fancysize
+		    , nf.file_mime
+		    , nf.file_savepath
+		    , nf.file_downcount 
+		from 
+			notice n 
+		left outer join 
+			noticefile nf on(n.bo_no = nf.bo_no)
+		where 
+			1=1  
+		and 
+			n.bo_no = ${boNo}
 	</select>
 	
 	<select id="prevNextInfo" parameterType="int" resultType="noticeVO">
@@ -196,7 +235,7 @@
 		    ]]>
 		) a
 		where a.rnum = 1
-		union
+		union all
 		select a.*
 		from(
 		    select bo_no, bo_title, bo_writer, bo_date, bo_hit, 'next' as "prevnext_flag", row_number() over (order by bo_no asc) rnum from notice

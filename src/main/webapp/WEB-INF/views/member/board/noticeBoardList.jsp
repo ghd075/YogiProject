@@ -127,13 +127,19 @@
                 			<li class="noticeList textDropVerticalAlign">
 			                    <span>${notice.boNo }</span>
 			                    <span class="textDrop">
+			                    	<c:if test="${not empty fileExistNoticeList }">
+			                    		<c:forEach items="${fileExistNoticeList }" var="fileExistList">
+			                    			<c:if test="${fileExistList.boNo eq notice.boNo }">
+						                        <i class="fas fa-paperclip"></i>
+			                    			</c:if>
+			                    		</c:forEach>
+			                    	</c:if>
 			                        <a href="/notice/user/detail.do?boNo=${notice.boNo }">
 			                            ${notice.boTitle }
 			                        </a>
 			                        <c:if test="${notice.boImpor eq 'y' }">
 			                        	<u style="text-decoration: none;" class="badge bg-danger">중요공지</u>
 			                        </c:if>
-			                        <i class="fas fa-paperclip"></i>
 			                    </span>
 			                    <fmt:parseDate var="parseData" value="${notice.boDate }" pattern="yyyy-MM-dd HH:mm:ss" />
 			                    <span><fmt:formatDate value="${parseData }" pattern="yyyy-MM-dd"/></span>
@@ -148,11 +154,15 @@
         <div id="pagingArea">
             ${pagingVO.pagingHTML }
         </div>
-        <div class="noticeBtnGroup">
-            <button type="button" class="btn btn-primary" id="noticeAddBtn">등록</button>
-        </div>
+        <c:if test="${sessionInfo.memCategory eq '03' }">
+	        <div class="noticeBtnGroup">
+	            <button type="button" class="btn btn-primary" id="noticeAddBtn">등록</button>
+	        </div>
+        </c:if>
     </article>
 </section>
+
+<%-- <c:out value="${fileExistNoticeList }" /> --%>
 
 <!-- 공지사항 js -->
 <script src="${contextPath }/resources/js/userNoticeBoard.js"></script>
@@ -164,7 +174,7 @@
         
         var noticeAddBtn = $("#noticeAddBtn");
         noticeAddBtn.click(function(){
-            location.href = "/notice/admin/register.do";
+            location.href = "/notice/${sessionInfo.memId }/register.do";
         });
         
         var fileDownload = $(".fileDownload");

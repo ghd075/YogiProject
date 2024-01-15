@@ -1,17 +1,24 @@
 package kr.or.ddit.users.board.service.impl;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import kr.or.ddit.mapper.NoticeBoardMapper;
 import kr.or.ddit.users.board.service.NoticeService;
 import kr.or.ddit.users.board.vo.NoticeFileVO;
 import kr.or.ddit.users.board.vo.NoticeVO;
+import kr.or.ddit.users.login.vo.MemberVO;
 import kr.or.ddit.utils.FileUploadUtils;
 import kr.or.ddit.utils.ServiceResult;
 import kr.or.ddit.vo.PaginationInfoVO;
@@ -23,18 +30,71 @@ public class NoticeServiceImpl implements NoticeService {
 	private NoticeBoardMapper noticeMapper;
 	
 	@Override
-	public int selectNoticeCount(PaginationInfoVO<NoticeVO> pagingVO) {
-		return noticeMapper.selectNoticeCount(pagingVO);
+	public void noticeList(Map<String, Object> param) {
+		
+		/** 파라미터 조회 */
+		int currentPage = (int) param.get("currentPage");
+		String searchType = (String) param.get("searchType");
+		String searchWord = (String) param.get("searchWord");
+		
+		/** 파라미터 정의 */
+		PaginationInfoVO<NoticeVO> pagingVO = new PaginationInfoVO<NoticeVO>();
+		List<NoticeVO> importantNoticeList = new ArrayList<NoticeVO>();
+		List<NoticeVO> fileExistNoticeList = new ArrayList<NoticeVO>();
+		
+		/** 메인로직 처리 */
+		// 검색 기능
+		if(StringUtils.isNotBlank(searchWord)) {
+			pagingVO.setSearchType(searchType);
+			pagingVO.setSearchWord(searchWord);
+		}
+		pagingVO.setCurrentPage(currentPage);
+		
+		// 총 게시글 수 가져오기
+		int totalRecord = noticeMapper.selectNoticeCount(pagingVO);
+		pagingVO.setTotalRecord(totalRecord);
+		
+		// 총 게시글을 리스트로 받아오기
+		List<NoticeVO> dataList = noticeMapper.selectNoticeList(pagingVO);
+		pagingVO.setDataList(dataList);
+		
+		// 중요공지 리스트 가져오기
+		importantNoticeList = noticeMapper.importantNoticeList();
+		
+		// 파일이 들어있는 게시글 리스트 가져오기
+		fileExistNoticeList = noticeMapper.fileExistNoticeList();
+		
+		/** 반환자료 저장 */
+		param.put("pagingVO", pagingVO);
+		param.put("importantNoticeList", importantNoticeList);
+		param.put("fileExistNoticeList", fileExistNoticeList);
+		
 	}
-
+	
 	@Override
-	public List<NoticeVO> selectNoticeList(PaginationInfoVO<NoticeVO> pagingVO) {
-		return noticeMapper.selectNoticeList(pagingVO);
-	}
+	public void noticeDetail(Map<String, Object> param) {
 
-	@Override
-	public List<NoticeVO> importantNoticeList() {
-		return noticeMapper.importantNoticeList();
+		/** 파라미터 조회 */
+		int boNo = (int) param.get("boNo");
+		
+		/** 파라미터 정의 */
+		NoticeVO noticeVO = new NoticeVO();
+		List<NoticeVO> prevNextList = new ArrayList<NoticeVO>();
+		
+		/** 메인로직 처리 */
+		// 조회수 증가
+		noticeMapper.incrementHit(boNo);
+		
+		// 게시판 상세 정보 가져오기
+		noticeVO = noticeMapper.selectNotice(boNo);
+		
+		// 이전글/이후글 정보 가져오기
+		prevNextList = noticeMapper.prevNextInfo(boNo);
+		
+		/** 반환자료 저장 */
+		param.put("noticeVO", noticeVO);
+		param.put("prevNextList", prevNextList);
+		
 	}
 
 	@Override
@@ -62,11 +122,6 @@ public class NoticeServiceImpl implements NoticeService {
 	public NoticeVO selectNotice(int boNo) {
 		noticeMapper.incrementHit(boNo); // 조회수 증가
 		return noticeMapper.selectNotice(boNo);
-	}
-
-	@Override
-	public List<NoticeVO> prevNextInfo(int boNo) {
-		return noticeMapper.prevNextInfo(boNo);
 	}
 
 	@Override
@@ -105,7 +160,6 @@ public class NoticeServiceImpl implements NoticeService {
 				
 				if(delNoticeNo != null) {
 					for(int i = 0; i > delNoticeNo.length; i++) {
-						System.out.println("delNoticeNo["+i+"] : " + delNoticeNo[i]);
 						// 삭제할 파일 번호 중, 파일 번호에 해당하는 게시판 파일 정보를 가져와 물리적인 삭제를 진행
 						NoticeFileVO noticeFileVO = noticeMapper.selectNoticeFile(delNoticeNo[i]);
 						File file = new File(noticeFileVO.getFileSavepath());

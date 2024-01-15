@@ -11,6 +11,8 @@ public interface NoticeBoardMapper {
 	public int selectNoticeCount(PaginationInfoVO<NoticeVO> pagingVO);
 	public List<NoticeVO> selectNoticeList(PaginationInfoVO<NoticeVO> pagingVO);
 	public List<NoticeVO> importantNoticeList();
+	public List<NoticeVO> fileExistNoticeList();
+	
 	public int insertNotice(NoticeVO noticeVO);
 	public void insertNoticeBoardFile(NoticeFileVO noticeFileVO);
 	public NoticeFileVO selectFileInfo(int fileNo);

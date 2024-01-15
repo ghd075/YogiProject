@@ -12,7 +12,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,6 +39,7 @@ public class LoginController {
 	private LoginService loginService;
 
 	// 로그인 페이지 이동
+	@CrossOrigin(origins = "http://localhost")
 	@RequestMapping(value = "/signin.do", method = RequestMethod.GET)
 	public String signin(String message, Model model) {
 		if(StringUtils.isNotBlank(message)) {
@@ -46,6 +49,7 @@ public class LoginController {
 	}
 	
 	// 회원 가입 페이지 이동
+	@CrossOrigin(origins = "http://localhost")
 	@RequestMapping(value = "/signup.do", method = RequestMethod.GET)
 	public String signup() {
 		return "login/signup";
@@ -66,6 +70,7 @@ public class LoginController {
 	}
 	
 	// 회원 가입 메서드
+	@Transactional
 	@RequestMapping(value = "/signup.do", method = RequestMethod.POST)
 	public String signup(
 			HttpServletRequest req, 
@@ -117,6 +122,7 @@ public class LoginController {
 	}
 	
 	// 아이디/비밀번호 페이지 이동
+	@CrossOrigin(origins = "http://localhost")
 	@RequestMapping(value = "/findIdPw.do", method = RequestMethod.GET)
 	public String findIdPw() {
 		return "login/findIdPw";
