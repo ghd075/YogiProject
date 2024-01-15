@@ -1,0 +1,468 @@
+@charset "utf-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@100;300;500;700;900&display=swap');
+
+/* css reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 공통 스타일 */
+body {
+    color: #333!important;
+    font-family: "Noto Sans KR", sans-serif!important;
+}
+
+a {
+    color: #333!important;
+    text-decoration: none!important;
+}
+
+nav ol,
+nav ul {
+    list-style: none;
+}
+
+/* 스크롤바 없애기 */
+/* ( 크롬, 사파리, 오페라, 엣지 ) 동작 */
+.scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll {
+  -ms-overflow-style: none; /* 인터넷 익스플로러 */
+  scrollbar-width: none; /* 파이어폭스 */
+}
+
+.cen {
+    max-width: 1200px;
+    width: 100%;
+    margin: auto;
+}
+
+/* 로그인 스타일 */
+#loginContainer,
+#idPwFindContainer,
+#signContainer {
+    width: 100vw;
+    height: 100vh;
+    background-color: #333;
+    position: relative;
+    overflow: hidden;
+}
+
+#loginContainer article {
+    width: 400px;
+    background-color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 20px;
+    z-index: 100;
+}
+
+#loginContainer>article>h1 {
+    position: absolute;
+    top: -130px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 0px!important;
+}
+
+#loginContainer>article>h1>a {
+	display: block;
+	width: 250px;
+	height: 250px;
+    border-radius: 50%;
+    transition: all 0.4s;
+}
+
+#loginContainer>article>h1>a:hover {
+	box-shadow: 0px 0px 100px white;
+}
+
+#loginContainer>article>h1>a>img {
+	display: block;
+    width: 100%;
+    height: 100%;
+}
+
+#loginContainer>article>div {
+    padding: 20px;
+    padding-top: 120px;
+    padding-bottom: 30px;
+}
+
+#loginContainer h2 {
+    text-align: center;
+    font-weight: 900;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+#loginContainer>article>div>p:first-of-type {
+    text-align: center;
+}
+
+#loginContainer>article>div>p:last-of-type {
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+#loginForm input {
+    margin-bottom: 15px;
+    outline: none;
+}
+
+#loginForm>div {
+    overflow: auto;
+    margin-bottom: 15px;
+}
+
+#loginForm a {
+    color: #0D6EFD!important;
+    text-decoration: underline!important;
+}
+
+#loginForm a:first-of-type {
+    display: block;
+    float: left;
+}
+
+#loginForm a:last-of-type {
+    display: block;
+    float: right;
+}
+
+#loginBtn {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.stylecomp_firstbar {
+    width: 500px;
+    height: 5000px;
+    background-color: red;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transition: all 0.4s;
+    transform: translate(-50%, -50%) rotate(70deg);
+    z-index: 90;
+}
+
+.stylecomp_secondbar {
+    width: 500px;
+    height: 5000px;
+    background-color: #dc1c2c;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transition: all 0.4s;
+    transform: translate(-50%, -50%) rotate(70deg);
+    top: 65%;
+    z-index: 80;
+}
+
+.bg_video {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+.donttouch {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #333;
+    z-index: 20;
+}
+
+.bg_video iframe {
+    display: block;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    transform: scale(1.3);
+}
+
+/* 아이디/비밀번호 스타일 */
+#idPwFindContainer article {
+    width: 500px;
+    background-color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 20px;
+    z-index: 100;
+    padding: 25px;
+    padding-top: 120px;
+}
+
+#idPwFindContainer>article>h1 {
+    position: absolute;
+    top: -75px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 0px!important;
+}
+
+#idPwFindContainer>article>h1>a {
+	display: block;
+	width: 200px;
+	height: 200px;
+	border-radius: 50%;
+    transition: all 0.4s;
+}
+
+#idPwFindContainer>article>h1>a:hover {
+	box-shadow: 0px 0px 100px white;
+}
+
+#idPwFindContainer>article>h1>a>img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.findContents {
+    margin-bottom: 10px;
+}
+
+.findContents h2 {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.9rem;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+}
+
+.findContents input {
+    margin-bottom: 15px
+}
+
+.loginPageGoBtn {
+    position: absolute;
+    right: 25px;
+}
+
+.searchTxt {
+    color: red;
+    font-size: 1.3rem;
+}
+
+/* 회원가입 스타일 */
+#signContainer article {
+    width: 500px;
+    background-color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 20px;
+    padding: 20px;
+    z-index: 100;
+}
+
+.profileContents {
+    position: relative;
+}
+
+.profileContents div {
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    top: -5px;
+    right: -95px;
+    background-color: white;
+}
+
+.profileContents img {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.profileIcon {
+    position: absolute;
+    top: 60px;
+    right: -75px;
+    background-color: #eee;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    text-align: center;
+    cursor: pointer;
+}
+
+.genderTxt {
+    margin-right: 10px;
+}
+
+#memPw {
+    margin-bottom: 15px;
+}
+
+.profileIcon i {
+    font-size: 2em;
+    line-height: 50px;
+}
+
+.inputCont {
+    margin-bottom: 5px;
+    overflow: auto;
+    height: 48px;
+}
+
+.inputCont:nth-of-type(3),
+.inputCont:nth-of-type(12),
+.inputCont:last-of-type {
+    height: auto;
+}
+
+.inputCont label {
+    display: block;
+    width: 100px;
+    float: left;
+}
+
+.inputCont input {
+    display: block;
+    width: calc(100% - 100px);
+    float: left;
+}
+
+.inputNone label {
+    display: inline;
+    width: auto;
+    float: none;
+}
+
+.inputNone input {
+    display: inline;
+    width: auto;
+    float: none;
+}
+
+.inputCont:first-of-type {
+    display: none;
+}
+
+/* 미디어 쿼리 (PC용) */
+@media all and (max-width: 1410px) {
+    
+    .bg_video iframe {
+        width: 1410px;
+    }
+    
+}
+
+/* 미디어 쿼리 (태블릿용) */
+@media all and (max-width: 768px) {
+    
+    .stylecomp_firstbar {
+        width: 300px;
+        transform: translate(-50%, -50%) rotate(20deg);
+    }
+    
+    .stylecomp_secondbar{
+        width: 300px;
+        transform: translate(-50%, -50%) rotate(20deg);
+        left: 60%;
+    }
+    
+}
+
+@media all and (max-width: 670px) {
+    
+    #signContainer article {
+        width: 300px;
+    }
+    
+    .profileContents div {
+        width: 100px;
+        height: 100px;
+        top: 15px;
+        right: -45px;
+    }
+    
+    .profileIcon {
+        top: 50px;
+        right: -30px;
+    }
+    
+}
+
+@media all and (max-width: 630px) {
+    
+    #idPwFindContainer h1 {
+        display: none;
+    }
+    
+    #idPwFindContainer article {
+        padding-top: 25px;
+        width: 300px;
+    }
+    
+    .findContents {
+        margin-bottom: 20px;
+    }
+    
+    .findContents h2 {
+        font-size: 1.5rem;
+    }
+    
+    .findContents p {
+        font-size: 0.9rem;
+    }
+    
+}
+
+@media all and (max-width: 510px) {
+    
+    #loginContainer article {
+        width: 280px;
+    }
+    
+    #loginContainer h2 {
+        font-size: 2rem;
+    }
+    
+    #loginContainer>article>div>p:first-of-type {
+        font-size: 0.8rem;
+    }
+    
+    #loginContainer>article>div>p:last-of-type {
+        font-size: 0.6rem;
+    }
+    
+    .stylecomp_firstbar {
+        display: none;
+    }
+    
+    .stylecomp_secondbar{
+        display: none;
+    }
+    
+    #loginForm a:first-of-type {
+        font-size: 0.9rem;
+    }
+
+    #loginForm a:last-of-type {
+        font-size: 0.9rem;
+    }
+    
+}

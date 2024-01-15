@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.NoticeBoardMapper">
+
+	<sql id="noticeSearch">
+		<if test="searchType != null and searchType == 'title'">
+			and (bo_title like '%' || #{searchWord} || '%')
+		</if>
+		<if test="searchType != null and searchType == 'writer'">
+			and (bo_writer like '%' || #{searchWord} || '%')
+		</if>
+		<if test="searchType != null and searchType == 'both'">
+			and (bo_title like '%' || #{searchWord} || '%')
+			and (bo_writer like '%' || #{searchWord} || '%')
+		</if>
+	</sql>
+	
+	<resultMap type="noticeVO" id="noticeMap">
+		<id property="boNo" column="bo_no" />
+		<result property="boNo" column="bo_no" />
+		<result property="boTitle" column="bo_title" />
+		<result property="boContent" column="bo_content" />
+		<result property="boWriter" column="bo_writer" />
+		<result property="boDate" column="bo_date" />
+		<result property="boHit" column="bo_hit" />
+		<result property="boImpor" column="bo_impor" />
+		<collection property="noticeFileList" resultMap="noticeFileMap" />
+	</resultMap>
+	
+	<resultMap type="noticefileVO" id="noticeFileMap">
+		<id property="fileNo" column="file_no" />
+		<result property="fileNo" column="file_no" />
+		<result property="fileName" column="file_name" />
+		<result property="fileSize" column="file_size" />
+		<result property="fileFancysize" column="file_fancysize" />
+		<result property="fileMime" column="file_mime" />
+		<result property="fileSavepath" column="file_savepath" />
+		<result property="fileDowncount" column="file_downcount" />
+		
+		<result property="fileNos" column="file_nos" />
+		<result property="fileNames" column="file_names" />
+		<result property="fileSizes" column="file_sizes" />
+		<result property="fileFancysizes" column="file_fancysizes" />
+		<result property="fileMimes" column="file_mimes" />
+		<result property="fileSavepaths" column="file_savepaths" />
+		<result property="fileDowncounts" column="file_downcounts" />
+	</resultMap>
+
+	<select id="selectNoticeCount" parameterType="pagingVO" resultType="int">
+		select count(bo_no) from notice 
+		where 1=1 
+		<include refid="noticeSearch" />
+	</select>
+	
+	<select id="selectNoticeList" parameterType="pagingVO" resultType="noticeVO">
+		select
+			b.*
+		from (
+			select
+				a.*, row_number() over (order by a.bo_no desc) rnum
+			from (
+				select 
+					bo_no, bo_title, bo_content, bo_writer, bo_date, bo_hit, bo_impor
+				from notice 
+				where 1=1 
+				<include refid="noticeSearch" />
+				order by bo_no desc
+			) a
+		) b
+		<![CDATA[
+			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<select id="importantNoticeList" resultMap="noticeMap">
+		select b.*
+		  from (
+		    select a.*, row_number() over (order by a.bo_no desc) rnum
+		    from (
+		        SELECT
+				    n.bo_no,
+				    n.bo_title,
+				    n.bo_content,
+				    n.bo_writer,
+				    n.bo_date,
+				    n.bo_hit,
+				    n.bo_impor,
+				    LISTAGG(nf.file_no, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_nos,
+				    LISTAGG(nf.file_name, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_names,
+				    LISTAGG(nf.file_size, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_sizes,
+				    LISTAGG(nf.file_fancysize, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_fancysizes,
+				    LISTAGG(nf.file_mime, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_mimes,
+				    LISTAGG(nf.file_savepath, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_savepaths,
+				    LISTAGG(nf.file_downcount, ',') WITHIN GROUP (ORDER BY nf.file_no) AS file_downcounts
+				FROM
+				    notice n
+				LEFT OUTER JOIN
+				    noticefile nf ON n.bo_no = nf.bo_no
+				WHERE
+				    1=1 AND n.bo_impor = 'y'
+				GROUP BY
+				    n.bo_no, n.bo_title, n.bo_content, n.bo_writer, n.bo_date, n.bo_hit, n.bo_impor
+				ORDER BY
+				    n.bo_no DESC
+		     ) a
+		  ) b
+		<![CDATA[
+			where b.rnum >= 1 and b.rnum <= 4
+		]]>
+	</select>
+	
+	<insert id="insertNotice" parameterType="noticeVO" useGeneratedKeys="true">
+		<selectKey keyProperty="boNo" order="BEFORE" resultType="int">
+			select seq_notice.nextval from dual
+		</selectKey>
+			INSERT INTO notice (
+			    bo_no,
+			    bo_title,
+			    bo_content,
+			    bo_writer,
+			    bo_date,
+			    bo_hit,
+			    bo_impor
+			) VALUES (
+			    #{boNo},
+			    #{boTitle},
+			    #{boContent},
+			    #{boWriter},
+			    sysdate,
+			    0,
+			    #{boImpor}
+			)
+	</insert>
+	
+	<insert id="insertNoticeBoardFile" parameterType="noticefileVO">
+		INSERT INTO noticefile (
+		    file_no,
+		    bo_no,
+		    file_name,
+		    file_size,
+		    file_fancysize,
+		    file_mime,
+		    file_savepath,
+		    file_downcount
+		) VALUES (
+		    seq_noticefile.nextval,
+		    #{boNo},
+		    #{fileName},
+		    #{fileSize},
+		    #{fileFancysize},
+		    #{fileMime},
+		    #{fileSavepath},
+		    0
+		)
+	</insert>
+	
+	<select id="selectFileInfo" parameterType="int" resultType="noticefileVO">
+		SELECT
+		    file_no,
+		    bo_no,
+		    file_name,
+		    file_size,
+		    file_fancysize,
+		    file_mime,
+		    file_savepath,
+		    file_downcount
+		FROM
+		    noticefile
+		WHERE file_no = #{fileNo}
+	</select>
+	
+	<update id="incrementHit" parameterType="int">
+		update notice 
+		set 
+			bo_hit = bo_hit + 1 
+		where bo_no = ${boNo}
+	</update>
+	
+	<select id="selectNotice" parameterType="int" resultMap="noticeMap">
+		select 
+		    b.bo_no, bo_title, bo_content, bo_writer, bo_date, bo_hit, bo_impor,
+		    file_no, file_name, file_size, file_fancysize, file_mime, file_savepath, file_downcount 
+		from notice b left outer join noticefile nf on(b.bo_no = nf.bo_no)
+		where 1=1  
+		and b.bo_no = ${boNo}
+	</select>
+	
+	<select id="prevNextInfo" parameterType="int" resultType="noticeVO">
+		select a.*
+		from(
+		    select bo_no, bo_title, bo_writer, bo_date, bo_hit, 'prev' as "prevnext_flag", row_number() over (order by bo_no desc) rnum from notice
+		    <![CDATA[
+		    	where bo_no < ${boNo}
+		    ]]>
+		) a
+		where a.rnum = 1
+		union
+		select a.*
+		from(
+		    select bo_no, bo_title, bo_writer, bo_date, bo_hit, 'next' as "prevnext_flag", row_number() over (order by bo_no asc) rnum from notice
+		    <![CDATA[
+		    	where bo_no > ${boNo}
+		    ]]>
+		) a
+		where a.rnum = 1
+	</select>
+	
+	<delete id="deleteNoticeFile" parameterType="int">
+		DELETE FROM noticefile
+		WHERE bo_no = #{boNo}
+	</delete>
+	
+	<delete id="deleteNotice" parameterType="int">
+		DELETE FROM notice
+		WHERE bo_no = #{boNo}
+	</delete>
+	
+	<update id="modifyNotice" parameterType="noticeVO">
+		UPDATE notice
+		SET
+		    bo_title = #{boTitle},
+		    bo_content = #{boContent},
+		    bo_writer = #{boWriter},
+		    bo_date = sysdate,
+		    bo_impor = #{boImpor}
+		WHERE bo_no = #{boNo}
+	</update>
+	
+	<select id="selectNoticeFile" parameterType="int" resultType="noticefileVO">
+		SELECT
+		    file_no,
+		    file_name,
+		    file_size,
+		    file_fancysize,
+		    file_mime,
+		    file_savepath,
+		    file_downcount
+		FROM
+		    noticefile
+		WHERE file_no = #{fileNo}
+	</select>
+	
+	<delete id="deleteNoticeFileList">
+		delete from noticefile 
+		<where>
+			file_no in 
+			<foreach collection="array" item="fileNo" open="(" close=")" separator=",">
+				${fileNo }
+			</foreach>
+		</where>
+	</delete>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<settings>
+		<!-- VO와 테이블컬럼명에 있는 언더바 대응 -->
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<!-- 오라클 Nullable 컬럼 대응 -->
+   		<setting name="jdbcTypeForNull" value="VARCHAR"/>
+	</settings>
+	
+	<typeAliases>
+		<typeAlias type="kr.or.ddit.users.login.vo.MemberVO" alias="memberVO"/>
+		<typeAlias type="kr.or.ddit.users.board.vo.NoticeVO" alias="noticeVO"/>
+		<typeAlias type="kr.or.ddit.users.board.vo.NoticeFileVO" alias="noticefileVO"/>
+		<typeAlias type="kr.or.ddit.vo.PaginationInfoVO" alias="pagingVO"/>
+		
+		<!-- 양이 많아지면 패키지로 선택 -->
+		<!-- 
+			해당 경로에 VO가 대문자로 자동 등록 된다. 
+			<package name="kr.or.ddit.vo" />
+		-->
+	</typeAliases>
+
+</configuration>

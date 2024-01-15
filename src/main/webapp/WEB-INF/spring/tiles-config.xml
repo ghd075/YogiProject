@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<tiles-definitions>
+
+	<definition name="mainTemplate" template="/WEB-INF/views/layout/member/mainTemplate.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/layout/member/header.jsp"/>
+		<put-attribute name="footer" value="/WEB-INF/views/layout/member/footer.jsp"/>
+		<put-attribute name="settings" value="/WEB-INF/views/layout/member/settings.jsp"/>
+	</definition>
+
+	<definition name="user/*" extends="mainTemplate">
+		<put-attribute name="userMainContainer" value="/WEB-INF/views/member/{1}.jsp"/>
+	</definition>
+	
+	<definition name="boardTemplate" template="/WEB-INF/views/layout/member/boardTemplate.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/layout/member/header.jsp"/>
+		<put-attribute name="footer" value="/WEB-INF/views/layout/member/footer.jsp"/>
+		<put-attribute name="settings" value="/WEB-INF/views/layout/member/settings.jsp"/>
+	</definition>
+
+	<definition name="board/*" extends="boardTemplate">
+		<put-attribute name="userBoardContainer" value="/WEB-INF/views/member/board/{1}.jsp"/>
+	</definition>
+	
+	<definition name="reserveTemplate" template="/WEB-INF/views/layout/member/reserveTemplate.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/layout/member/header.jsp"/>
+		<put-attribute name="footer" value="/WEB-INF/views/layout/member/footer.jsp"/>
+		<put-attribute name="settings" value="/WEB-INF/views/layout/member/settings.jsp"/>
+	</definition>
+
+	<definition name="reserve/*" extends="reserveTemplate">
+		<put-attribute name="userReserveContainer" value="/WEB-INF/views/member/reserve/{1}.jsp"/>
+	</definition>
+	
+	<definition name="partnerTemplate" template="/WEB-INF/views/layout/member/partnerTemplate.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/layout/member/header.jsp"/>
+		<put-attribute name="footer" value="/WEB-INF/views/layout/member/footer.jsp"/>
+		<put-attribute name="settings" value="/WEB-INF/views/layout/member/settings.jsp"/>
+	</definition>
+
+	<definition name="partner/*" extends="partnerTemplate">
+		<put-attribute name="userPartnerContainer" value="/WEB-INF/views/member/partner/{1}.jsp"/>
+	</definition>
+	
+	<definition name="myPlanTemplate" template="/WEB-INF/views/layout/member/myPlanTemplate.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/layout/member/header.jsp"/>
+		<put-attribute name="footer" value="/WEB-INF/views/layout/member/footer.jsp"/>
+		<put-attribute name="settings" value="/WEB-INF/views/layout/member/settings.jsp"/>
+	</definition>
+
+	<definition name="myplan/*" extends="myPlanTemplate">
+		<put-attribute name="userMyPlanContainer" value="/WEB-INF/views/member/myplan/{1}.jsp"/>
+	</definition>
+
+</tiles-definitions>

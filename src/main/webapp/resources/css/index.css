@@ -1,0 +1,590 @@
+@import url('https://fonts.cdnfonts.com/css/spongition');
+
+/* 랜딩 페이지 스타일링 */
+.mainSlideContainer {
+    position: relative;
+}
+
+.mainSlideTxt {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 40;
+    color: white;
+    left: 200px;
+}
+
+.mainSlideTxt h2 {
+    font-family: 'Spongition', sans-serif;
+    font-weight: 800;
+    font-size: 5rem;
+}
+
+.mainSlideTxt p {
+    font-size: 1.9rem;
+}
+
+.mainSlideTxt h2 span {
+    color: yellow;
+}
+
+/* 슬라이드 스타일 */
+.mainSlideContainer .mainSlider {
+    position: relative;
+}
+
+.mainSlider img {
+    width: 100%;
+}
+
+.mainSlider .slick-dots {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 15px;
+    list-style: none;
+    margin-bottom: 0px;
+    padding-left: 0px;
+    overflow: auto;
+}
+
+.mainSlider .slick-dots li {
+    float: left;
+}
+
+.mainSlider .slick-dots button {
+    display: block;
+    border-radius: 50%;
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 1.1rem;
+    text-align: center;
+    margin: 0px 5px;
+}
+
+.mainSlider .slick-active button {
+    color: black;
+}
+
+.mainSlider .slick-active i {
+    opacity: 0.6;
+}
+
+.mainSlider .slick-prev,
+.mainSlider .slick-next {
+    position: absolute;
+    top: 55%;
+    transform: translateY(-50%);
+    z-index: 50;
+    background-color: rgba(0,0,0,0.6);
+    border: none;
+    outline: none;
+    padding: 20px 10px;
+    text-align: center;
+    border-radius: 4px;
+    color: white;
+    font-size: 2rem;
+    transition: all 0.4s;
+}
+
+.mainSlider .slick-prev:hover,
+.mainSlider .slick-next:hover {
+    background-color: white;
+    color: black;
+}
+
+.mainSlider .slick-prev {
+    left: 15px;
+}
+
+.mainSlider .slick-next {
+    right: 15px;
+}
+
+/* 여행 정보 스타일 */
+.journeyInfoContainer {
+    position: relative;
+    padding: 50px 0px;
+}
+
+.journeyInfoContainer h3 {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 20px 0px;
+    margin-bottom: 0px;
+}
+
+.journeyInfoSearchContents>div {
+    overflow: auto;
+    position: relative;
+    width: 600px;
+    margin: 0px auto;
+}
+
+.journeyInfoSearchContents {
+    padding: 30px 0px;
+}
+
+.journeyInfoSearchContents input,
+.journeyInfoSearchContents button {
+    float: left;
+}
+
+.journeyInfoSearchContents input {
+    width: 100%;
+}
+
+.journeyInfoSearchContents input::placeholder {
+    color: #dee2e6;
+}
+
+.journeyInfoSearchContents button {
+    display: block;
+    width: 20px;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+    border: none;
+    background-color: transparent;
+    color: #dee2e6;
+    transition: all 0.4s;
+}
+
+.journeyInfoSearchContents button:hover {
+    color: black;
+}
+
+.journeyInfoContents {
+    height: 840px;
+    margin: 25px 0px;
+}
+
+.journeyInfoContents article {
+    float: left;
+    width: calc(100% / 4 - 30px);
+    margin-right: 40px;
+    cursor: pointer;
+    transition: all 0.4s;
+}
+
+.journeyInfoContents article:hover {
+    transform: scale(1.03);
+}
+
+.journeyInfoContents article:nth-of-type(4),
+.journeyInfoContents article:last-of-type {
+    margin-right: 0px;
+}
+
+.journeyInfoContents .infoThumbnailBox {
+    position: relative;
+    overflow: hidden;
+    height: 320px;
+    border-radius: 10px;
+}
+
+.journeyInfoContents .infoThumbnailBox img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.journeyInfoContents h4 {
+    margin-bottom: 5px;
+}
+
+.journeyInfoContents article>div:last-of-type {
+    padding: 20px 0px;
+}
+
+.journeyInfoContents article>div:last-of-type span {
+    font-weight: 300;
+}
+
+.journeyInfoContents article p,
+.journeyInfoContents article .airportText {
+    display: none;
+}
+
+/* 여행 정보 모달창 */
+.infoModalContents {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.3);
+    z-index: 70;
+    display: none;
+}
+
+.infoModalBox {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 60px;
+    overflow: auto;
+    border-radius: 10px;
+}
+
+.infoModalClose {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    background-color: rgba(0,0,0,0.4);
+    border-radius: 4px;
+}
+
+.infoModalClose div {
+    width: 25px;
+    height: 1px;
+    background-color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.infoModalClose div:first-of-type {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.infoModalClose div:last-of-type {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.infoModalBox article {
+    float: left;
+    width: calc(100% / 2);
+    padding: 24px;
+}
+
+.infoModalLeft>div {
+    height: 400px;
+    position: relative;
+}
+
+.modalInfoSetting span {
+    color: #AAB1B8;
+    font-size: 20px;
+    font-weight: 300;
+}
+
+.modalInfoSetting h5 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.modalInfoSetting p {
+    font-weight: 300;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.infoModalImgBox {
+    position: relative;
+    overflow: hidden;
+    height: 400px;
+}
+
+.infoModalImgBox img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.infoModalFourSection {
+    overflow: auto;
+}
+
+.infoModalFourSection>div {
+    float: left;
+    width: calc(100% / 4);
+}
+
+.infoModalFourSection>div>div:first-of-type {
+    margin-bottom: 10px;
+}
+
+.infoModalFourSection>div>div:last-of-type span {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.infoModalFourSection>div>div:last-of-type span:first-of-type {
+    color: #AAB1B8;
+    font-size: 12px;
+}
+
+.infoModalFourSection>div>div:last-of-type span:last-of-type {
+    color: #737E8A;
+    font-size: 14px;
+}
+
+.makePlanSty {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    padding: 8px 30px;
+}
+
+.makePlanSty i {
+    margin-left: 10px;
+}
+
+.noUserBlockModal::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0,0,0,0.6);
+}
+
+.noUserBlockModal::after {
+    content: "회원전용";
+    display: block;
+    width: 80px;
+    height: 20px;
+    background-color: #0dcaf0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+/* 그래프 디자인 영역 */
+.siteGraphContainer {
+    position: relative;
+    padding-bottom: 100px;
+}
+
+.siteGraphContainer h3 {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 20px 0px;
+    margin-bottom: 0px;
+}
+
+.siteGraphContents {
+    height: 800px;
+}
+
+.siteGraph {
+    float: left;
+    width: calc(100% / 2);
+    height: 400px;
+    padding: 40px 30px;
+}
+
+.siteGraph h4 {
+    font-size: 1.2rem;
+}
+
+/* 미디어 쿼리 (PC용) */
+@media all and (max-width: 1600px) {
+    
+    .mainSlideTxt h2 {
+        font-size: 4rem;
+    }
+
+    .mainSlideTxt p {
+        font-size: 1.5rem;
+    }
+    
+}
+
+@media all and (max-width: 1400px) {
+    
+    .mainSlideTxt {
+        top: 60%;
+        left: 150px;
+    }
+    
+    .mainSlideTxt h2 {
+        font-size: 3rem;
+    }
+
+    .mainSlideTxt p {
+        font-size: 1.2rem;
+    }
+    
+}
+
+@media all and (max-width: 1300px) {
+    
+    .mainSlideTxt h2 {
+        font-size: 2.5rem;
+    }
+
+    .mainSlideTxt p {
+        font-size: 1rem;
+    }
+    
+    .journeyInfoContainer {
+        padding: 50px 20px;
+    }
+    
+}
+
+@media all and (max-width: 1060px) {
+    
+    .journeyInfoContents article {
+        width: calc(100% / 2 - 20px);
+    }
+    
+    .journeyInfoContents {
+        height: 1680px;
+        margin: 0px;
+    }
+    
+    .journeyInfoContents article:nth-of-type(2),
+    .journeyInfoContents article:nth-of-type(4),
+    .journeyInfoContents article:nth-of-type(6),
+    .journeyInfoContents article:last-of-type {
+        margin-right: 0px;
+    }
+    
+    /* 모달창 스타일 */
+    .infoModalBox {
+        padding: 30px;
+    }
+    
+    .infoModalBox article {
+        float: none;
+        width: 100%;
+        padding-top: 100px;
+    }
+    
+    .infoModalBox article:first-of-type {
+        padding-top: 0px;
+    }
+    
+    .infoModalLeft>div,
+    .infoModalImgBox {
+        height: 200px;
+    }
+    
+    .makePlanSty {
+        bottom: 120px;
+        right: 0;
+        border: none;
+    }
+     
+}
+
+@media all and (max-width: 900px) {
+    
+    .mainSlideTxt {
+        left: 100px;
+    }
+    
+    .mainSlideTxt h2 {
+        font-size: 2rem;
+    }
+
+    .mainSlideTxt p {
+        font-size: 0.8rem;
+    }
+    
+    .mainSlider .slick-prev,
+    .mainSlider .slick-next {
+        top: 60%;
+        padding: 15px 7px;
+        font-size: 1.4rem;
+    }
+    
+    .mainSlider .slick-dots button {
+        font-size: 0.9rem;
+    }
+    
+    .siteGraphContents {
+        height: 1600px;
+    }
+
+    .siteGraph {
+        float: none;
+        width: 100%;
+    }
+    
+}
+
+/* 미디어 쿼리 (태블릿용) */
+@media all and (max-width: 760px) {
+    
+    .mainSlideTxt h2,
+    .mainSlideTxt p {
+        display: none;
+    }
+    
+}
+
+@media all and (max-width: 680px) {
+    
+    .mainSlider .slick-prev,
+    .mainSlider .slick-next {
+        display: none;
+    }
+    
+    .mainSlider .slick-dots {
+        display: none;
+    }
+    
+    .journeyInfoContents {
+        margin: 0px;
+    }
+    
+    .journeyInfoContents article {
+        width: 100%;
+        margin-right: 0px;
+    }
+    
+    .journeyInfoContents article:nth-of-type(5),
+    .journeyInfoContents article:nth-of-type(6),
+    .journeyInfoContents article:nth-of-type(7),
+    .journeyInfoContents article:last-of-type {
+        display: none;
+    }
+    
+    .journeyInfoSearchContents {
+        padding: 30px 0px;
+    }
+    
+    .journeyInfoSearchContents>div {
+        width: auto;
+    }
+    
+    .infoModalBox article {
+        padding-top: 150px;
+    }
+    
+    .infoModalBox article:first-of-type {
+        padding-top: 0px;
+    }
+    
+}
+
+@media all and (max-width: 500px) {
+    
+    .makePlanSty {
+        display: none;
+    }
+    
+}
