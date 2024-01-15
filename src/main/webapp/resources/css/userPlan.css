@@ -58,7 +58,7 @@
 
 .input-date {
 	position:absolute;
-	width: 100px;
+	width: 120px;
     height: 35px;
     left:500px;
     top:10px;
@@ -152,7 +152,8 @@
 
 .plan-container{
 	width: 100%;
-	height: 90%;
+	/* height: 90%; */
+	height: 630px;
 	margin-bottom: 10px;
 	display: flex;
 }
@@ -160,13 +161,13 @@
 /* DAYS box */
 .plan-daysbox {
   width: 120px;
-  height: 90%;
+  /* height: 90%; */
   background: #FFD8A8; /* Lighter sand color */
 }
 
 .plan-daysboxtitle {
   height: 80px;
-  border-bottom: 1px solid #FFD8A8; /* Matching lighter sand color */
+  /* border-bottom: 1px solid #FFD8A8; */ /* Matching lighter sand color */
   color: white;
   font-size: 25px;
   text-align: center;
@@ -186,16 +187,16 @@
 /* 해당 날짜에 일정을 추가하는 영역 */
 .plan-planscontainer {
   width: 260px;
-  height: 90%;
+  /* height: 90%; */
   background: #FFE5C4; /* Even lighter sand color */
 }
 
 .plan-plansbox {
   float: left;
-  border-right: 1px solid #FFE5C4; /* Matching even lighter sand color */
-  border-bottom: 1px solid #FFE5C4; /* Matching even lighter sand color */
+  /* border-right: 1px solid #FFE5C4; */ /* Matching even lighter sand color */
+  /* border-bottom: 1px solid #FFE5C4; Matching even lighter sand color */
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
 }
 
 .plan-plansboxtitle {
@@ -214,11 +215,11 @@
 .plan-searchbox{
 	width: 367px;
 	height: 90%;
-	overflow: scroll; 
+	/* overflow: scroll;  */
 }
 
 .searchContents {
-    padding: 30px 0px;
+    padding: 0px 0px 30px;
 }
 
 .searchContents > div {
@@ -276,6 +277,41 @@
 
 /* 지도API */
 .plan-mapbox{
-	height: 90%;
+	/* height: 630px; */
+	height: 100%;
 	width: 50%;
+}
+
+/* 일정 추가 */
+/* styles.css */
+
+.day-cell {
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ddd; /* Border color */
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.day-btn {
+    background-color: #3498db;
+    color: #fff;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.day-btn:hover {
+    background-color: #2980b9;
+}
+
+.day-date {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Optional: Add some spacing between cells */
+.day-cell + .day-cell {
+    margin-top: 10px;
 }

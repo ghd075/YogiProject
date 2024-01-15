@@ -17,6 +17,10 @@
 		<typeAlias type="kr.or.ddit.users.board.vo.NoticeFileVO" alias="noticefileVO"/>
 		<typeAlias type="kr.or.ddit.vo.PaginationInfoVO" alias="pagingVO"/>
 		
+		<!-- makePlan 관련 VO -->
+		<typeAlias type="kr.or.ddit.users.myplan.vo.AreaVO" alias="areaVO"/>
+		<typeAlias type="kr.or.ddit.users.myplan.vo.SigunguVO" alias="sigunguVO"/>
+		
 		<!-- 양이 많아지면 패키지로 선택 -->
 		<!-- 
 			해당 경로에 VO가 대문자로 자동 등록 된다. 

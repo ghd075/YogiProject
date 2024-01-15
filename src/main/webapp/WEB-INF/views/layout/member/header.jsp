@@ -67,6 +67,7 @@
                         <li><a href="/myplan/info.do">여행 정보</a></li>
                         <li><a href="/myplan/recommend.do">일정 추천</a></li>
                         <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/myplan/makeplan.do">플래너 작성</a></li>
+                        <li><a href="/myplan/makeplan.do">플래너 작성</a></li>
                     </ul>
                 </li>
                 <li class="main">

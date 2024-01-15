@@ -6,6 +6,11 @@
 <link href="${contextPath }/resources/css/userPlan.css" rel="stylesheet" />    
 <!-- nice-select css -->
 <link rel="stylesheet" href="${contextPath }/resources/css/nice-select.css">
+<!-- flatpickr css -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<!-- flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
     
 <!-- 구현할 페이지를 여기에 작성 -->
 <section class="makePlanContainer emptySpace">
@@ -16,7 +21,7 @@
 		</div>
 		<div class="calendar">
 			<label class="calendar_detail_01">여행 시작일 : </label>
-			<input class="input-date" type="date" id="startDate" value="" min="${formattedDate}" />
+			<input class="input-date" type="date" id="startDate" value="" min="" />
 			<label class="calendar_detail_02">여행 일수 : </label>
 			<button id="decrease" class="btn btn-outline-info">-</button>
 			<input type="text" id="days" value="1" class="wave">
@@ -43,17 +48,18 @@
 				<option value="" selected="selected">테마</option>
 				<option value="혼자">혼자</option>
 				<option value="동행">동행</option>
-			</select> <select name="area" id="areacode"
-				class="nice-select top-select" onchange="changes(value)">
+			</select> 
+			<select name="areaCode" id=areaCode class="nice-select top-select">
 				<option value="">지역 선택</option>
-			</select> <select name="sigungu" class="nice-select top-select"
-				id="sigunguCode">
-				<option value="">세부 지역</option>
+			</select> 
+			<select name="sigunguCode" class="nice-select top-select" id="sigunguCode">
+				<option value="">전체</option>
 			</select>
 		</div>
 	</article>
 </section>
 <section class="plan-container">
+	<!-- 해당 날짜가 추가하는 영역 -->
 	<article class="plan-daysbox">
 		<div class="plan-daysboxtitle">DAY</div>
 		<div class="category-listing">
@@ -92,6 +98,7 @@
 			</div>
 		</div>
     </article>
+     <!-- 관광지 검색 리스트 영역 -->
     <article class="plan-searchbox">
        <!-- 관광지 검색 리스트 -->
        <div class="category-listing">
@@ -106,19 +113,19 @@
                </div>
                <div class="select-job-items2">
                    <button id="touraBtn" value="A01" onclick="search(value)" class="cat1-btn">
-                       <img src="${contextPath }/resources/images/camera.png" title="명소">
+                       <img src="${contextPath }/resources/images/plan/camera.png" title="명소">
                    </button>
                    <button id="shoppingBtn" value="A04" onclick="search(value)" class="cat1-btn">
-                       <img src="${contextPath }/resources/images/shopping.png" title="쇼핑">
+                       <img src="${contextPath }/resources/images/plan/shopping.png" title="쇼핑">
                    </button>
                    <button id="foodBtn" value="A05" onclick="search(value)" class="cat1-btn">
-                       <img src="${contextPath }/resources/images/food.png" title="맛집">
+                       <img src="${contextPath }/resources/images/plan/food.png" title="맛집">
                    </button>
                    <button id="hotelBtn" value="B02" onclick="search(value)" class="cat1-btn">
-                       <img src="${contextPath }/resources/images/hotel.png" title="숙소">
+                       <img src="${contextPath }/resources/images/plan/hotel.png" title="숙소">
                    </button>
                    <button id="likeBtn" value="C01" onclick="search(value)" class="cat1-btn">
-                       <img src="${contextPath }/resources/images/like.png" title="추천!">
+                       <img src="${contextPath }/resources/images/plan/like.png" title="추천!">
                    </button>
                </div>
                <div id="result"></div>
@@ -136,9 +143,13 @@
 	</article>
 	<!-- 지도 API -->
 </section>
-<!-- 지도 -->
-<script type="text/javascript"
-	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b32a29fe75c5dec3cc66391aed3fe468&libraries=services"></script>
+
+<!-- 공지사항 JS -->
+<script src="${contextPath }/resources/js/userPlan.js"></script>
+
+<!-- 카카오 지도 JS  -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b32a29fe75c5dec3cc66391aed3fe468&libraries=services"></script>
+
 <script>
 	// 마커를 담을 배열생성
 	let markers = [];
@@ -153,3 +164,87 @@
 	let map = new kakao.maps.Map(mapContainer, mapOption);
 </script>
 <!-- 지도 -->
+<script type="text/javascript">
+	$(function () {
+		draw.areaList();
+	});
+	// 지도의 중심지점으로 이동
+	function moveMapCenter(latitude, longitude) {
+	 	// 이동할 위도 경도 위치를 생성합니다 
+	 	let moveLatLon = new kakao.maps.LatLng(latitude, longitude);
+	    
+	    // 지도 중심을 이동 시킵니다
+	 	map.setCenter(moveLatLon);
+	}
+
+	// 지역 좌표 이동
+	$('#areaCode').change(function() {
+		$('#sigunguCode').find('option').each(function() {
+			$(this).remove();
+	   	});
+		
+		$('#sigunguCode').append("<option value=''>-- 전체 --</option>");
+		// 선택된 옵션을 가져옴
+		var selectedOption = $(this).find(':selected');
+
+		// 데이터 속성에서 위도와 경도 값을 가져옴
+		var latitude = selectedOption.data('latitude');
+		var longitude = selectedOption.data('longitude');
+
+		// 위도와 경도 값을 사용하여 작업 수행
+		//console.log('선택된 위도:', latitude);
+		//console.log('선택된 경도:', longitude);
+		
+		// 만약 위도와 경도 값이 없으면 서울의 위도와 경도를 사용
+		if (!latitude || !longitude) {
+			latitude = 37.56682; // 서울의 위도
+			longitude = 126.97865; // 서울의 경도
+		}
+
+		// 선택된 select 박스의 value 값을 data 객체에 추가
+		var areaCodeValue = selectedOption.val();
+		if(areaCodeValue != "") {
+			var data = {
+				areaCode: areaCodeValue
+			};
+	
+			console.log("선택된 지역코드 : ", data);
+			
+			draw.sigunguList(data);
+		}
+
+		moveMapCenter(latitude, longitude);	
+		
+	});
+	
+	// 세부 지역 좌표 이동
+	$('#sigunguCode').change(function() {
+		var selectedOption = $(this).find(':selected');
+
+		// 데이터 속성에서 위도와 경도 값을 가져옴
+		var latitude = selectedOption.data('latitude');
+		var longitude = selectedOption.data('longitude');
+
+		// 위도와 경도 값을 사용하여 작업 수행
+		// console.log('선택된 위도:', latitude);
+		// console.log('선택된 경도:', longitude);
+
+		var areaCode = $('#areaCode').find(':selected');
+		// console.log('선택된 지역코드 : ', areaCode);
+		
+		var areaLatitude = areaCode.data('latitude');
+		var areaLongitude = areaCode.data('longitude');
+		
+		// 만약 위도와 경도 값이 없으면 해당 지역의 위도와 경도를 사용
+		if (!latitude || !longitude) {
+			latitude = areaCode.data('latitude'); // 해당 지역 위도
+			longitude = areaCode.data('longitude'); // 해당 지역 경도
+			
+			console.log('좌표가 없는 경우 => 위도:', latitude);
+			console.log('좌표가 없는 경우 => 경도:', longitude);
+		}
+
+		moveMapCenter(latitude, longitude);
+		
+	});
+</script>
