@@ -28,4 +28,17 @@
 		AND AREA_CODE = #{areaCode}
 		ORDER BY ROWNUM 
 	</select>
+	
+	<!-- 관광지 정보 추가 -->
+	<insert id="save" parameterType="touritemsVO">
+		insert into TOURITEMS(
+			content_id, area_code, sigungu_code, tour_cate, contenttype_id,
+	        first_image, longitude, latitude, address, tel,
+	        title, zipcode
+		) VALUES (
+			#{contentId}, #{areaCode}, #{sigunguCode}, #{tourCate}, #{contenttypeId},
+	        #{firstImage}, #{longitude}, #{latitude}, #{address}, #{tel},
+	        #{title}, #{zipcode}
+		)
+	</insert>
 </mapper>

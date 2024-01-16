@@ -17,9 +17,10 @@
 		<typeAlias type="kr.or.ddit.users.board.vo.NoticeFileVO" alias="noticefileVO"/>
 		<typeAlias type="kr.or.ddit.vo.PaginationInfoVO" alias="pagingVO"/>
 		
-		<!-- makePlan 관련 VO -->
+		<!-- Plan 관련 VO -->
 		<typeAlias type="kr.or.ddit.users.myplan.vo.AreaVO" alias="areaVO"/>
 		<typeAlias type="kr.or.ddit.users.myplan.vo.SigunguVO" alias="sigunguVO"/>
+		<typeAlias type="kr.or.ddit.api.vo.TouritemsVO" alias="touritemsVO"/>
 		
 		<!-- 양이 많아지면 패키지로 선택 -->
 		<!-- 

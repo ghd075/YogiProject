@@ -48,6 +48,8 @@
 			<exclude-mapping path="/imageInfo.do"/>
 			<exclude-mapping path="/imageUpload.do"/>
 			
+			<exclude-mapping path="/locations/**"/>
+			
 			<exclude-mapping path="/login/**"/>
 			
 			<exclude-mapping path="/myplan/info.do"/>
