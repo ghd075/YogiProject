@@ -50,7 +50,6 @@ public class LoginServiceImpl implements LoginService {
 		return result;
 	}
 	
-	@Transactional
 	@Override
 	public ServiceResult signup(HttpServletRequest req, MemberVO memberVO) {
 		ServiceResult result = null;

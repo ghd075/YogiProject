@@ -1,0 +1,274 @@
+/* 마이페이지 스타일링 */
+
+/* cen 재정의 */
+.cen {
+    width: 1200px;
+}
+
+/* 내 정보 스타일링 */
+.myInfoContainer {
+    position: relative;
+    overflow: auto;
+}
+
+.myPageLnbContents {
+    float: left;
+    width: 200px;
+    background-color: #333;
+    padding: 20px;
+}
+
+.myPageLnbContents .myPageLnbCont a {
+    display: block;
+    padding: 20px 15px;
+    border-bottom: 1px solid #444;
+    color: white;
+    transition: all 0.4s;
+}
+
+.myPageLnbContents .myPageLnbCont a:hover {
+    background-color: white;
+    color: #333;
+}
+
+.mypageContainer {
+    float: left;
+    width: calc(100% - 200px);
+    background-color: #eee;
+}
+
+.myPageTabbtnGroup {
+    overflow: auto;
+    padding-bottom: 20px;
+}
+
+.mypageContainer {
+    padding: 20px;
+}
+
+.tabbtn {
+    background-color: white;
+    float: left;
+    padding: 10px 15px;
+    border-radius: 4px 4px 0px 0px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.tabbtn:last-of-type {
+    margin-right: 0px;
+}
+
+.tactive {
+    background-color: #333;
+    color: white;
+}
+
+.tabcont {
+    display: none;
+}
+
+.tabcont:first-of-type {
+    display: block;
+}
+
+.myInfoContents {
+    position: relative;
+    overflow: auto;
+}
+
+.myInfoContents>div {
+    float: left;
+    width: 50%;
+    padding: 20px;
+}
+
+.myInfoImgBox {
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 50%;
+    position: relative;
+    margin: auto;
+}
+
+.myInfoImgBox img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.myInfoContLefts label {
+    width: 100%;
+    padding: 20px 0px;
+    padding-bottom: 0px;
+    overflow: auto;
+}
+
+.myInfoContLefts span {
+    display: block;
+    float: left;
+    width: 100px;
+    margin-top: 7px;
+}
+
+.myInfoContLefts input {
+    float: left;
+    width: calc(100% - 100px);
+}
+
+.myInfoContRights {
+    border-left: 1px solid #ddd;
+    position: relative;
+}
+
+.myInfoContRights>form>label {
+    width: 100%;
+    padding: 20px 0px;
+    padding-bottom: 0px;
+}
+
+.myInfoContRights .nonBlock {
+    display: inline!important;
+    margin-right: 10px;
+}
+
+.myInfoContRights>form>label>span:first-of-type {
+    margin-bottom: 10px;
+    display: block;
+}
+
+.myInfoUpdBtn {
+    margin-top: 20px;
+}
+
+.profileIcon {
+    width: 60px;
+    height: 60px;
+    background-color: #333;
+    color: white;
+    font-size: 1.6rem;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 60px;
+    position: absolute;
+    right: 80px;
+    bottom: 0px;
+    cursor: pointer;
+    transition: all 0.4s;
+}
+
+.profileIcon:hover {
+    background-color: white;
+    color: #333;
+}
+
+.updBlockLayer {
+    position: absolute;
+    background-color: rgba(0,0,0,0.6);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    border-radius: 4px;
+}
+
+#updBlockBtn {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+}
+
+/* 회원 탈퇴 스타일링 */
+.memResign {
+    position: relative;
+    border: 1px dashed #0070BC;
+    padding: 30px;
+    background-color: white;
+    border-radius: 4px;
+}
+
+.memResign h1,
+.memResign h2,
+.memResign p {
+    margin-bottom: 0px;
+}
+
+.memResign ol,
+.memResign ul {
+    margin-bottom: 0px;
+}
+
+.memResign>div>div:first-of-type {
+    padding-bottom: 10px;
+}
+
+.memResign>div>div:nth-of-type(2) {
+    padding-bottom: 10px;
+}
+
+.memResign h2 {
+    font-size: 1.5em;
+    color: #6021D0;
+    margin-bottom: 10px;
+}
+
+.memResign>div>div:nth-of-type(2) p {
+    color: #989898;
+    margin-bottom: 10px;
+}
+
+.memResign>div>div:nth-of-type(2) article {
+    background-color: #EEE8F2;
+    padding: 20px 10px;
+    border-radius: 4px;
+}
+
+.memResign>div>div:nth-of-type(3) article {
+    background-color: #F3F3F3;
+    padding: 20px 10px;
+    border-radius: 4px;
+}
+
+.memResign>div>div:nth-of-type(3)>div {
+    margin-top: 10px;
+}
+
+.memResign>div>div:last-of-type {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.memResign>div>div:last-of-type button {
+    background-color: transparent;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+}
+
+#goToHome {
+    border: 1px solid #5B18FD;
+    margin-right: 20px;
+    transition: all 0.4s;
+}
+
+#goToHome:hover {
+    transform: scale(1.1);
+}
+
+#memExit {
+    border: 1px solid #5B18FD;
+    background-color: #5B18FD;
+    color: white;
+    transition: all 0.4s;
+}
+
+#memExit:hover {
+    transform: scale(1.1);
+}
+
+.memResign>div>div:nth-of-type(3) {
+    padding-bottom: 10px;
+}

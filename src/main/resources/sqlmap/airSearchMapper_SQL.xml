@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.AirSearchMapper">
+
+  <!-- 가는편/돌아오는편에 따라 동적조건 적용 -->
+  <sql id="normalSearch">
+    <if test="flightType == 'departure'">
+      flight_depairport LIKE #{flightDepairport} || '%' 
+      AND flight_arrairport LIKE #{flightArrairport} || '%' 
+      AND flight_deptime LIKE #{flightDeptime} || '%'
+	    <if test="seatClass == 'economy'">
+	      AND a.airplane_remaineconomy >= #{totalCnt}
+	    </if>
+	    <if test="seatClass == 'business'">
+	      AND a.airplane_remainbusiness >= #{totalCnt}
+	    </if>
+	    <if test="seatClass == 'firstClass'">
+	      AND a.airplane_remainfirst >= #{totalCnt}
+	    </if>
+    </if>
+    
+    <if test="flightType == 'arrival'">
+      flight_depairport LIKE #{flightArrairport} || '%' 
+      AND flight_arrairport LIKE #{flightDepairport} || '%' 
+      AND flight_deptime LIKE #{flightArrtime} || '%'
+	    <if test="seatClass == 'economy'">
+	      AND a.airplane_remaineconomy >= #{totalCnt}
+	    </if>
+	    <if test="seatClass == 'business'">
+	      AND a.airplane_remainbusiness >= #{totalCnt}
+	    </if>
+	    <if test="seatClass == 'firstClass'">
+	      AND a.airplane_remainfirst >= #{totalCnt}
+	    </if>
+    </if>
+  </sql>
+  
+  <!-- 왕복항공편 검색 -->
+  <select id="selectAllRoundTripFlight" parameterType="flightVO" resultType="searchVO">
+    SELECT f.flight_code,
+           f.airline_code,
+           airline_name,
+           flight_depairport,
+           flight_depportcode,
+           flight_deptime,
+           flight_arrairport,
+           flight_arrportcode,
+           flight_arrtime,
+           flight_duration,
+           flight_economyprice,
+           flight_businessprice,
+           flight_firstclassprice
+    FROM flight f INNER JOIN airplane a ON(f.flight_code = a.flight_code)
+    WHERE <include refid="normalSearch"/>
+  </select>
+  
+
+
+
+</mapper>

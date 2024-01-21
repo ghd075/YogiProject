@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.MyPageMapper">
+
+	<update id="myinfoUpd" parameterType="mypageMemberVO">
+		UPDATE members
+		SET
+		    mem_pw = #{memPw},
+		    mem_name = #{memName},
+		    mem_gender = #{memGender},
+		    mem_email = #{memEmail},
+		    mem_phone = #{memPhone},
+		    mem_postcode = #{memPostcode},
+		    mem_address1 = #{memAddress1},
+		    mem_address2 = #{memAddress2},
+		    mem_agedate = #{memAgedate}
+		    <if test="memProfileimg != null and !memProfileimg.equals('')">
+            , mem_profileimg = #{memProfileimg}
+        	</if>  
+		WHERE
+		    mem_id = #{memId}
+	</update>
+	
+	<select id="updCheck" parameterType="mypageMemberVO" resultType="mypageMemberVO">
+		SELECT
+		    mem_no,
+		    mem_id,
+		    mem_pw,
+		    mem_name,
+		    mem_gender,
+		    mem_email,
+		    mem_phone,
+		    mem_postcode,
+		    mem_address1,
+		    mem_address2,
+		    mem_profileimg,
+		    grade_code,
+		    enabled,
+		    mem_category,
+		    mem_regdate,
+		    mem_agedate
+		FROM
+		    members
+		WHERE 1=1 
+		  AND mem_id = #{memId}
+		  AND mem_pw = #{memPw}
+	</select>
+	
+	<update id="memDelete" parameterType="string">
+		UPDATE members
+		SET
+		    enabled = 0
+		WHERE
+		    mem_id = #{memId}
+	</update>
+
+</mapper>

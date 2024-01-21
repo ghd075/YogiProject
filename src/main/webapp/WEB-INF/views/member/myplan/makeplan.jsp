@@ -2,6 +2,19 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     
+
+<style>
+    
+.dot {overflow:hidden;float:left;width:12px;height:12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/mini_circle.png');}    
+.dotOverlay {position:relative;bottom:10px;border-radius:6px;border: 1px solid #ccc;border-bottom:2px solid #ddd;float:left;font-size:12px;padding:5px;background:#fff;}
+.dotOverlay:nth-of-type(n) {border:0; box-shadow:0px 1px 2px #888;}    
+.number {font-weight:bold;color:#ee6152;}
+.dotOverlay:after {content:'';position:absolute;margin-left:-6px;left:50%;bottom:-8px;width:11px;height:8px;background:url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white_small.png')}
+.distanceInfo {position:relative;top:10px;left:100px;list-style:none;margin:0;}
+.distanceInfo .label {display:inline-block;width:50px;}
+.distanceInfo:after {content:none;}
+</style>
+
 <!-- 마이플랜 css -->
 <link href="${contextPath }/resources/css/userPlan.css" rel="stylesheet" />    
 <!-- nice-select css -->
@@ -27,9 +40,17 @@
 			<input type="text" id="days" value="1" class="wave">
 			<button id="increase" class="btn btn-outline-info">+</button>
 			<button id="btn" class="btn btn-primary btn-sm">일정 생성</button>
+			<button id="testbtn" class="btn btn-primary btn-sm">테스트</button>
 		</div>
 		<div class="form-group mt-10">
-           <button id="plannerSaveBtn" type="button" class="btn btn-outline-warning">저장</button>
+			<form method="post" name="planSaveForm" action="">
+				<input type="hidden" name="plNo" value="${plNo}" id="plNo" />
+				<input type="hidden" name="plTitle" value="" />
+				<input type="hidden" name="plMsize" value="" />
+				<input type="hidden" name="plTheme" value="" />
+				<input type="hidden" name="memId" value="${sessionInfo.memId }" />
+	           <button id="plannerSaveBtn" type="button" onclick="savePlanner();" class="btn btn-outline-warning">저장</button>
+			</form>
            <button id="plannerResetBtn" type="button" class="btn btn-outline-danger">초기화</button>
            <button id="plannerListGoBtn" type="button" class="btn btn-outline-success">목록</button>
 	 	</div>
@@ -43,8 +64,8 @@
 				<option value="3인">3인</option>
 				<option value="4인">4인</option>
 				<option value="5인 이상">5인 이상</option>
-			</select> <select id="test2" name="test1"
-				class="nice-select top-select">
+			</select> 
+			<select id="test2" name="test2" class="nice-select top-select">
 				<option value="" selected="selected">테마</option>
 				<option value="혼자">혼자</option>
 				<option value="동행">동행</option>
@@ -86,15 +107,15 @@
 		<div class="plan-plansboxtitle" id="plan-plansboxtitle"></div>
 		<div class="plan-plansbox">
 			<!-- 선택된 day 리스트 -->
-			<div class="category-listing">
+			<div class="category-listing" style="overflow-y: scroll;">
 				<div class="single-listing">
-					<div class="select-job-items1">
-						<div class="card" id="card2"></div>
+					<div class="select-job-items2">
+						<div class="card" id="card3" style="min-height: 460px;"></div>
 					</div>
 				</div>
-				<div class="single-listing" style="margin-top: 20px; text-align: center;">
-					<a onclick="dayDelAll()" class="btn btn-outline-danger" style="font-size: small;">전체 삭제</a>
-				</div>
+			</div>
+			<div class="single-listing" style="text-align: center;">
+				<a onclick="dayDelAll()" class="btn btn-outline-danger" style="font-size: small;">전체 삭제</a>
 			</div>
 		</div>
     </article>
@@ -128,9 +149,10 @@
                        <img src="${contextPath }/resources/images/plan/like.png" title="추천!">
                    </button>
                </div>
-               <div id="result"></div>
                <div class="select-job-items2">
-                   <div class="row" id="data-panel"></div>
+	               <div id="result"></div>
+               	   <div class="sidebar-menu" id="data-panel"></div>
+                   <!-- <div class="row" id="data-panel"></div> -->
                </div>
            </div>
        </div>
@@ -148,7 +170,7 @@
 <script src="${contextPath }/resources/js/userPlan.js"></script>
 
 <!-- 카카오 지도 JS  -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b32a29fe75c5dec3cc66391aed3fe468&libraries=services"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5d692983b8638035f4f288e59aea36fe&libraries=services"></script>
 
 <script>
 	// 마커를 담을 배열생성
@@ -160,6 +182,14 @@
 	// 지도의 확대 레벨
 	};
 
+	// scs
+	let markers2 = [];
+	let getTourBounds = new kakao.maps.LatLngBounds();
+	const polylines = [];
+	let tourArr = [];
+	let circleOverlays = [];
+
+
 	// 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 	let map = new kakao.maps.Map(mapContainer, mapOption);
 </script>
@@ -167,15 +197,41 @@
 <script type="text/javascript">
 	$(function () {
 		draw.areaList();
+		
+		setTimeout(() => {
+			var areaCodeOpt = $("#areaCode").find(".item");
+			for(var i = 0; i < areaCodeOpt.length; i++){
+				if(areaCodeOpt[i].value == "${planList.areaCode}"){
+					areaCodeOpt[i].selected = true;
+				}
+			}
+			$('#areaCode').change();  // Rendering
+			/* if("${planList.sigunguCode}") {
+				$("#sigunguCode").html("<option value='${planList.sigunguCode}'>${planList.sigunguName}</option>");
+			} else {
+				$('#sigunguCode').append("<option value=''>-- 전체 --</option>");
+			} */
+
+
+			setTimeout(()=>{
+			//alert("쳌킁${planList.sigunguCode}체킁");
+
+			if("${planList.sigunguCode}") {	
+					console.log("메롱",$("#sigunguCode")[0]);
+				//				$("#sigunguCode").val("${planList.sigunguCode}").prop("selected", true);
+				$("#sigunguCode").val("${planList.sigunguCode}");
+				var sigunguCodeOpt = $("#sigunguCode").find(".item2"); // 수정된 부분
+				console.log("sigunguCodeOpt 값 들 : ", sigunguCodeOpt);
+				console.log("sigunguCode 값 들 : ", $("#sigunguCode").val("${planList.sigunguCode}"));
+				console.log("sigunguCodeOpt 길이 : " + sigunguCodeOpt.length);
+				$('#sigunguCode').change();  // 강제로 요따구 이벤트를 발생시키는 것은 아주 못된 습관! 
+		}
+
+// $('#sigunguCode').change();
+
+			},300);
+		}, 300);
 	});
-	// 지도의 중심지점으로 이동
-	function moveMapCenter(latitude, longitude) {
-	 	// 이동할 위도 경도 위치를 생성합니다 
-	 	let moveLatLon = new kakao.maps.LatLng(latitude, longitude);
-	    
-	    // 지도 중심을 이동 시킵니다
-	 	map.setCenter(moveLatLon);
-	}
 
 	// 지역 좌표 이동
 	$('#areaCode').change(function() {
@@ -191,10 +247,6 @@
 		var latitude = selectedOption.data('latitude');
 		var longitude = selectedOption.data('longitude');
 
-		// 위도와 경도 값을 사용하여 작업 수행
-		//console.log('선택된 위도:', latitude);
-		//console.log('선택된 경도:', longitude);
-		
 		// 만약 위도와 경도 값이 없으면 서울의 위도와 경도를 사용
 		if (!latitude || !longitude) {
 			latitude = 37.56682; // 서울의 위도
@@ -208,8 +260,6 @@
 				areaCode: areaCodeValue
 			};
 	
-			console.log("선택된 지역코드 : ", data);
-			
 			draw.sigunguList(data);
 		}
 
@@ -225,12 +275,7 @@
 		var latitude = selectedOption.data('latitude');
 		var longitude = selectedOption.data('longitude');
 
-		// 위도와 경도 값을 사용하여 작업 수행
-		// console.log('선택된 위도:', latitude);
-		// console.log('선택된 경도:', longitude);
-
 		var areaCode = $('#areaCode').find(':selected');
-		// console.log('선택된 지역코드 : ', areaCode);
 		
 		var areaLatitude = areaCode.data('latitude');
 		var areaLongitude = areaCode.data('longitude');
@@ -239,12 +284,37 @@
 		if (!latitude || !longitude) {
 			latitude = areaCode.data('latitude'); // 해당 지역 위도
 			longitude = areaCode.data('longitude'); // 해당 지역 경도
-			
-			console.log('좌표가 없는 경우 => 위도:', latitude);
-			console.log('좌표가 없는 경우 => 경도:', longitude);
 		}
 
 		moveMapCenter(latitude, longitude);
 		
 	});
+	
+	// 플래너 작성 각각의 이미지 종횡비 변경 함수
+	// $.eachPlanImgResizeFn();
+	
+	// 플랜 저장
+	function savePlanner(){
+	  var sp = document.getElementById('card3').innerText;
+	  var p_title = $("#p_title").val();
+	  console.log("sp : " + sp);
+	  console.log("제목 : " + p_title);
+	  console.log("시작일 : " + sdate);
+	  console.log("종료일 : " + edate);
+	  if(p_title == null || p_title==""){
+	    alert("여행 플래너의 제목을 입력해주세요.");
+	    $("#p_title").focus();
+	    return false;
+	  } else if( sp==null || sp == "장소를 추가해주세요" || sp==""){
+	  	alert("여행 플래너에 장소를 추가해주세요.");
+	  	return false;
+	  } else {
+	  	var plMsize = $("#test1 option:selected").val();
+	  	console.log("plMsize : " + plMsize);
+		var plTheme = $("#test2 option:selected").val();
+	  	console.log("plTheme : " + plTheme);
+	  	console.log("document.planSaveForm : ", document.planSaveForm);
+	  }
+	}
+	
 </script>

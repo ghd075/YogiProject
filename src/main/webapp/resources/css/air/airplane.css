@@ -1,0 +1,390 @@
+/* 항공 예약 스타일 */
+.slick-arrow {
+    display: none!important;
+}
+
+.airplaneSlideContainer {
+    position: relative;
+}
+
+.airplaneSlideContainer>article>div {
+    position: relative;
+    height: 600px;
+}
+
+.airplaneSlideContainer>article>div>img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: inherit;
+}
+
+.airplaneReserveContents {
+    position: relative;
+}
+
+.airplaneSlideTxt {
+    background-color: rgba(0,0,0,0.6);
+    position: absolute;
+    width: 400px;
+    height: 200px;
+    z-index: 1;
+    top: 90px;
+    padding: 20px;
+    border-radius: 4px;
+    color: white;
+}
+
+.airplaneSlideTxt h2 {
+    font-weight: 700;
+}
+
+.airplaneSlideTxt p {
+    font-size: 1.1rem;
+}
+
+.airplaneReserveCont {
+    background-color: white;
+    position: absolute;
+    width: 100%;
+    height: 200px;
+    z-index: 1;
+    top: 300px;
+    border-radius: 4px;
+    padding: 15px;
+}
+
+.airTabbtnGroup {
+    overflow: auto;
+}
+
+.airTabbtnGroup .tabbtn {
+    float: left;
+    padding: 8px 16px;
+    background-color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.airTabbtnGroup .tactive {
+    background-color: violet;
+    color: white;
+}
+
+.airTabcontBox {
+    border-radius: 4px;
+}
+
+.tabcont {
+    height: 100%;
+    padding: 20px 0px;
+    display: none;
+}
+
+.tabcont:first-of-type {
+    display: block;
+}
+
+#roundTripForm>div:first-of-type {
+    overflow: auto;
+    position: relative;
+}
+
+#roundTripForm>div:first-of-type>div {
+    width: 50px;
+    float: left;
+    text-align: center;
+    height: 38px;
+    line-height: 38px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+#roundTripForm>div:first-of-type input {
+    float: left;
+    width: calc(100% / 2 - 25px);
+    padding-left: 30px;
+}
+
+#roundTripForm>div:first-of-type>i {
+    display: block;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+#roundTripForm>div:first-of-type>i:last-of-type {
+    left: 620px;
+}
+
+#roundTripForm>div:last-of-type>div:first-of-type,
+#roundTripForm>div:last-of-type>div:last-of-type {
+    float: left;
+    width: calc(100% / 2 - 25px);
+}
+
+#roundTripForm>div:last-of-type>div:first-of-type input {
+    width: calc(100% / 2 - 5px);
+    float: left;
+    margin-right: 10px;
+}
+
+#roundTripForm>div:last-of-type>div:first-of-type input:last-of-type {
+    margin-right: 0px;
+}
+
+#roundTripForm>div:last-of-type>div:nth-of-type(2) {
+    overflow: auto;
+}
+
+#roundTripForm>div:last-of-type>div:nth-of-type(2) {
+    width: 50px;
+    float: left;
+}
+
+#roundTripForm>div:last-of-type>div:last-of-type input:not([type=radio]) {
+    width: calc(70% - 10px);
+    margin-right: 10px;
+    float: left;
+}
+
+#roundTripForm>div:last-of-type>div:last-of-type>button {
+    width: 30%;
+    float: left;
+}
+
+#oneWayForm>div:first-of-type {
+    overflow: auto;
+    position: relative;
+}
+
+#oneWayForm>div:first-of-type>div {
+    width: 50px;
+    float: left;
+    text-align: center;
+    height: 38px;
+    line-height: 38px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+#oneWayForm>div:first-of-type input {
+    float: left;
+    width: calc(100% / 2 - 25px);
+    padding-left: 30px;
+}
+
+#oneWayForm>div:first-of-type>i {
+    display: block;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+#oneWayForm>div:first-of-type>i:last-of-type {
+    left: 620px;
+}
+
+#oneWayForm>div:last-of-type>div:first-of-type,
+#oneWayForm>div:last-of-type>div:last-of-type {
+    float: left;
+    width: calc(100% / 2 - 25px);
+}
+
+#oneWayForm>div:last-of-type>div:first-of-type input {
+    width: 100%;
+    float: left;
+}
+
+#oneWayForm>div:last-of-type>div:nth-of-type(2) {
+    overflow: auto;
+}
+
+#oneWayForm>div:last-of-type>div:nth-of-type(2) {
+    width: 50px;
+    float: left;
+}
+
+#oneWayForm>div:last-of-type>div:last-of-type input:not([type=radio]) {
+    width: calc(70% - 10px);
+    margin-right: 10px;
+    float: left;
+}
+
+#oneWayForm>div:last-of-type>div:last-of-type>button {
+    width: 30%;
+    float: left;
+}
+
+.autoSetTxt {
+    cursor: pointer;
+}
+
+.autoSetFn {
+    position: relative;
+}
+
+.autoSetOpt {
+    position: absolute;
+    background-color: white;
+    box-shadow: 2px 5px 10px #333;
+    border-radius: 4px;
+    padding: 20px;
+    width: 68%;
+    top: 40px;
+    display: none;
+}
+
+.autoSetOpt h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.autoSetOpt h4 {
+    font-size: 1.2rem;
+    margin: 10px 0px;
+}
+
+.autoSetOpt>div:first-of-type {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.autoSetOpt>div:first-of-type>div {
+    overflow: auto;
+    
+}
+
+.autoSetOpt>div:first-of-type>div h4,
+.autoSetOpt>div:first-of-type>div div {
+    display: inline-block;
+    float: left;
+}
+
+.autoSetOpt>div:first-of-type>div h4 {
+    width: calc(100% - 100px);
+}
+
+.autoSetOpt>div:first-of-type>div>div {
+    width: 100px;
+    text-align: center;
+    margin: 10px 0px;
+}
+
+.autoSetOpt>div:first-of-type>div>div span {
+    margin-right: 5px;
+}
+
+.autoSetOpt>div:first-of-type>div>div span:first-of-type,
+.autoSetOpt>div:first-of-type>div>div span:last-of-type {
+    background-color: #eee;
+    display: inline-block;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    transition: all 0.4s;
+    cursor: pointer;
+}
+
+.autoSetOpt>div:first-of-type>div>div span:first-of-type:hover,
+.autoSetOpt>div:first-of-type>div>div span:last-of-type:hover {
+    background-color: #333;
+    color: white;
+}
+
+.autoSetOpt>div:first-of-type>div>div span:last-of-type {
+    margin-right: 0px;
+}
+
+.autoSetOpt>div:nth-of-type(2) {
+    padding: 20px 0px;
+    border-bottom: 1px solid #ddd;
+}
+
+.autoSetOpt>div:nth-of-type(2) label {
+    width: 100%;
+    padding: 5px 0px;
+}
+
+.autoSetOpt>div:last-of-type {
+    padding-top: 20px;
+    text-align: right;
+}
+
+.airplaneInfoContainer {
+    position: relative;
+    padding: 40px 0px;
+}
+
+.airplaneInfoContainer:last-of-type {
+    padding-top: 0px;
+}
+
+.airplaneInfoContainer h2 {
+    margin-bottom: 20px;
+}
+
+.airplaneInfoContainer h2 i {
+    margin-left: 10px;
+}
+
+.airInfoContents {
+    overflow: auto;
+}
+
+.airInfoCont {
+    float: left;
+    width: calc(100% / 4 - 8px);
+    margin-right: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.4s;
+}
+
+.airInfoCont:hover {
+    background-color: #eee;
+}
+
+.airInfoCont:last-of-type {
+    margin-right: 0px;
+}
+
+.airImgBox {
+    height: 210px;
+    overflow: hidden;
+    position: relative;
+}
+
+.airImgBox img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.airInfoCont div:nth-of-type(2) {
+    font-size: 0.85rem;
+    padding: 10px 0px;
+    color: #888;
+}
+
+.airInfoCont div:nth-of-type(3) {
+    font-size: 1.2rem;
+    padding-bottom: 10px;
+}
+
+.airInfoCont div:nth-of-type(4) {
+    font-size: 0.85rem;
+    padding-bottom: 10px;
+    color: #666;
+}
+
+.airInfoCont div:last-of-type {
+    font-size: 1.2rem;
+    font-weight: 900;
+}

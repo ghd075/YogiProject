@@ -41,4 +41,271 @@
 	        #{title}, #{zipcode}
 		)
 	</insert>
+	
+	<!-- 카테고리별 관광지 정보 조회 -->
+	<select id="searchResult" resultType="touritemsVO" parameterType="searchCodeVO" >
+		select content_id
+		,   area_code
+		,   sigungu_code
+		,   tour_cate
+		,   contenttype_id
+		,   first_image
+		,   longitude
+		,   latitude
+		,   address
+		,   tel
+		,   title
+		,   zipcode
+		from touritems
+		where 1 = 1 
+		<if test="areaCode != null and !areaCode.equals('')">and area_code = #{areaCode} </if>		
+		<if test="sigunguCode != null and !sigunguCode.equals('')">and sigungu_code = #{sigunguCode} </if>
+		<choose>
+			<when test='searchOption == "A01"'>
+				and tour_cate in('A01','A02','A03') and (title like '%'||#{keyword}||'%' or address like '%'||#{keyword}||'%')
+			</when>
+			<when test='searchOption == "A01" and (keyword == null or keyword.length() == 0)'>
+				and tour_cate in('A01','A02','A03')
+			</when>
+			<when test='searchOption == "A04"'>
+				and tour_cate ='A04' and (title like '%'||#{keyword}||'%' or address like '%'||#{keyword}||'%')
+			</when>
+			<when test='searchOption == "A04" and (keyword == null or keyword.length() == 0)'>
+				and tour_cate ='A04'
+			</when>
+			<when test='searchOption == "A05"'>
+				and tour_cate ='A05' and (title like '%'||#{keyword}||'%' or address like '%'||#{keyword}||'%')			
+			</when>
+			<when test='searchOption == "A05" and (keyword == null or keyword.length() == 0)'>
+				and tour_cate ='A05'
+			</when>
+			<when test='searchOption == "B02"'>
+				and tour_cate ='B02' and (title like '%'||#{keyword}||'%' or address like '%'||#{keyword}||'%')
+			</when>
+			<when test='searchOption == "B02" and (keyword == null or keyword.length() == 0)'>
+				and tour_cate ='B02'
+			</when>
+			<when test='searchOption == "C01"'>
+				and tour_cate ='C01' and (title like '%'||#{keyword}||'%' or address like '%'||#{keyword}||'%')
+			</when>
+			<when test='searchOption == "C01" and (keyword == null or keyword.length() == 0)'>
+				and tour_cate ='C01'
+			</when>
+			<otherwise>
+				and (title like '%'||#{keyword}||'%' or address like '%'||#{keyword}||'%')
+			</otherwise>
+		</choose>
+		order by rownum 
+	</select>
+
+	<!-- 카테고리별 관광지 정보 조회(갯수) -->
+	<select id="contentCnt" resultType="int" parameterType="searchCodeVO">
+		select count(*) from touritems
+		where 1 = 1 
+		and (address like '%'||#{keyword}||'%' OR title like '%'||#{keyword}||'%')
+		<if test="areaCode != null and !areaCode.equals('')">and area_code = #{areaCode} </if>		
+		<if test="sigunguCode != null and !sigunguCode.equals('')">and sigungu_code = #{sigunguCode} </if>		 
+		<if test="searchOption == 'A01'">and tour_cate in('A01','A02','A03') </if>
+		<if test="searchOption == 'A04'">and tour_cate = 'A04' </if>	
+		<if test="searchOption == 'A05'">and tour_cate = 'A05' </if>	
+		<if test="searchOption == 'B02'">and tour_cate = 'B02' </if>	
+		<if test="searchOption == 'C01'">and tour_cate = 'C01' </if>
+	</select>
+	
+	<!-- 새로운 플래너 생성 -->
+	<insert id="newPlanner" parameterType="plannerVO">
+		<selectKey keyProperty="plNo" order="BEFORE" resultType="int">
+			select seq_planer.nextval from dual
+		</selectKey>
+		Insert into PLANER(
+			PL_NO
+			, MEM_ID
+			, PL_RDATE
+		) values (
+		    #{plNo}
+		    , #{memId}
+		    , sysdate			
+		)
+	</insert>
+	
+	<!-- 일자별 세부플랜 조회 -->
+	<select id="selectDayById" resultType="touritemsVO" parameterType="detatilPlannerVO">
+		SELECT SP_DAY, SP_ORDER, LATITUDE, LONGITUDE, CONTENT_ID, FIRST_IMAGE, TITLE, ADDRESS, SP_NO
+		FROM S_PLANER
+		NATURAL JOIN TOURITEMS
+		WHERE PL_NO = #{plNo} AND SP_DAY= #{spDay} 
+		ORDER BY SP_NO	
+	</select>
+	
+	<!-- 장소 선택시 세부플래너에 추가 -->
+	<insert id="insertDetailPlan" parameterType="detatilPlannerVO">
+	       INSERT INTO S_PLANER
+		    (
+		        SP_NO,
+		        SP_DAY,
+		        SP_SDAY,
+		        SP_EDAY,
+		        CONTENT_ID,
+		        PL_NO,
+		        SP_ORDER,
+		        SP_DISTANCE
+		    )
+		    VALUES
+		    (
+		        SEQ_S_PLANER.nextval,
+		        #{spDay},
+		        #{spSday},
+		        #{spEday},
+		        #{contentId},
+		        #{plNo},
+		        #{spOrder},
+		        #{spDistance}
+		    )
+	</insert>
+	
+	<!-- 장소 선택시 세부플래너 삭제 -->
+	<delete id="deleteDetailPlase" parameterType="detatilPlannerVO">
+		DELETE FROM S_PLANER WHERE SP_NO = #{spNo}
+	</delete>
+	
+	<!-- 전체 삭제시 해당일자 세부플래너 전체 삭제 -->
+	<delete id="detailDeleteAll" parameterType="detatilPlannerVO">
+		DELETE FROM S_PLANER WHERE PL_NO = #{plNo} AND SP_DAY = #{spDay}
+	</delete>
+	
+	<!-- 지역 조회 -->
+	<select id="selectAreaType" resultType="plannerListVO">
+	    SELECT area_code
+	    , area_name
+	    , latitude
+	    , longitude
+	    FROM area_tb
+	    WHERE 1 = 1
+	    AND area_name LIKE '%'||#{areaName}||'%'
+	</select>
+	
+	<!-- 시구군 조회 -->
+	<select id="selectSigogunType" resultType="plannerListVO">
+	    SELECT area.area_code, area.area_name, sigun.sigungu_code, sigun.sigungu_name, sigun.latitude, sigun.longitude
+	    FROM area_tb area, sigungu_tb sigun
+	    WHERE 1 = 1 
+	    AND sigun.area_code = area.area_code
+	    AND (sigun.sigungu_name LIKE '%'||#{areaName}||'%' OR area.area_name LIKE '%'||#{areaName}||'%')
+	</select>
+	
+	<!-- 월간 BEST PLAN -->
+	<select id="getSortedByLikes" resultType="plannerVO">
+		SELECT 
+		    plan.pl_no
+		    , plan.mem_id
+		    , plan.pl_rdate
+		    , NVL(plan.pl_title, '제목 없음') as pl_title
+		    , plan.pl_msize
+		    , plan.pl_private
+		    , plan.pl_theme
+		     ,plan.pl_thumburl,
+		    COUNT(plike.pl_like_no) AS like_count
+		FROM planer plan
+		LEFT JOIN planer_like plike ON plan.pl_no = plike.pl_no
+		WHERE
+		<![CDATA[ 
+			MONTHS_BETWEEN(SYSDATE, plike.pl_like_date) <= 1 OR plike.pl_like_date IS NULL
+		]]>
+		GROUP BY plan.pl_no, plan.mem_id, plan.pl_rdate, plan.pl_title, plan.pl_msize, plan.pl_private, plan.pl_theme, plan.pl_thumburl
+		ORDER BY like_count DESC
+	</select>
+	
+	<!-- 월간 BEST PLAN - 구 -->
+<!-- 	<select id="planList" resultType="planerVO">
+		SELECT 
+		    plan.pl_no
+		    , plan.mem_id
+		    , plan.pl_rdate
+		    , NVL(plan.pl_title, '제목 없음') as pl_title
+		    , plan.pl_msize
+		    , plan.pl_private
+		    , plan.pl_theme
+		     ,plan.pl_thumburl,
+		    COUNT(plike.pl_like_no) AS like_count
+		FROM planer plan
+		LEFT JOIN planer_like plike ON plan.pl_no = plike.pl_no
+		WHERE
+		<![CDATA[ 
+			MONTHS_BETWEEN(SYSDATE, plike.pl_like_date) <= 1 OR plike.pl_like_date IS NULL
+		]]>
+		GROUP BY plan.pl_no, plan.mem_id, plan.pl_rdate, plan.pl_title, plan.pl_msize, plan.pl_private, plan.pl_theme, plan.pl_thumburl
+		ORDER BY like_count DESC
+	</select> -->
+	
+	
+	<!-- 지역별 코스 -->		
+	<select id="plansForArea" parameterType="int" resultType="plannerVO">
+        SELECT 
+			P.PL_NO
+			, P.MEM_ID
+			, P.PL_RDATE
+			, NVL(p.pl_title, '제목 없음') as pl_title
+			, P.PL_MSIZE
+			, P.PL_PRIVATE
+			, P.PL_THEME
+			, P.PL_THUMBURL
+            , COUNT(DISTINCT PLI.mem_id) AS LIKE_COUNT
+		FROM PLANER P
+		JOIN S_PLANER SP ON P.PL_NO = SP.PL_NO
+		JOIN TOURITEMS T ON SP.CONTENT_ID = T.CONTENT_ID
+		JOIN AREA_TB A ON T.AREA_CODE = A.AREA_CODE
+        LEFT JOIN planer_like PLI ON P.pl_no = PLI.pl_no
+		WHERE P.PL_NO IN (
+		    SELECT SP.PL_NO
+		    FROM S_PLANER SP
+		    JOIN TOURITEMS T ON SP.CONTENT_ID = T.CONTENT_ID
+		    GROUP BY SP.PL_NO
+		    HAVING COUNT(DISTINCT T.AREA_CODE) = 1
+		) 
+	    <if test="areaCode > 0">
+		AND A.AREA_CODE = #{areaCode}
+    	</if>
+        GROUP BY P.PL_NO, P.MEM_ID, P.PL_RDATE, P.PL_TITLE, P.PL_MSIZE, P.PL_PRIVATE, P.PL_THEME, P.PL_THUMBURL
+	</select>
+	
+	<!-- 좋아요 관련 -->
+	<insert id="addLike" parameterType="HashMap">
+		INSERT INTO planer_like (
+			pl_like_no
+			, mem_id
+			, pl_like_date
+			, pl_no
+		) VALUES (
+			SEQ_PLANER_LIKE.NEXTVAL
+			, #{memId}
+			, sysdate
+			, #{plNo}
+		)
+	</insert>
+	
+	<delete id="delLike" parameterType="HashMap">
+		DELETE FROM planer_like
+		WHERE mem_id = #{memId}
+		AND pl_no = #{plNo}
+	</delete>
+	
+	<select id="alreadyActivatedLikeList" parameterType="String" resultType="plannerLikeVO">
+		SELECT
+		pl_like_no
+		, mem_id
+		, pl_like_date
+		, pl_no
+		FROM planer_like
+		WHERE mem_id = #{memId}
+	</select>
+	<!--  -->
+	
+	<!-- 하나의 장소만 조회하는 쿼리 -->
+	<select id="getTour" parameterType="String" resultType="touritemsVO">
+		SELECT
+		*
+		FROM touritems
+		WHERE content_id = #{contentId}
+	</select>
+	
 </mapper>

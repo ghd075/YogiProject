@@ -203,12 +203,16 @@
 }
 
 .journeyInfoContents article>div:last-of-type span {
+    display: block;
     font-weight: 300;
 }
 
 .journeyInfoContents article p,
-.journeyInfoContents article .airportText {
-    display: none;
+.journeyInfoContents article .airportText,
+.journeyInfoContents article .visaText,
+.journeyInfoContents article .voltageTxt,
+.journeyInfoContents article .infoTimediferTxt {
+    display: none!important;
 }
 
 /* 여행 정보 모달창 */

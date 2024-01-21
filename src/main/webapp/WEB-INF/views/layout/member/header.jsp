@@ -39,7 +39,7 @@
                 	</c:if>
                     <div class="gnbBtnGroup">
                     	<c:if test="${not empty sessionInfo }">
-	                        <a class="mypageIcon" href="javascript:void(0)">
+	                        <a class="mypageIcon" href="/mypage/myinfo.do">
 	                            <i class="fas fa-address-book"></i>
 	                        </a>
 	                        <a class="alarmIcon" href="javascript:void(0)">
@@ -65,9 +65,9 @@
                     <a href="javascript:void(0);">마이 플랜</a>
                     <ul class="sub">
                         <li><a href="/myplan/info.do">여행 정보</a></li>
-                        <li><a href="/myplan/recommend.do">일정 추천</a></li>
-                        <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/myplan/makeplan.do">플래너 작성</a></li>
-                        <li><a href="/myplan/makeplan.do">플래너 작성</a></li>
+                        <li><a href="/myplan/planMain.do">플래너</a></li>
+                        <%-- <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/myplan/makeplan.do">플래너</a></li> --%>
+                        <li><a href="/myplan/chatting.do">채팅 테스트</a></li>
                     </ul>
                 </li>
                 <li class="main">
@@ -82,8 +82,8 @@
                 <li class="main">
                     <a href="javascript:void(0);">예약 관리</a>
                     <ul class="sub">
-                        <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/reserve/airplane.do">항공 예약</a></li>
-                        <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/reserve/stays.do">숙박 예약</a></li>
+                      <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/reserve/air/search/form.do">항공 예약</a></li>
+                      <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/reserve/stays/search/form.do">숙박 예약</a></li>
                     </ul>
                 </li>
                 <li class="main">
@@ -129,7 +129,7 @@
 	                	</c:if>
                         <div class="gnbBtnGroup">
                         	<c:if test="${not empty sessionInfo }">
-		                        <a class="mypageIcon" href="javascript:void(0)">
+		                        <a class="mypageIcon" href="/mypage/myinfo.do">
 		                            <i class="fas fa-address-book"></i>
 		                        </a>
 		                        <a class="alarmIcon" href="javascript:void(0)">
@@ -173,8 +173,7 @@
                     <a href="javascript:void(0);">마이 플랜</a>
                     <ul class="msub">
                         <li><a href="/myplan/info.do">여행 정보</a></li>
-                        <li><a href="/myplan/recommend.do">일정 추천</a></li>
-                        <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/myplan/makeplan.do">플래너 작성</a></li>
+                        <li><a href="/myplan/planMain.do">플래너</a></li>
                     </ul>
                 </li>
                 <li class="mmain">
@@ -189,8 +188,8 @@
                 <li class="mmain">
                     <a href="javascript:void(0);">예약 관리</a>
                     <ul class="msub">
-                        <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/reserve/airplane.do">항공 예약</a></li>
-                        <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/reserve/stays.do">숙박 예약</a></li>
+                      <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/reserve/air/search/form.do">항공 예약</a></li>
+                      <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/reserve/stays/search/form.do">숙박 예약</a></li>
                     </ul>
                 </li>
                 <li class="mmain">

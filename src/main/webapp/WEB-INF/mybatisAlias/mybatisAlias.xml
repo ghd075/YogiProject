@@ -17,12 +17,26 @@
 		<typeAlias type="kr.or.ddit.users.board.vo.NoticeFileVO" alias="noticefileVO"/>
 		<typeAlias type="kr.or.ddit.vo.PaginationInfoVO" alias="pagingVO"/>
 		
+		<typeAlias type="kr.or.ddit.users.mypage.vo.MemberVO" alias="mypageMemberVO"/>
+		<typeAlias type="kr.or.ddit.users.myplan.vo.JourneyinfoVO" alias="journeyinfoVO"/>
+		<typeAlias type="kr.or.ddit.indexsearch.vo.JourneyinfoVO" alias="indexsearchVO"/>
+		
+		<!--  항공  -->
+        <typeAlias type="kr.or.ddit.users.reserve.air.vo.FlightVO" alias="flightVO"/>
+        <typeAlias type="kr.or.ddit.users.reserve.air.vo.SearchVO" alias="searchVO"/>
+		
 		<!-- Plan 관련 VO -->
 		<typeAlias type="kr.or.ddit.users.myplan.vo.AreaVO" alias="areaVO"/>
 		<typeAlias type="kr.or.ddit.users.myplan.vo.SigunguVO" alias="sigunguVO"/>
-		<typeAlias type="kr.or.ddit.api.vo.TouritemsVO" alias="touritemsVO"/>
+		<typeAlias type="kr.or.ddit.users.myplan.vo.TouritemsVO" alias="touritemsVO"/>
+		<typeAlias type="kr.or.ddit.users.myplan.vo.SearchCodeVO" alias="searchCodeVO"/>
+		<typeAlias type="kr.or.ddit.users.myplan.vo.PlannerVO" alias="plannerVO"/>
+		<typeAlias type="kr.or.ddit.users.myplan.vo.DetatilPlannerVO" alias="detatilPlannerVO"/>
+		<typeAlias type="kr.or.ddit.users.myplan.vo.PlannerListVO" alias="plannerListVO"/>
+		<typeAlias type="kr.or.ddit.users.myplan.vo.PlannerLikeVO" alias="plannerLikeVO"/>
 		
 		<!-- 양이 많아지면 패키지로 선택 -->
+		
 		<!-- 
 			해당 경로에 VO가 대문자로 자동 등록 된다. 
 			<package name="kr.or.ddit.vo" />

@@ -25,6 +25,11 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!-- flatpickr css -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <!-- flatpickr JS -->
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
         
         <c:if test="${not empty message }">
 		    <script>
@@ -65,7 +70,7 @@
                             <label for="memId">
 								아이디
                                 <span class="idChkMsg">
-                                    <span class="badge bg-danger"> 아이디 사용불가</span>
+                                    <span class="badge bg-danger">아이디 사용불가</span>
                                 </span>
                             </label>
                             <input class="form-control" type="text" id="memId" name="memId" autocomplete="off" value="${member.memId }" />
@@ -162,6 +167,7 @@
                 var postcodeBtn = $(".postcodeBtn");
 
                 var imgFile = $("#imgFile");
+                var profileImg = $("#profileImg");
                 
                 var memPwChk = $("#memPwChk");
 
@@ -172,7 +178,7 @@
                 $.findMouseOutEvent(signCont);
 
                 // 이미지 미리보기 함수
-                $.imgPreviewFn(imgFile);
+                $.imgPreviewFn(imgFile, profileImg);
                 
                 // KISS - Keep it small and simple
                 // 아이디중복체크여부

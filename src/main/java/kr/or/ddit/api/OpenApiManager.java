@@ -11,7 +11,7 @@ public class OpenApiManager {
 
     // 지역 기반 조회 테스트(해당 지역 50건의 데이터 가져오기)
     public String fetchByAreaCode(int areaCode, int pageNo) {
-    	String areaUrl = makeAreaUrl(areaCode, 100, pageNo);
+    	String areaUrl = makeAreaUrl(areaCode, 3000, pageNo);
     	return areaUrl;
     }
 	

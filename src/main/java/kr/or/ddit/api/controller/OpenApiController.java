@@ -26,7 +26,7 @@ import kr.or.ddit.api.exception.OpenApiException;
 import kr.or.ddit.api.service.PlannerService;
 import kr.or.ddit.api.vo.AreaCode;
 import kr.or.ddit.api.vo.ContentCode;
-import kr.or.ddit.api.vo.TouritemsVO;
+import kr.or.ddit.users.myplan.vo.TouritemsVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -102,19 +102,27 @@ public class OpenApiController {
 		            sigunguCd = (String) item.get("sigungucode");			// 시군구코드
 		            tourCate = (String) item.get("cat1");					// 관광지 분류(자연, 인문, 레포츠, 쇼핑, 음식, 숙박, 교통, 추천)
 		            contentTypeId = (String) item.get("contenttypeid");		// 관광지 타입(관광지, 문화시설, 축제공연행사, 여행코스, 레포츠, 숙박, 쇼핑, 음식점)
-		            thumbnail = (String) item.get("firstimage2");			// 썸네일 이미지
+		            thumbnail = (String) item.get("firstimage");			// 썸네일 이미지
 		            title = (String) item.get("title");						// 관광지명
 		            phone = ((String) item.get("tel")).equals("") ? generateRandomNumber() : (String) item.get("tel");	// 전화번호
-		            zipcode = (String) item.get("zipcode") == null ? null : (String) item.get("zipcode");				// 우편번호
+		            zipcode = (String) item.get("zipcode");					// 우편번호
 		            latitude = (String) item.get("mapy");					// 위도
 		            longitude = (String) item.get("mapx");					// 경도
-	            	tourId = (String) item.get("contentid");						// 관광지 고유 번호
-	            	areaCd = (String) item.get("areacode");							// 지역코드
-		            cityName = AreaCode.getAreaName(Long.valueOf(areaCd));			// 지역명
+	            	tourId = (String) item.get("contentid");				// 관광지 고유 번호
+	            	areaCd = (String) item.get("areacode");					// 지역코드
+		            cityName = AreaCode.getAreaName(Long.valueOf(areaCd));	// 지역명
+		            
+		            if (contentTypeId.equals("15") || contentTypeId.equals("25")) {
+		                continue;
+		            }
 		            
 		            if(addr2.equals("")) {
 	            		address = addr1 + ' ' + (String) item.get("addr2");			// 주소
 	            	}
+		            
+		            if (zipcode.equals("")) {
+		                zipcode = generateRandomPostalCode();
+		            }
 		            
 		            String contenttypeName = ContentCode.getContentName(Long.valueOf(contentTypeId)); 
 
@@ -162,5 +170,13 @@ public class OpenApiController {
 	    int secondPart = 1000 + random.nextInt(9000);
 	    
 	    return "010-" + firstPart + "-" + secondPart;
+	}
+	
+	// 랜덤한 우편번호 생성
+	private static String generateRandomPostalCode() {
+	    // 랜덤하게 6자리 우편번호 생성
+	    Random random = new Random();
+	    int randomCode = 100000 + random.nextInt(900000);
+	    return String.valueOf(randomCode);
 	}
 }

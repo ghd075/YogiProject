@@ -50,106 +50,65 @@
         </div>
     </div>
     <div class="journeyInfoContents">
-        <article>
-            <div class="infoThumbnailBox">
-                <img src="${contextPath }/resources/images/Jeju.jpg" alt="여행 정보 썸네일 이미지" />
-            </div>
-            <div>
-                <h4>JEJU</h4>
-                <span class="infoTitle">대한민국 제주</span>
-                <p>
-					섬 전체가 하나의 거대한 관광자원인 제주도. 에메랄드빛 물빛이 인상적인 협재 해수욕장은 제주 대표 여행지며, 파도가 넘보는 주상절리와 바다 위 산책로인 용머리 해안은 제주에서만 볼 수 있는 천혜의 자연경관으로 손꼽힌다. 드라마 촬영지로 알려진 섭지코스는 꾸준한 사랑을 받고 있으며 한라봉과 흑돼지, 은갈치 등은 제주를 대표하는 음식이다.
-                </p>
-                <span class="airportText">
-                    <span>직항</span>
-                    <span>약 30분</span>
-                </span>
-            </div>
-        </article>
-        <article>
-            <div class="infoThumbnailBox">
-                <img src="${contextPath }/resources/images/Busan.jpg" alt="여행 정보 썸네일 이미지" />
-            </div>
-            <div>
-                <h4>BUSAN</h4>
-                <span class="infoTitle">대한민국 부산</span>
-                <p>
-					우리나라 제2의 수도 부산광역시. 부산 대표 관광지로 손꼽히는 해운대는 밤에는 마린시티의 야경이 더해져 더욱 화려한 해변이 된다. 감천문화마을은 사진 찍기에 좋으며, 매해 가을마다 개최되는 아시아 최대 규모의 영화제인 부산국제영화제와 함께 부산의 구석구석을 즐겨보는 것도 좋다. 전통시장 투어가 있을 만큼 먹거리가 가득한 부산의 맛기행은 필수!
-                </p>
-            </div>
-        </article>
-        <article>
-            <div class="infoThumbnailBox">
-                <img src="${contextPath }/resources/images/Seoul.jpg" alt="여행 정보 썸네일 이미지" />
-            </div>
-            <div>
-                <h4>SEOUL</h4>
-                <span class="infoTitle">대한민국 서울</span>
-                <p>
-					과거와 현재가 공존하며 하루가 다르게 변하는 서울을 여행하는 일은 매일이 새롭다. 도시 한복판에서 600년의 역사를 그대로 안고 있는 아름다운 고궁들과 더불어 대한민국의 트렌드를 이끌어나가는 예술과 문화의 크고 작은 동네들을 둘러볼 수 있는 서울은 도시 여행에 최적화된 장소다.
-                </p>
-            </div>
-        </article>
-        <article>
-            <div class="infoThumbnailBox">
-                <img src="${contextPath }/resources/images/Gyeongju.jpg" alt="여행 정보 썸네일 이미지" />
-            </div>
-            <div>
-                <h4>GYEONGJU</h4>
-                <span class="infoTitle">대한민국 경주</span>
-                <p>
-					지붕 없는 박물관 경주. 경주는 그만큼 발길이 닿는 어느 곳이든 문화 유적지를 만날 수 있는 곳이다. 밤이면 더 빛나는 안압지를 비롯해 허허벌판에 자리를 굳건히 지키고 있는 첨성대. 뛰어난 건축미를 자랑하는 불국사 석굴암까지 어느 하나 빼놓을 수 없다. 경주 여행의 기록을 남기고 싶다면 스탬프 투어를 이용해보는 것도 좋다. 16곳의 명소를 탐방할 때마다 찍히는 도장 모으는 재미가 쏠쏠하다. 모바일 앱으로도 스탬프 투어 참여가 가능하다.
-                </p>
-            </div>
-        </article>
-        <article>
-            <div class="infoThumbnailBox">
-                <img src="${contextPath }/resources/images/Jeonju.jpg" alt="여행 정보 썸네일 이미지" />
-            </div>
-            <div>
-                <h4>JEONJU</h4>
-                <span class="infoTitle">대한민국 전주</span>
-                <p>
-					한국의 멋이 살아있는 전주. 도심 한복판에 자리한 한옥마을에 들어서면 시대를 거슬러가는 기분이다. '경사스러운 터에 지어진 궁궐'이란 의미의 경기전에 들어서면 대나무가 서로 부대끼며 내는 소리에 귀 기울이게 된다. 전주 야경투어 명소의 대표인 전동성당과 한옥마을을 한눈에 내려다볼 수 있는 오목대 역시 빼놓을 수 없는 곳. 마을 전체가 미술관인 자만 벽화마을은 전주의 대표 포토 존이다.
-                </p>
-            </div>
-        </article>
-        <article>
-            <div class="infoThumbnailBox">
-                <img src="${contextPath }/resources/images/Pohang.jpg" alt="여행 정보 썸네일 이미지" />
-            </div>
-            <div>
-                <h4>POHANG</h4>
-                <span class="infoTitle">대한민국 포항</span>
-                <p>
-					경북 동남부에 위치해 한반도에서 가장 빨리 해가 뜨는 고장으로 알려진 경상북도 포항은 천혜의 해안선을 가진 해양경관의 보고이다. 특히 감포에서 구룡포까지 바닷가 도로에 펼쳐지는 풍광은 세계적인 미항인 나폴리나 시드니를 능가하는 아름답고 환상적 해양자원이다. 북부, 칠포해수욕장을 비롯한 여러 해수욕장이 있고 국립 등대박물관, 호미곶 등 해양관광자원은 포항의 대표적 관광자원이다.
-                </p>
-            </div>
-        </article>
-        <article>
-            <div class="infoThumbnailBox">
-                <img src="${contextPath }/resources/images/Incheon.jpg" alt="여행 정보 썸네일 이미지" />
-            </div>
-            <div>
-                <h4>INCHEON</h4>
-                <span class="infoTitle">대한민국 인천</span>
-                <p>
-					살짝 비릿한 바다향이 매력적인 인천광역시. 지리적 특징을 잘 이용하여 내륙과 해안 지역의 관광이 두루 발달한 곳이다. 대표적인 해양관광지로는 을왕리 해수욕장을 비롯해 문화의 거리가 갖춰진 월미도 등이 있으며, 한국 속 작은 중국이라 불리는 차이나타운도 인천 여행지로 손꼽힌다. 이 외에도 인천 각처에 오랜 역사 유물들이 산재해 있어 역사를 테마로 여행 코스를 잡아보는 것도 좋다.
-                </p>
-            </div>
-        </article>
-        <article>
-            <div class="infoThumbnailBox">
-                <img src="${contextPath }/resources/images/Daejeon.jpg" alt="여행 정보 썸네일 이미지" />
-            </div>
-            <div>
-                <h4>DAEJEON</h4>
-                <span class="infoTitle">대한민국 대전</span>
-                <p>
-					 다양한 테마 여행이 가능한 대전광역시. 맨발로 걸을 수 있는 계족산 황톳길은 온몸으로 자연을 느끼는 여행을 할 수 있으며, 대전 근현대 전시관과 남간정사 등 대전에 있는 역사 문화 공간을 코스로 잡아도 좋다. 아이들이 좋아하는 동물원이 있는 오월드와 가볍게 산책하기 좋은 유림공원도 있어 주말 가족 나들이 코스로도 손색이 없다.
-                </p>
-            </div>
-        </article>
+    	<!-- 반복 시작 구간 -->
+    	<c:choose>
+    		<c:when test="${not empty journeyList8 }">
+    			<c:forEach items="${journeyList8 }" var="journey">
+    				<article>
+			            <div class="infoThumbnailBox">
+			                <img src="${journey.infoPreviewimg }" alt="여행 정보 썸네일 이미지" />
+			            </div>
+			            <div>
+			                <h4 class="textDrop">${journey.infoEngname }</h4>
+			                <span class="infoTitle textDrop">${journey.infoName }</span>
+			                <p>
+								${journey.infoDescription }
+			                </p>
+			                <c:if test="${journey.infoFlightyn eq 'y' }">
+				                <span class="airportText">
+				                    <span>
+				                    	<c:if test="${journey.infoFlight eq 'str' }">
+				                    		직항
+				                    	</c:if>
+				                    	<c:if test="${journey.infoFlight eq 'round' }">
+				                    		왕복
+				                    	</c:if>
+				                    </span>
+				                    <span>${journey.infoFlighttime }</span>
+				                </span>
+			                </c:if>
+			                <c:if test="${journey.infoVisayn eq 'y' }">
+			                	<span class="visaText">
+				                    <span>
+				                    	<c:if test="${journey.infoVisaexp eq 'visa' }">
+				                    		비자
+				                    	</c:if>
+				                    	<c:if test="${journey.infoVisaexp eq 'none' }">
+				                    		무비자
+				                    	</c:if>
+				                    </span>
+				                    <span>${journey.infoVisatime }</span>
+				                </span>
+			                </c:if>
+			                <span class="voltageTxt">
+			                	<span>콘센트</span>
+			                	<span>${journey.infoVoltage }</span>
+			                </span>
+			                <span class="infoTimediferTxt">
+			                	<span>한국대비</span>
+			                	<span>${journey.infoTimedifer }</span>
+			                </span>
+			                <input type="hidden" class="infoNo" name="infoNo" value="${journey.infoNo }" />
+			            </div>
+			        </article>
+    			</c:forEach>
+    		</c:when>
+    		<c:otherwise>
+    			<article style="text-align: center; width: 50%; margin: 0px auto; float: none; cursor: auto; background-color: #333; color: white; padding: 20px; border-radius: 4px;">
+    				등록된 여행 정보가 없습니다.
+    			</article>
+    		</c:otherwise>
+    	</c:choose>
     </div>
 </section>
 
@@ -174,8 +133,8 @@
 							항공
                         </div>
                         <div>
-                            <span>직항</span>
-                            <span>약 30분</span>
+                            <span>없음</span>
+                            <span>-</span>
                         </div>
                     </div>
                     <div>
@@ -262,6 +221,8 @@
         $(".slick-dots").mainSlideDotsStyle();
         $.JourneyInfoModalFn();
         $.startHeaderEmpty();
+        $.ajaxIndexJourneyInfoSearchFn();
+        $.makeplanClickEvent();
         
         /* 종횡비 함수 */
         $.eachJourneyInfoImgResizeFn();

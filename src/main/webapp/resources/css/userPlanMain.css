@@ -1,0 +1,197 @@
+@import url('https://fonts.cdnfonts.com/css/spongition');
+
+
+.bestContainer {
+  position: relative;
+  padding: 50px 0px;
+}
+
+.bestPlanMainHeadStyle {
+    height: 310px;
+    position: relative;
+    overflow: hidden;
+}
+
+.comImgBox {
+    position: relative;
+    height: inherit;
+}
+
+.comImgBox img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.17);
+}
+
+.bestPlanMainHeadStyle>div:last-of-type {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+}
+
+.bestPlanMainHeadStyle>div:last-of-type h3 {
+    font-weight: 700;
+    font-size: 2.3rem;
+    margin-bottom: 15px;
+}
+
+.bestPlanMainHeadStyle>div:last-of-type span {
+    
+    color: white;
+    /* opacity: 0.6; */
+    /* border: 1px solid; */
+    background-color: #20356f;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 15px;
+    cursor: pointer;
+}
+.bestPlanMainHeadStyle>div:last-of-type span {
+    
+    color: white;
+    /* opacity: 0.6; */
+    /* border: 1px solid; */
+    background-color: #20356f;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.bestPlanMainHeadStyle>div:last-of-type span:hover {
+    background-color: #333;
+}
+
+.bestPlansContainer {
+	padding-top : 60px;
+}
+.bestPlansContainer h3 {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  padding: 60px 0px;
+  margin-top : 20px;
+  margin-bottom: 0px;
+}
+
+/* 탭버튼  */
+.tabbtn {
+    background-color: white;
+    float: left;
+    padding: 10px 15px;
+    border-radius: 4px 4px 0px 0px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.tabbtn:last-of-type {
+    margin-right: 0px;
+}
+
+.tactive {
+/*     background-color: #333; */
+    background-color: #20356f;
+    color: white;
+}
+
+.bestPlansTabbtnGroup {
+	margin : 0 auto;
+}
+
+.bestContents {
+  height: 840px;
+  margin: 40px 0px;
+  min-height: 1400px;
+}
+
+.bestContents article {
+  float: left;
+  width: calc(100% / 4 - 30px);
+  margin-right: 40px;
+  cursor: pointer;
+  transition: all 0.4s;
+}
+
+.bestContents article:hover {
+  transform: scale(1.03);
+}
+
+.bestContents article:nth-of-type(4),
+.bestContents article:last-of-type {
+  margin-right: 0px;
+}
+
+.bestContents .infoThumbnailBox {
+  position: relative;
+  overflow: hidden;
+  height: 320px;
+  border-radius: 10px;
+}
+
+.bestContents .infoThumbnailBox img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.bestContents .like{
+      width: 50px;
+      fill: #ddd;
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      pointer-events: auto;
+      fill:white;
+}
+
+.bestContents .like:hover{
+      fill: red;
+      transition:0.6s;
+}
+
+.bestContents .like.active{
+      fill: red;
+}
+
+.bestContents h4 {
+  margin-bottom: 5px;
+}
+
+.bestContents article>div:last-of-type {
+  padding: 20px 0px;
+}
+
+.bestContents article>div:last-of-type span {
+  font-weight: 300;
+}
+
+.bestContents article p,
+.bestContents article .airportText {
+  display: none;
+}
+
+.emptySpace {
+    padding-top: 150px;
+}
+
+.infoCont2:after {
+  content: '';
+  display: inline-block;
+  width: 1px;
+  height: 13px;
+  background: #bfbfbf;
+  margin: 2px 10px 0;
+}
+
+.bestPlanMainHeadStyle span {
+    transition:0.6s;
+}
+.bestPlanMainHeadStyle span > a {
+	
+	color : white;
+}

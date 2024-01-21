@@ -7,8 +7,8 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
 import kr.or.ddit.api.service.PlannerService;
-import kr.or.ddit.api.vo.TouritemsVO;
 import kr.or.ddit.mapper.PlannerMapper;
+import kr.or.ddit.users.myplan.vo.TouritemsVO;
 
 @Service
 public class PlannerServiceImpl implements PlannerService {

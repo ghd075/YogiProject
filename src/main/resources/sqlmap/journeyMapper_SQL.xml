@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.JourneyMapper">
+	
+	<insert id="inforReg" parameterType="journeyinfoVO">
+		<selectKey keyProperty="infoNo" order="BEFORE" resultType="int">
+			select seq_journeyinfo.nextval from dual
+		</selectKey>
+		INSERT INTO journeyinfo (
+		    info_no,
+		    info_name,
+		    info_engname,
+		    info_description,
+		    info_flightyn,
+		    info_flight,
+		    info_flighttime,
+		    info_visayn,
+		    info_visaexp,
+		    info_visatime,
+		    info_voltage,
+		    info_timedifer,
+		    info_previewimg,
+		    info_regdate
+		) VALUES (
+		    #{infoNo},
+		    #{infoName},
+		    #{infoEngname},
+		    #{infoDescription},
+		    #{infoFlightyn},
+		    #{infoFlight},
+		    #{infoFlighttime},
+		    #{infoVisayn},
+		    #{infoVisaexp},
+		    #{infoVisatime},
+		    #{infoVoltage},
+		    #{infoTimedifer},
+		    #{infoPreviewimg},
+		    sysdate
+		)
+	</insert>
+	
+	<select id="informationList" resultType="journeyinfoVO">
+		SELECT
+		    info_no,
+		    info_name,
+		    info_engname,
+		    info_description,
+		    info_flightyn,
+		    info_flight,
+		    info_flighttime,
+		    info_visayn,
+		    info_visaexp,
+		    info_visatime,
+		    info_voltage,
+		    info_timedifer,
+		    info_previewimg,
+		    info_regdate
+		FROM
+		    journeyinfo
+		ORDER BY info_no desc
+	</select>
+	
+	<select id="selectJourney" parameterType="int" resultType="journeyinfoVO">
+		SELECT
+		    info_no,
+		    info_name,
+		    info_engname,
+		    info_description,
+		    info_flightyn,
+		    info_flight,
+		    info_flighttime,
+		    info_visayn,
+		    info_visaexp,
+		    info_visatime,
+		    info_voltage,
+		    info_timedifer,
+		    info_previewimg,
+		    info_regdate
+		FROM
+		    journeyinfo
+		WHERE 
+			1=1 
+		AND
+			info_no = #{infoNo}
+	</select>
+	
+	<update id="inforModify" parameterType="journeyinfoVO">
+		UPDATE journeyinfo
+		SET
+		    info_name = #{infoName},
+		    info_engname = #{infoEngname},
+		    info_description = #{infoDescription},
+		    info_flightyn = #{infoFlightyn},
+		    info_flight = #{infoFlight},
+		    info_flighttime = #{infoFlighttime},
+		    info_visayn = #{infoVisayn},
+		    info_visaexp = #{infoVisaexp},
+		    info_visatime = #{infoVisatime},
+		    info_voltage = #{infoVoltage},
+		    info_timedifer = #{infoTimedifer},
+		    info_regdate = sysdate
+		    <if test="infoPreviewimg != null and !infoPreviewimg.equals('')">
+            , info_previewimg = #{infoPreviewimg}
+        	</if> 
+		WHERE 
+		    1=1 
+		AND 
+		    info_no = #{infoNo}
+	</update>
+	
+	<delete id="deleteInfor" parameterType="int">
+		DELETE FROM journeyinfo
+		WHERE info_no = #{infoNo}
+	</delete>
+	
+	<select id="searchJourneyList" parameterType="journeyinfoVO" resultType="journeyinfoVO">
+		SELECT *
+		FROM journeyinfo
+		WHERE info_name LIKE '%' || #{infoName} || '%'
+		   AND UPPER(info_engname) LIKE UPPER('%' || #{infoEngname} || '%')
+		ORDER BY info_no desc
+	</select>
+
+</mapper>

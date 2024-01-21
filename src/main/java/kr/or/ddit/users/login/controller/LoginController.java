@@ -176,13 +176,18 @@ public class LoginController {
 		}else {
 			MemberVO member = loginService.loginCheck(memberVO);
 			if(member != null) {
-				session.setAttribute("sessionInfo", member);
-				int intervalInSeconds = 60 * 60; // 1시간을 초로 계산합니다
-				session.setMaxInactiveInterval(intervalInSeconds);
-				ra.addFlashAttribute("message", member.getMemName() + "님, 환영합니다!");
-				goPage = "redirect:/index.do";
+				if(member.getEnabled().equals("0")) { // 탈퇴한 회원
+					ra.addFlashAttribute("message", "탈퇴한 회원 계정입니다.");
+					goPage = "redirect:/login/signin.do";
+				}else {
+					session.setAttribute("sessionInfo", member);
+					int intervalInSeconds = 60 * 60; // 1시간을 초로 계산합니다
+					session.setMaxInactiveInterval(intervalInSeconds);
+					ra.addFlashAttribute("message", member.getMemName() + "님, 환영합니다!");
+					goPage = "redirect:/index.do";
+				}
 			}else {
-				model.addAttribute("message", "서버에러, 다시 시도해 주세요.");
+				model.addAttribute("message", "존재하지 않는 회원입니다.");
 				model.addAttribute("member", memberVO);
 				goPage = "login/signin";
 			}

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.IndexSearchMapper">
+
+	<select id="informationList8" resultType="indexsearchVO">
+		SELECT *
+		FROM (
+		    SELECT
+		        info_no,
+		        info_name,
+		        info_engname,
+		        info_description,
+		        info_flightyn,
+		        info_flight,
+		        info_flighttime,
+		        info_visayn,
+		        info_visaexp,
+		        info_visatime,
+		        info_voltage,
+		        info_timedifer,
+		        info_previewimg,
+		        info_regdate
+		    FROM
+		        journeyinfo
+		    ORDER BY info_no DESC
+		)
+		<![CDATA[
+			WHERE ROWNUM <= 8
+		]]>
+	</select>
+	
+	<select id="searchJourneyList8" parameterType="indexsearchVO" resultType="indexsearchVO">
+		SELECT *
+		FROM (
+		    SELECT *
+			FROM journeyinfo
+			WHERE info_name LIKE '%' || #{infoName} || '%'
+			   AND UPPER(info_engname) LIKE UPPER('%' || #{infoEngname} || '%')
+			ORDER BY info_no desc
+		)
+		<![CDATA[
+			WHERE ROWNUM <= 8
+		]]>
+	</select>
+
+</mapper>

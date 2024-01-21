@@ -216,7 +216,7 @@ public class NoticeBoardController {
 			ra.addFlashAttribute("message", "공지사항 삭제가 완료되었습니다");
 			goPage = "redirect:/notice/list.do";
 		}else {
-			ra.addFlashAttribute("message", "공지사항 삭제가 완료되었습니다");
+			ra.addFlashAttribute("message", "공지사항 삭제에 실패했습니다");
 			goPage = "redirect:/notice/user/detail.do?boNo=" + boNo;
 		}
 		

@@ -28,8 +28,12 @@
 		<put-attribute name="settings" value="/WEB-INF/views/layout/member/settings.jsp"/>
 	</definition>
 
-	<definition name="reserve/*" extends="reserveTemplate">
-		<put-attribute name="userReserveContainer" value="/WEB-INF/views/member/reserve/{1}.jsp"/>
+	<definition name="reserve/air/*" extends="reserveTemplate">
+		<put-attribute name="userReserveContainer" value="/WEB-INF/views/member/reserve/air/{1}.jsp"/>
+	</definition>
+	
+	<definition name="reserve/stay/*" extends="reserveTemplate">
+		<put-attribute name="userReserveContainer" value="/WEB-INF/views/member/reserve/stay/{1}.jsp"/>
 	</definition>
 	
 	<definition name="partnerTemplate" template="/WEB-INF/views/layout/member/partnerTemplate.jsp">
@@ -50,6 +54,16 @@
 
 	<definition name="myplan/*" extends="myPlanTemplate">
 		<put-attribute name="userMyPlanContainer" value="/WEB-INF/views/member/myplan/{1}.jsp"/>
+	</definition>
+	
+	<definition name="myPageTemplate" template="/WEB-INF/views/layout/member/myPageTemplate.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/layout/member/header.jsp"/>
+		<put-attribute name="footer" value="/WEB-INF/views/layout/member/footer.jsp"/>
+		<put-attribute name="settings" value="/WEB-INF/views/layout/member/settings.jsp"/>
+	</definition>
+
+	<definition name="mypage/*" extends="myPageTemplate">
+		<put-attribute name="myPageContainer" value="/WEB-INF/views/member/mypage/{1}.jsp"/>
 	</definition>
 
 </tiles-definitions>

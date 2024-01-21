@@ -1,0 +1,546 @@
+/* 여행 정보 스타일 */
+.cen {
+    width: 1200px;
+}
+
+.journeyInfoContainer {
+    position: relative;
+    padding: 50px 0px 50px;
+}
+
+.journeyInfoHeadStyle>article {
+    height: 310px;
+    position: relative;
+}
+
+.jourImgBox {
+    position: relative;
+    overflow: hidden;
+    height: inherit;
+}
+
+.jourImgBox img {
+	display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.journeyInfoHeadStyle div:last-of-type {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 20px 30px;
+	border-radius: 4px;
+	background-color: rgba(255, 255, 255, 0.6);
+	text-align: center;
+}
+
+.journeyInfoHeadStyle div:last-of-type h3 {
+	font-weight: 700;
+	font-size: 2.3rem;
+}
+
+.journeyInfoHeadStyle div:last-of-type span {
+	font-size: 1.3rem;
+}
+
+.journeyInfoContainer h3 {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 40px 0px 20px;
+    margin-bottom: 0px;
+}
+
+.journeyInfoSearchContents>div {
+    overflow: auto;
+    position: relative;
+    width: 600px;
+    margin: 0px auto;
+}
+
+.journeyInfoSearchContents {
+    padding: 30px 0px;
+}
+
+.journeyInfoSearchContents input,
+.journeyInfoSearchContents button {
+    float: left;
+}
+
+.journeyInfoSearchContents input {
+    width: 100%;
+}
+
+.journeyInfoSearchContents input::placeholder {
+    color: #dee2e6;
+}
+
+.journeyInfoSearchContents button {
+    display: block;
+    width: 20px;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+    border: none;
+    background-color: transparent;
+    color: #dee2e6;
+    transition: all 0.4s;
+}
+
+.journeyInfoSearchContents button:hover {
+    color: black;
+}
+
+.journeyInfoContents {
+    overflow: auto;
+    margin: 25px 0px;
+}
+
+.journeyInfoContents article:hover {
+    transform: none!important;
+}
+
+.journeyInfoContents article {
+    float: left;
+    width: calc(100% / 4 - 40px);
+    margin: 0px 20px;
+    cursor: pointer;
+    transition: all 0.4s;
+}
+
+.journeyInfoContents article:hover {
+    transform: none;
+}
+
+.journeyInfoContents .infoThumbnailBox {
+	transition: all 0.4s;
+}
+
+.journeyInfoContents .infoThumbnailBox:hover {
+	box-shadow: 2px 3px 5px #333;
+}
+
+.journeyInfoContents .infoThumbnailBox {
+    position: relative;
+    overflow: hidden;
+    height: 320px;
+    border-radius: 10px;
+}
+
+.journeyInfoContents .infoThumbnailBox img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.journeyInfoContents h4 {
+    margin-bottom: 5px;
+}
+
+.journeyInfoContents article>div:last-of-type {
+    padding: 20px 0px;
+}
+
+.journeyInfoContents article>div:last-of-type span {
+    font-weight: 300;
+    display: block;
+}
+
+.journeyInfoContents article p,
+.journeyInfoContents article .airportText,
+.journeyInfoContents article .visaText,
+.journeyInfoContents article .voltageTxt,
+.journeyInfoContents article .infoTimediferTxt {
+    display: none!important;
+}
+
+/* 여행 정보 모달창 */
+.infoModalContents {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.3);
+    z-index: 70;
+    display: none;
+}
+
+.infoModalBox {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 60px;
+    overflow: auto;
+    border-radius: 10px;
+}
+
+.infoModalClose {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    background-color: rgba(0,0,0,0.4);
+    border-radius: 4px;
+}
+
+.infoModalClose div {
+    width: 25px;
+    height: 1px;
+    background-color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.infoModalClose div:first-of-type {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.infoModalClose div:last-of-type {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.infoModalBox article {
+    float: left;
+    width: calc(100% / 2);
+    padding: 24px;
+}
+
+.infoModalLeft>div {
+    height: 400px;
+    position: relative;
+}
+
+.modalInfoSetting span {
+    color: #AAB1B8;
+    font-size: 20px;
+    font-weight: 300;
+}
+
+.modalInfoSetting h5 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.modalInfoSetting p {
+    font-weight: 300;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.infoModalImgBox {
+    position: relative;
+    overflow: hidden;
+    height: 400px;
+}
+
+.infoModalImgBox img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.infoModalFourSection {
+    overflow: auto;
+}
+
+.infoModalFourSection>div {
+    float: left;
+    width: calc(100% / 4);
+}
+
+.infoModalFourSection>div>div:first-of-type {
+    margin-bottom: 10px;
+}
+
+.infoModalFourSection>div>div:last-of-type span {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.infoModalFourSection>div>div:last-of-type span:first-of-type {
+    color: #AAB1B8;
+    font-size: 12px;
+}
+
+.infoModalFourSection>div>div:last-of-type span:last-of-type {
+    color: #737E8A;
+    font-size: 14px;
+}
+
+.makePlanSty {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    padding: 8px 30px;
+}
+
+.makePlanSty i {
+    margin-left: 10px;
+}
+
+.noUserBlockModal::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0,0,0,0.6);
+}
+
+.noUserBlockModal::after {
+    content: "회원전용";
+    display: block;
+    width: 80px;
+    height: 20px;
+    background-color: #0dcaf0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+#journeyRegiBtn {
+    display: block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    position: absolute;
+    left: 0px;
+    top: 92px;
+    background-color: #333;
+    color: white;
+    transition: all 0.4s;
+}
+
+#journeyRegiBtn:hover {
+    background-color: #eee;
+    color: #333;
+}
+
+/* 여행 정보 등록 페이지 스타일링 */
+.placeinfoRegContainer {
+    position: relative;
+}
+
+.placeinfoRegContainer h3 {
+    margin-bottom: 0px;
+    padding: 20px 0px;
+    border-bottom: 1px solid #eee;
+}
+
+#jourInfoRegForm .form-group {
+    overflow: auto;
+    padding-top: 20px;
+}
+
+#jourInfoRegForm .form-group:last-of-type {
+    text-align: right;
+}
+
+#jourInfoRegForm .form-group:last-of-type button {
+    margin-left: 10px;
+}
+
+.placeinfoRegContents {
+    padding: 40px 0px;
+}
+
+.placeinfoRegContents label:first-of-type {
+    display: block;
+    width: 200px;
+    float: left;
+}
+
+.placeinfoRegContents input[type=text],
+.placeinfoRegContents input[type=file],
+.placeinfoRegContents textarea {
+    float: left;
+    width: calc(100% - 200px);
+}
+
+.placeinfoRegContents textarea {
+    min-height: 200px;
+}
+
+.previewSty>div {
+    overflow: auto;
+    padding: 20px 0px;
+}
+
+.journeyInfoThumbnailPreview,
+.journeyInfoModalPreview {
+    float: left;
+}
+
+.journeyInfoThumbnailPreview {
+    width: 270px;
+    margin-right: 20px;
+}
+
+.previewThumbBox {
+    position: relative;
+    overflow: hidden;
+    height: 320px;
+    border-radius: 10px;
+}
+
+.previewThumbBox img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.journeyInfoThumbnailPreview>div:last-of-type {
+    padding: 20px 0px;
+}
+
+.journeyInfoThumbnailPreview>div:last-of-type h4 {
+    margin-bottom: 5px;
+}
+
+.journeyInfoThumbnailPreview>div:last-of-type span {
+    font-weight: 300;
+}
+
+.journeyInfoModalPreview {
+    width: calc(100% - 290px);
+    border-left: 1px solid #eee;
+}
+
+.previewinfoModal {
+    position: relative;
+    overflow: auto;
+    border-radius: 10px;
+}
+
+.previewinfoModal>div {
+    float: left;
+    width: calc(100% / 2);
+    padding: 24px;
+}
+
+.previewModalLeft>div {
+    height: 400px;
+    position: relative;
+}
+
+.previewModalInfoSetting span {
+    color: #AAB1B8;
+    font-size: 20px;
+    font-weight: 300;
+}
+
+.previewModalInfoSetting h5 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.previewModalInfoSetting p {
+    font-weight: 300;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.previewModalImgBox {
+    position: relative;
+    overflow: hidden;
+    height: 400px;
+}
+
+.previewModalImgBox img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.previewModalFourSection {
+    overflow: auto;
+}
+
+.previewModalFourSection>div {
+    float: left;
+    width: calc(100% / 4);
+}
+
+.previewModalFourSection>div>div:first-of-type {
+    margin-bottom: 10px;
+}
+
+.previewModalFourSection>div>div:last-of-type span {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.previewModalFourSection>div>div:last-of-type span:first-of-type {
+    color: #AAB1B8;
+    font-size: 12px;
+}
+
+.previewMakePlanSty {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    padding: 8px 30px;
+}
+
+.previewModalFourSection>div>div:last-of-type span:last-of-type {
+    color: #737E8A;
+    font-size: 14px;
+}
+
+#jourInfoRegForm .card-footer {
+    padding: 16px;
+}
+
+.placeinfoRegContainer .card-header {
+    border-bottom: none;
+}
+
+.journeyInfoBtnGroup {
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+}
+
+.journeyInfoBtnGroup button {
+	border: none;
+	width: 42px;
+	height: 42px;
+	line-height: 42px;
+	display: inline-block;
+	background-color: #333;
+	color: white;
+	border-radius: 50%;
+	text-align: center;
+	margin-left: 10px;
+	transition: all 0.4s;
+}
+
+.journeyInfoBtnGroup button:hover {
+	background-color: #eee;
+	color: #333;
+}

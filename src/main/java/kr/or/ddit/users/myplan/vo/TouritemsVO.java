@@ -1,7 +1,8 @@
-package kr.or.ddit.api.vo;
+package kr.or.ddit.users.myplan.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -9,6 +10,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 public class TouritemsVO {
 	private String contentId;
 	private String areaCode;
@@ -44,9 +46,10 @@ public class TouritemsVO {
 	/**
      * 조인 용도
      */
-    private long sp_day;
-    private long sp_id;
-    private long p_id;
+    private long spDay;
+    private long spNo;
+    private long plNo;
+    private long spOrder;
     
 }
 

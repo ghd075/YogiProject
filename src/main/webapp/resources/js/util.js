@@ -41,14 +41,14 @@ $.ratioBoxH = function(boxEl, imgEl) {
 };
 
 // 이미지 미리보기 함수
-$.imgPreviewFn = function(imgEl){
+$.imgPreviewFn = function(imgEl, profileImg){
     imgEl.on("change", function(e){
         var file = event.target.files[0];
 
         if(isImageFile(file)) {
             var reader = new FileReader();
             reader.onload = function(e){
-                $("#profileImg").attr("src", e.target.result);
+                profileImg.attr("src", e.target.result);
             }
             reader.readAsDataURL(file);
         }else { // 이미지 파일이 아닐 때
@@ -65,3 +65,13 @@ function isImageFile(file){
     var ext = file.name.split(".").pop().toLowerCase(); // 파일명에서 확장자를 가져옵니다.
     return ($.inArray(ext, ["jpg", "jpeg", "gif", "png"]) === -1) ? false : true;
 }
+
+$.dateFickerNorFn = function(dateElement, callback){
+    flatpickr(dateElement, {
+      dateFormat: "Y-m-d",
+      enableTime: false,
+      minDate: "today",
+      defaultDate: "today",
+      locale: "ko",
+    });
+};

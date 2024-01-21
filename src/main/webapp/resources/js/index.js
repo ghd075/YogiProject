@@ -41,16 +41,9 @@ $.JourneyInfoModalFn = function () {
         
         var thisIs = $(this);
         var infoImgSrc = thisIs.find("img").attr("src").trim();
-        //console.log("infoImgSrc : ", infoImgSrc);
         var infoH4 = thisIs.find("h4").text().trim();
-        //console.log("infoH4 : ", infoH4);
         var infoSpan = thisIs.find(".infoTitle").text().trim();
-        //console.log("infoSpan : ", infoSpan);
         var infoP = thisIs.find("p").text().trim();
-        //console.log("infoP : ", infoP);
-        var airportText = thisIs.find(".airportText").html();
-        console.log("airportText : ", airportText);
-        //console.log("airportText : ", typeof(airportText));
         
         modalInfoSetting.find("span").text(infoH4);
         modalInfoSetting.find("h5").text(infoSpan);
@@ -58,15 +51,50 @@ $.JourneyInfoModalFn = function () {
         var infoModalImgBox = $(".infoModalImgBox");
         infoModalImgBox.find("img").attr("src", infoImgSrc);
         
+        var airportText = thisIs.find(".airportText").html();
         var airportHtmlEl = $(".infoModalFourSection>div:first-of-type>div:last-of-type");
         airportHtmlEl.html("");
+
+        var visaText = thisIs.find(".visaText").html();
+        var visaHtmlEl = $(".infoModalFourSection>div:nth-of-type(2)>div:last-of-type");
+        visaHtmlEl.html("");
+
+        var voltageTxt = thisIs.find(".voltageTxt").html();
+        var voltageHtmlEl = $(".infoModalFourSection>div:nth-of-type(3)>div:last-of-type");
+        voltageHtmlEl.html("");
+
+        var infoTimediferTxt = thisIs.find(".infoTimediferTxt").html();
+        var infoTimediferHtmlEl = $(".infoModalFourSection>div:last-of-type>div:last-of-type");
+        infoTimediferHtmlEl.html("");
+
+        var emptyHtmlEl = "<span>없음</span><span>-</span>";
         
-        var emptyHtmlEl = "<span>없음</span><span></span>";
         if(airportText != undefined) {
             airportHtmlEl.html(airportText);
         }else {
             airportHtmlEl.html(emptyHtmlEl);
         }
+
+        if(visaText != undefined) {
+            visaHtmlEl.html(visaText);
+        }else {
+            visaHtmlEl.html(emptyHtmlEl);
+        }
+
+        if(voltageTxt != undefined) {
+            voltageHtmlEl.html(voltageTxt);
+        }else {
+            voltageHtmlEl.html(emptyHtmlEl);
+        }
+
+        if(infoTimediferTxt != undefined) {
+            infoTimediferHtmlEl.html(infoTimediferTxt);
+        }else {
+            infoTimediferHtmlEl.html(emptyHtmlEl);
+        }
+        
+        var infoNoVal = thisIs.find(".infoNo").val();
+        $("#choiceInfoNo").val(infoNoVal);
         
         infoModalContents.show();
         
@@ -450,6 +478,145 @@ $.startHeaderEmpty = function(){
     }else {
         mainSlideContainer.removeClass("emptySpace");
     }
+};
+
+// 랜딩 페이지 > 여행 정보 실시간 검색 기능 함수
+$.ajaxIndexJourneyInfoSearchFn = function(){
+    var jourInfoSearch = $("#jourInfoSearch");
+    jourInfoSearch.keyup(function(){
+        var thisIs = $(this);
+        var thisVal = thisIs.val();
+        console.log("thisVal : ", thisVal);
+
+        var languageType = detectLanguage(thisVal);
+        console.log("languageType : " + languageType);
+
+        var journeyVO = {};
+        
+        if(languageType == "korean") {
+            journeyVO.infoName = thisVal;
+            journeyVO.infoEngname = "";
+        }else if(languageType == "english") {
+            journeyVO.infoName = "";
+            journeyVO.infoEngname = thisVal;
+        }else {
+            journeyVO.infoName = "";
+            journeyVO.infoEngname = "";
+        }
+
+        $.ajax({
+            type: "get",
+            url: "/index/ajaxSearch.do",
+            data: journeyVO,
+            dataType: "json",
+            success: function(res){
+                console.log("res : ", res);
+
+                var searchHtml = "";
+                if(res.length == 0) {
+                    searchHtml += `
+                        <article style="text-align: center; width: 50%; margin: 0px auto; float: none; cursor: auto; background-color: #333; color: white; padding: 20px; border-radius: 4px;">
+                            검색된 여행 정보가 없습니다.
+                        </article>
+                    `;
+                }
+                for(var i=0; i<res.length; i++){
+                    searchHtml += `
+                        <article>
+                            <div class="infoThumbnailBox">
+                                <img src="${res[i].infoPreviewimg}" alt="여행 정보 썸네일 이미지" />
+                            </div>
+                            <div>
+                                <h4 class="textDrop">${res[i].infoEngname}</h4>
+                                <span class="infoTitle textDrop">${res[i].infoName}</span>
+                                <p>${res[i].infoDescription}</p>
+                                <span class="airportText">`;
+
+                            if(res[i].infoFlightyn == 'y'){
+                                searchHtml += `<span>`;
+
+                                if(res[i].infoFlight == "str"){
+                                    searchHtml += `직항</span>`;
+                                }else {
+                                    searchHtml += `왕복</span>`;
+                                }
+
+                                searchHtml += `<span>${res[i].infoFlighttime}</span>`;
+                            }else {
+                                searchHtml += `<span>없음</span>
+                                                <span>-</span>`;
+                            }
+
+                    searchHtml += `</span>
+                                <span class="visaText">`;
+
+                            if(res[i].infoVisayn == 'y'){
+                                searchHtml += `<span>`;
+
+                                if(res[i].infoVisaexp == "visa"){
+                                    searchHtml += `비자</span>`;
+                                }else {
+                                    searchHtml += `무비자</span>`;
+                                }
+
+                                searchHtml += `<span>${res[i].infoVisatime}</span>`;
+                            }else {
+                                searchHtml += `<span>없음</span>
+                                                <span>-</span>`;
+                            }
+
+                    searchHtml += `</span>
+                                <span class="voltageTxt">
+                                    <span>콘센트</span>
+                                    <span>${res[i].infoVoltage}</span>
+                                </span>
+                                <span class="infoTimediferTxt">
+                                    <span>한국대비</span>
+                                    <span>${res[i].infoTimedifer}</span>
+                                </span>
+                                <input type="hidden" class="infoNo" name="infoNo" value="${res[i].infoNo}" />
+                            </div>
+                        </article>
+                    `;
+                }
+
+                var journeyInfoContents = $(".journeyInfoContents");
+                journeyInfoContents.html("");
+                journeyInfoContents.append(searchHtml);
+
+                $.JourneyInfoModalFn();
+                $.eachJourneyInfoImgResizeFn();
+            }
+        });
+    });
+};
+
+function detectLanguage(inputValue) {
+    // 정규표현식을 사용하여 문자열이 한글인지 영어인지 판별
+    var koreanRegex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+    var englishRegex = /^[a-zA-Z]*$/;
+
+    if (koreanRegex.test(inputValue)) {
+        return "korean";
+    } else if (englishRegex.test(inputValue)) {
+        return "english";
+    } else {
+        return "etc";
+    }
+}
+
+$.makeplanClickEvent = function(){
+    var makePlanSty = $(".makePlanSty");
+    makePlanSty.click(function(event){
+        event.preventDefault();
+        var thisIs = $(this);
+        var hrefVal = thisIs.attr("href");
+        var spanVal = thisIs.parents(".infoModalLeft").find(".modalInfoSetting>span").text();
+        console.log("spanVal : " + spanVal);
+        hrefVal += "?infoName=" + spanVal;
+        console.log("hrefVal : " + hrefVal);
+        location.href = hrefVal;
+    });
 };
 
 // 윈도우 가로 길이 변경 이벤트
