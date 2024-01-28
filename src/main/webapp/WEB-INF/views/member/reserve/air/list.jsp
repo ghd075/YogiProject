@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
@@ -36,9 +36,9 @@
 	    </div>
 	    <div class="col-sm-8 text-white top">
 	      <p id="topText2">
-	        <span>◁</span>&nbsp;&nbsp; 3월 25일 (월) &nbsp;&nbsp;<span>▷</span>
-	        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
-	        <span>◁</span>&nbsp;&nbsp; 3월 30일 (금) &nbsp;&nbsp;<span>▷</span> 
+	        <span>◁</span>&nbsp; ${searchInfo.originDeptime} &nbsp;<span>▷</span>
+	        &nbsp;&nbsp;   
+	        <span>◁</span>&nbsp; ${searchInfo.originArrtime} &nbsp;<span>▷</span> 
 	      </p>   
 	    </div>
 	  </div>
@@ -55,53 +55,68 @@
 		    </h2>
 		    <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
 		      <div class="accordion-body">
-		         <strong>가는날 출발시간</strong><br>
-		         <small>오전 12:00 ~ 오후 11:59</small>
-		         <label for="customRange" class="form-label"></label>
-                 <input type="range" class="form-range" id="customRange">  
+		         <label for="depRange" class="form-label">
+					<strong>가는날 출발시간</strong><br>
+					<small>오전 00:00</small> ~ <small id="depRangeVal">오후 11:59</small>
+				 </label>
+                 <input type="range" class="form-range" id="depRange" min="0" max="1440" step="30" value="1440">  
                  <br><br> 
-		         <strong>오는날 출발시간</strong><br>
-                 <small>오전 12:00 ~ 오후 11:59</small>
-		         <label for="customRange" class="form-label"></label>
-                 <input type="range" class="form-range" id="customRange">
+		         <label for="arrRange" class="form-label">
+					<strong>오는날 출발시간</strong><br>
+					<small>오전 00:00</small> ~ <small id="arrRangeVal">오후 11:59</small>
+				 </label>
+                 <input type="range" class="form-range" id="arrRange" min="0" max="1440" step="30" value="1440">
 		      </div>
 		    </div>
 		  </div>
 		  
 		  <div class="accordion-item">
 		    <h2 class="accordion-header">
-		      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+		      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseTwo">
 		                 <strong>총 소요시간</strong>
 		      </button>
 		    </h2>
-		    <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
+		    <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show">
 		      <div class="accordion-body">
-                 <small>40분 ~ 129분</small>
-		         <label for="customRange" class="form-label"></label>
-                 <input type="range" class="form-range" id="customRange">
+		         <label for="durRange" class="form-label">
+					<small>0분</small> ~ <small id="durRangeVal">240분</small>
+				 </label>
+                 <input type="range" class="form-range" id="durRange" min="0" max="240" step="10" value="240">
 		      </div>
 		    </div>
 		  </div>
 		  
 		  <div class="accordion-item">
 		    <h2 class="accordion-header">
-		      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+		      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="true" aria-controls="panelsStayOpen-collapseThree">
 		              <strong> 항공사</strong>
 		      </button>
 		    </h2>
-		    <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
+		    <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show">
 		      <div class="accordion-body">
 		        <div class="form-check">
 		          <button type="button" class="btn btn-primary">모두선택</button>
 		          <button type="button" class="btn btn-primary">모두지우기</button><br><br>
-				  <input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
-				  <label class="form-check-label">제주항공</label><br><br>
-				  <input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
-				  <label class="form-check-label">인천국제공항</label><br><br>
-				  <input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
-				  <label class="form-check-label">김해공항</label><br><br>
-				  <input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
-				  <label class="form-check-label">Option 1</label>
+				  &nbsp;<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
+				  &nbsp;<label class="form-check-label">대한항공</label><br>
+				  &nbsp;<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
+				  &nbsp;<label class="form-check-label">아시아나항공</label><br><hr>
+				  &nbsp;<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
+				  &nbsp;<label class="form-check-label">제주항공</label><br>
+				  &nbsp;<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
+				  &nbsp;<label class="form-check-label">진에어</label><br>
+				  &nbsp;<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
+				  &nbsp;<label class="form-check-label">티웨이항공</label><br><hr>
+				  &nbsp;<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
+				  &nbsp;<label class="form-check-label">에어부산</label><br>
+				  &nbsp;<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
+				  &nbsp;<label class="form-check-label">에어서울</label><br>
+				  &nbsp;<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
+				  &nbsp;<label class="form-check-label">이스타항공</label><br>
+				  &nbsp;<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
+				  &nbsp;<label class="form-check-label">플라이강원</label><br>
+				  &nbsp;<input class="form-check-input" type="checkbox" id="check1" name="option1" value="something" checked>
+				  &nbsp;<label class="form-check-label">하이에어</label><br>
 				</div>
 		      </div>
 		    </div>
@@ -113,7 +128,7 @@
 		         <strong> 경유</strong>
 		      </button>
 		    </h2>
-		    <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
+		    <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show">
 		      <div class="accordion-body">
 		        <div class="form-check">
 		          <button type="button" class="btn btn-primary">모두선택</button>
@@ -135,18 +150,18 @@
 	 <!-- 중앙 컨텐츠 최상단 -->
      <div class="container-fluid mt-3" id="container-content">
 	   <div class="row content-top">
-	     <div class="col-sm-8">
-	        <strong>${searchInfo.totalRecord}개의 검색결과...</strong>
+	     <div class="col-sm-8">총
+	        <strong id="resultCnt">${searchInfo.totalRecord}개의 검색결과...</strong>
 	       <div class="progress">
-			  <div class="progress-bar" style="width:70%"></div>
-		   </div>  
+			  <div class="progress-bar" style="width:100%"></div>
+		   </div>   
 	     </div>
 	     <div class="col-sm-4 basicSelect">
 	            정렬기준 &nbsp;&nbsp;
-	      <select>
-	        <option selected="selected">최저가</option>
-	        <option>최단여행시간</option>
-	        <option>추천순</option>
+	      <select id="selectSort">
+	        <option selected="selected" id="priceSelect" value="priceSelect">최저가</option>
+	        <option id="durationSelect" value="durationSelect">최단여행시간</option>
+	        <option id="recoSelect" value="recoSelect">추천순</option>
 	      </select> 
 	     </div>
 	   </div>
@@ -166,34 +181,38 @@
 	    <c:otherwise>
 	      <!-- 정렬조건 선택 영역 -->
 		  <div class="row basicSearch">
-		     <div class="col-sm-4"><br>
+		     <div class="col-sm-4" id="lowestPrice"><br>
 		       <strong>최저가</strong><br>
-		       <span>
+		       <span id="lowPrice">
 		         <fmt:formatNumber value="${sortVO.lowestPrice}" type="currency" currencySymbol="₩" />
 		       </span><br>
-		       ${sortVO.lowestDuration}(평균)
+		       <span id="lowDuration" style="font-size: 16px;">${sortVO.lowestDuration}(평균)</span>
 		     </div>
-		     <div class="col-sm-4"><br>
+		     <div class="col-sm-4" id="shortDuration"><br>
 		       <strong>최단시간여행</strong><br>
-	           <span>
+	           <span id="shortestPrice">
 	             <fmt:formatNumber value="${sortVO.shortestPrice}" type="currency" currencySymbol="₩"/>
 	           </span><br>
-	           ${sortVO.shortestDuration}(평균)
+	           <span id="shortestDuration" style="font-size: 16px;">${sortVO.shortestDuration}(평균)</span>
 		     </div>
-		     <div class="col-sm-4"><br>
+		     <div class="col-sm-4" id="recommendation"><br>
 		        <strong>추천순</strong><br>
-		        <span>
+		        <span id="recoPrice">
 		          <fmt:formatNumber value="${sortVO.recoPrice}" type="currency" currencySymbol="₩"/>
 		        </span><br>
-		        ${sortVO.recoDuration}(평균)
+		        <span id="recoDuration" style="font-size: 16px;">${sortVO.recoDuration}(평균)</span>
 		     </div>
 		   </div>
 		   
-		   <!-- 메인컨텐츠 -->
+		 <!-- 메인컨텐츠 -->
+		 <div class="contentSet"> 
 		   <c:forEach items="${pageList}" var="flight" varStatus="loop">
+		     <form action="/reserve/air/reserve/reserve.do" method="get"> 
+		       <!-- 왕복편 -->
 		       <div class="mainContent">
 		          <!-- 출발편 -->
 		          <div class="row">
+		             <input type="hidden" value="${flight.departure.flightCode}" name="depFlightCode">
 			         <div class="col-sm-2">
 			           <c:if test="${empty flight.departure.airlineLogo}">
 			             <img src="/resources/images/air/list/basic.PNG">
@@ -207,21 +226,21 @@
 			              <fmt:parseDate value="${flight.departure.flightDeptime}" pattern="yyyyMMddHHmm" var="depTime1"/>
 			              <fmt:formatDate value="${depTime1}" pattern="a h:mm"/>
 			            </span><br>
-			            ${flight.departure.flightDepairport}(${flight.departure.flightDepportcode})   
+			            <span style="font-weight: normal; font-size: 16px;">${flight.departure.flightDepairport}(${flight.departure.flightDepportcode})</span>  
 			         </div>
 			         <div class="col-sm-3 middle">
 			            <span style="font-size: 15px;">${flight.departure.flightDuration} (편도)</span>
 			            <img src="/resources/images/air/list/경로.PNG">
 			         </div>
-			         <div class="col-sm-2 middle">
+			         <div class="col-sm-2 middle third" >
 			            <span>
 			              <fmt:parseDate value="${flight.departure.flightArrtime}" pattern="yyyyMMddHHmm" var="arrTime1"/>
 			              <fmt:formatDate value="${arrTime1}" pattern="a h:mm"/>
 			            </span>  <br>
-			            ${flight.departure.flightArrairport}(${flight.departure.flightArrportcode})
+			            <span style="font-weight: normal; font-size: 16px;">${flight.departure.flightArrairport}(${flight.departure.flightArrportcode})</span>
 			         </div>
 			         <div class="col-sm-3 end" style="border-left: 2px solid rgb(239, 241, 242);">
-			           <span id="roundTripPrice">
+			           <span style="font-size: 22px;" id="roundTripPrice">
 			            <fmt:formatNumber value="${flight.roundTripPrice}" type="currency" currencySymbol="₩"/>
 			           </span>
 			           <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 512 512">
@@ -233,6 +252,7 @@
 		          
 			      <!-- 돌아오는 편 -->
 		          <div class="row">
+		              <input type="hidden" value="${flight.arrival.flightCode}" name="arrFlightCode">
 			          <div class="col-sm-2">
 			            <c:if test="${empty flight.arrival.airlineLogo}">
 			              <img src="/resources/images/air/list/basic.PNG">
@@ -246,7 +266,7 @@
 			              <fmt:parseDate value="${flight.arrival.flightDeptime}" pattern="yyyyMMddHHmm" var="depTime2"/>
 			              <fmt:formatDate value="${depTime2}" pattern="a h:mm"/>
 			            </span> <br>
-			             ${flight.arrival.flightDepairport}(${flight.arrival.flightDepportcode})    
+			            <span style="font-weight: normal; font-size: 16px;" id="flightDepairport2">${flight.arrival.flightDepairport}(${flight.arrival.flightDepportcode})</span>    
 			          </div>
 			          <div class="col-sm-3 middle">
 			             <span style="font-size: 15px;">${flight.arrival.flightDuration} (편도)</span>
@@ -254,24 +274,26 @@
 			          </div>
 			          <div class="col-sm-2 middle">
 			            <span>
-			              <fmt:parseDate value="${flight.departure.flightArrtime}" pattern="yyyyMMddHHmm" var="arrTime2"/>
+			              <fmt:parseDate value="${flight.arrival.flightArrtime}" pattern="yyyyMMddHHmm" var="arrTime2"/>
 			              <fmt:formatDate value="${arrTime2}" pattern="a h:mm"/>
 			            </span> <br>
-			            ${flight.arrival.flightArrairport}(${flight.arrival.flightArrportcode})
+			            <span style="font-weight: normal; font-size: 16px;">${flight.arrival.flightArrairport}(${flight.arrival.flightArrportcode})</span>
 			          </div>
 			          <div class="col-sm-3 end" style="border-left: 2px solid rgb(239, 241, 242);">
-			            <button type="button" class="btn btn-primary">선택하기</button> 
+			            <button type="submit" class="btn btn-primary">예매하기</button> 
 			          </div>
 		           </div>
 		       </div>
+		      </form>
 		    </c:forEach>
+		  </div>
 	    </c:otherwise>
 	  </c:choose> 
 	  
       <!-- 더보기 버튼 -->
       <br>
       <div class="row more">
-        <div class="col-sm-12"><button type="button" class="btn btn-primary" onclick="location.href='/reserve/air/search/moreList.do'">더 많은 결과를 표시하기</button></div>
+        <div class="col-sm-12"><button type="button" class="btn btn-primary" id="moreBtn">더 많은 결과를 표시하기</button></div>
       </div><br>
 	 
    </div>  
@@ -282,13 +304,18 @@
 	  <a href="#"><img src="/resources/images/air/list/호텔광고링크1.PNG" width="285" height="300" style="border-radius: 20px; margin-bottom: 12px;"></a> 
 	  <br><br>
 	  <a href="#"><img src="/resources/images/air/list/호텔광고링크2.PNG" width="285" height="300" style="border-radius: 20px; margin-bottom: 12px;"></a> 
+	  <a href="#"><img src="/resources/images/air/list/호텔광고링크3.PNG" width="285" height="400" style="border-radius: 20px; margin-bottom: 12px;"></a> 
 	  </div>
    </div>
 </section>
 
+<!-- 항공리스트 JS -->
+<script src="${contextPath }/resources/js/air/list.js"></script>
+  
 <script>
   $(function(){
-
+	  //정렬 및 조회 관련 모든 기능
+	  $.sortBtnFn();
   })
 </script>
 

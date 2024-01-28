@@ -13,14 +13,24 @@
     padding-right: 0;
   }
   #container-content{
+    height : 1200px;
     width: 1010px;
     display: inline-block;
     /* margin-right: 10px; */
   }
+/*   .form-check{
+    padding-left: 100px;
+  }
+  .form-check-input{
+    padding-left: 100px;
+  }
+  .form-check-label{
+    padding-left: 100px;
+  } */
   
   #container-left{
    width: 290px;
-   height : 930px;
+   height : 1000px;
    display: inline-block;
    margin-left : 150px;
    margin-right: 10px;
@@ -77,11 +87,9 @@
   margin-bottom: 10px;
  }
  
- .basicSearch div:hover{
-   background-color: rgb(5, 32, 60);
+  .basicSearch div:hover{
    cursor: pointer;
-   color: white;
- }
+ } 
   .basicSearch div{
    border-radius: 20px;
    border-right : 1px solid rgb(239, 241, 242);
@@ -115,13 +123,17 @@
    margin-top: 10px;
    padding-top : 10px;
    padding-left: 20px;
-   padding-right: 20px;
+   padding-right: 30px;
+ }
+ .mainContent .middle .third{
+   padding-right: 30px;
+   margin-right: 20px;
  }
  .mainContent .middle span{
    font-size: 17px;
    font-weight: bolder;
    position: absolute;
-   padding-left: 30px;
+   padding-left: 10px;
  }
  
  #roundTripPrice{

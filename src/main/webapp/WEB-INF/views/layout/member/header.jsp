@@ -67,15 +67,19 @@
                         <li><a href="/myplan/info.do">여행 정보</a></li>
                         <li><a href="/myplan/planMain.do">플래너</a></li>
                         <%-- <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/myplan/makeplan.do">플래너</a></li> --%>
-                        <li><a href="/myplan/chatting.do">채팅 테스트</a></li>
+                        <!-- <li><a href="/myplan/chatting.do">채팅 테스트</a></li> -->
                     </ul>
                 </li>
                 <li class="main">
                     <a href="javascript:void(0);">마이 트립</a>
                     <ul class="sub">
-                        <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/partner/mygroup.do">마이 그룹</a></li>
+                        <!-- 
+	                    	1. 만남의 광장 > 0) 플래너 작성 > 1) 여행 목록 리스트 > 2) 만남의 광장 그룹 채팅 > 3) 그룹 플랜 화면으로 진입? 4) 장바구니까지 표현하시겠다?
+	                    	2. 여행 경비 계산 > 1) 지출 내역을 가계부 형식으로 기록 관리만 하는 것이다.
+	                    	3. 마이 플랜 이력 > 1) 여행 목록 리스트 > 2) 해당 여행에 대한 플랜이 제시 되고, 그 여행에 걸린 여행상품 구매 내역을 목록으로 출력
+	                    -->
+                        <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/partner/mygroup.do">마이 플래너</a></li>
                         <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/partner/calculate.do">여행 경비 계산</a></li>
-                        <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/partner/basket.do">그룹 장바구니</a></li>
                         <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/partner/history.do">마이 플랜 이력</a></li>
                     </ul>
                 </li>
@@ -179,9 +183,8 @@
                 <li class="mmain">
                     <a href="javascript:void(0);">마이 트립</a>
                     <ul class="msub">
-                        <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/partner/mygroup.do">마이 그룹</a></li>
+                        <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/partner/mygroup.do">마이 플래너</a></li>
                         <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/partner/calculate.do">여행 경비 계산</a></li>
-                        <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/partner/basket.do">그룹 장바구니</a></li>
                         <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/partner/history.do">마이 플랜 이력</a></li>
                     </ul>
                 </li>

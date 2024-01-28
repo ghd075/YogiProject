@@ -92,7 +92,7 @@ public class TimeGenerator {
     	 return hours+"시간 "+minutes+"분";
 	}
 	
-	/* 시간을 나타내는 문자열을 밀리초 단위로 계산하여 리턴 */
+	/* 시간을 나타내는 문자열을 밀리초 단위로 계산하여 리턴(시분) */
 	private static long convertToMilliseconds(String timeString) {
 		//시,분 추출
         int hours = Integer.parseInt(timeString.split("시")[0]);
@@ -104,6 +104,12 @@ public class TimeGenerator {
         return hoursInMillis + minutesInMillis;
     }
 	
+	/* 시간을 나타내는 문자열을 밀리초 단위로 계산하여 리턴(분) */
+	public static long minuteToMilliseconds(String minutes) {
+		int min = Integer.parseInt(minutes);
+		long minutesInMillis = min * 60 * 1000;
+		return minutesInMillis;
+	}
 	
 	
 	
@@ -111,37 +117,7 @@ public class TimeGenerator {
 	
 	
 	
-	
-	/* 
-	  운항시간 계산하기 후 반환
-	  - 총운항시간 : 출항편 운항시간 + 귀국편 운항시간 
-	  - 평균운항시간 : (출항편 운항시간 + 귀국편 운항시간)/2 
-	*/
-//	public static String[] clacDuration(String depDuration, String arrDuration) {
-//		String[] durArr = new String[2];
-//		LocalTime dep = parseTimeString(depDuration);
-//        LocalTime arr = parseTimeString(arrDuration);
-//        
-//        // Duration으로 시간 더하기
-//        Duration sumDuration = Duration.between(LocalTime.MIN, dep).plus(Duration.between(LocalTime.MIN, arr));
-//        durArr[0] = sumDuration.toHours() + "시간 " + sumDuration.toMinutes() + "분";  //총운항시간
-//        System.out.println("총운항시간, durArr[0] : "+durArr[0]);
-//        
-//        // 2로 나누기
-//        Duration aveDuration = sumDuration.dividedBy(2);
-//        durArr[1] = aveDuration.toHours() + "시간 " + aveDuration.toMinutes() + "분";  //평균운항시간
-//        System.out.println("평균운항시간, durArr[1] : "+durArr[1]);
-//        
-//        return durArr;
-//    }
-//	
-//	/* 시간을 나타내는 문자열을 parsing하는 메서드*/
-//	private static LocalTime parseTimeString(String timeString) {
-//        String[] parts = timeString.split(" ");
-//        int hours = Integer.parseInt(parts[0].replace("시간", ""));
-//        int minutes = Integer.parseInt(parts[1].replace("분", ""));
-//        return LocalTime.of(hours, minutes);
-//    }
+
 }
 
 

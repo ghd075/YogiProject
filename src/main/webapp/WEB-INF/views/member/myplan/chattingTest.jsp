@@ -112,12 +112,14 @@
 			                </div>
 			                <div class="chat-message clearfix">
 			                    <div class="input-group mb-0">
+			                    	<input type="hidden" id="sessionId" value="">
+			                    	<input type="hidden" id="memName" value="${sessionInfo.memName }" />
 			                    	<button class="btn btn-link bg-white">
 							       		<i class="fa fa-paperclip"></i>
 							        </button>
-			                        <input type="text" id="chat" placeholder="메세지를 입력하세요." class="form-control rounded-0 border-0 py-4 bg-light">
+			                        <input type="text" id="txtMessage" placeholder="메세지를 입력하세요." class="form-control rounded-0 border-0 py-4 bg-light">
 						          	<div class="input-group-append">
-						            	<button type="button" class="btn btn-link bg-white" id="sendBtn" onclick="send('message');">
+						            	<button type="button" class="btn btn-link bg-white" id="sendBtn">
 						            		<i class="fa fa-paper-plane"></i>
 						            	</button>
 						          	</div>                                    
@@ -130,13 +132,140 @@
 		</div>
 	</article>
 </section>
+<!-- 소켓 관련 JS -->
+<script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
+<script>
+	// websocket을 지정한 URL로 연결
+	// var sock = new SockJS("/echo");
+	//websocket 서버에서 메시지를 보내면 자동으로 실행된다.
+	
+	$("#txtMessage").on("keypress", function(e) {
+		if (e.keyCode == 13 && !e.shiftKey) {
+			e.preventDefault();
+			var message = $("#txtMessage").val();
+			if (message == "") {
+				alert("메시지를 입력하세요.");
+				$("#txtMessage").focus();
+				return;
+			}
+			
+			// 서버로 메시지 보내기
+			//sock.send(uid + "|" + message);
+			//$("#txtMessage").val("");
+			
+			send();
+		}
+	})
 
-<!-- 소켓관련 JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"></script>
-<script type="text/javascript">
-	// 웹소켓 생성
-	var sock = new SockJS("http://localhost/echo");
+	// 웹소캣 생성
+	var sock = new SockJS("/echo");  // SockJS는 예전 WebSocket을 일부 브라우져가 지원하지 않을 때 사용했던 것!
+	// var sock = new WebSocket("ws://localhost/echo");
+	sock.onmessage = onMessage;
+	//sock.onclose = onClose;
+	//sock.onopen = onOpen;
+
+	// 서버로부터 메시지 받기
+	function onMessage(e) {
+		// e 파라미터는 websocket이 보내준 데이터
+		var msg = e.data;		// 전달 받은 데이터
+		console.log("받은 값 들 : ", msg);
+		if(msg != null && msg.trim() != '') {
+			var d = JSON.parse(msg);
+
+			console.log("서버로부터 받은 메시지 : ", d);
+			
+			//socket 연결시 sessionId 셋팅
+			if(d.type == "getId"){
+				var si = d.sessionId != null ? d.sessionId : "";
+				if(si != ''){
+					$("#sessionId").val(si); 
+					
+					var obj ={
+						type: "open",
+						sessionId : $("#sessionId").val(),
+						userName : $("#memName").val()
+					}
+					//서버에 데이터 전송
+					sock.send(JSON.stringify(obj))
+				}
+			}
+			//채팅 메시지를 전달받은 경우
+			else if(d.type == "message"){
+			    if(d.sessionId == $("#sessionId").val()){
+			        var str = '<li class="clearfix"><div class="message-data text-right" style="text-align: right;"><span class="message-data-time">' + getFormattedDateTime() + '</span><img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar"></div><div class="message other-message float-right">' + d.msg + '</div></li>';
+			        $(".chat-history ul").append(str);	
+			    }else{
+			        var str = '<li class="clearfix"><div class="message-data"><span class="message-data-time">' + getFormattedDateTime() + '</span><img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar"></div><div class="message my-message">' + d.userName + ' : ' + d.msg + '</div></li>';
+			        $(".chat-history ul").append(str);
+			    }
+			}
+
+			//새로운 유저가 입장하였을 경우
+			else if(d.type == "open"){
+				if(d.sessionId == $("#sessionId").val()){
+					var str = '<li class="clearfix"><div class="text-center text-muted"><strong>[채팅에 참가하였습니다.]</strong></div></li>';
+					$(".chat-history ul").append(str);
+				}else{
+					var str = '<li class="clearfix"><div class="text-center text-muted"><strong>[' + d.userName + '] 님이 입장하였습니다.</strong></div></li>';
+					$(".chat-history ul").append(str);
+				}
+			}
+			//유저가 퇴장하였을 경우
+			else if(d.type == "close"){
+				var str = '<li class="clearfix"><div class="text-center text-muted"><strong>[' + d.userName + '] 님이 퇴장하셨습니다.</strong></div></li>';
+				$(".chat-history ul").append(str);
+				
+			}
+			else{
+				console.warn("unknown type!")
+			}
+		}
+	}
+	
+	// 채팅창에서 나갔을 때
+	function onClose(evt) {
+	    var memName = $("#memName").val();
+	    console.log("memName : " +  memName);
+	    var str = '<li class="clearfix"><div class="text-center text-muted"><strong>' + memName + ' 님이 나가셨습니다.</strong></div></li>';
+	    $(".chat-history ul").append(str);
+	}
+
+	// 채팅창에 들어왔을 때
+	function onOpen(evt) {
+	    var memName = $("#memName").val();
+	    console.log("memName : " +  memName);
+	    var str = '<li class="clearfix"><div class="text-center text-muted"><strong>' + memName + ' 님이 들어오셨습니다.</strong></div></li>';
+	    $(".chat-history ul").append(str);
+	}
+
+	// 현재 날짜와 시간을 '년-월-일(요일) AM/PM 시:분' 형식으로 반환
+	function getFormattedDateTime() {
+	    var date = new Date();
+	    var year = date.getFullYear();
+	    var month = date.getMonth() + 1;
+	    var day = date.getDate();
+	    var weekday = ["일", "월", "화", "수", "목", "금", "토"][date.getDay()];
+	    var hours = date.getHours();
+	    var minutes = date.getMinutes();
+	    var ampm = hours >= 12 ? 'PM' : 'AM';
+	    hours = hours % 12;
+	    hours = hours ? hours : 12; // the hour '0' should be '12'
+	    minutes = minutes < 10 ? '0' + minutes : minutes;
+	    var strTime = year + "-" + month + "-" + day + "(" + weekday + ") " + ampm + " " + hours + ':' + minutes;
+	    return strTime;
+	}	
+	
+	function send() {
+		var obj ={
+			type: "message",
+			sessionId : $("#sessionId").val(),
+			userName : $("#memName").val(),
+			msg : $("#txtMessage").val()
+		}
+		//서버에 데이터 전송
+		sock.send(JSON.stringify(obj))
+		$('#txtMessage').val("");
+	}
+
 </script>
-
-
 

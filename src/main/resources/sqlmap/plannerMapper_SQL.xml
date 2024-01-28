@@ -3,6 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.mapper.PlannerMapper">
+
 	<!-- 지역선택 -->
 	<select resultType="areaVO" id="areaList">
 		SELECT 
@@ -128,51 +129,6 @@
 		)
 	</insert>
 	
-	<!-- 일자별 세부플랜 조회 -->
-	<select id="selectDayById" resultType="touritemsVO" parameterType="detatilPlannerVO">
-		SELECT SP_DAY, SP_ORDER, LATITUDE, LONGITUDE, CONTENT_ID, FIRST_IMAGE, TITLE, ADDRESS, SP_NO
-		FROM S_PLANER
-		NATURAL JOIN TOURITEMS
-		WHERE PL_NO = #{plNo} AND SP_DAY= #{spDay} 
-		ORDER BY SP_NO	
-	</select>
-	
-	<!-- 장소 선택시 세부플래너에 추가 -->
-	<insert id="insertDetailPlan" parameterType="detatilPlannerVO">
-	       INSERT INTO S_PLANER
-		    (
-		        SP_NO,
-		        SP_DAY,
-		        SP_SDAY,
-		        SP_EDAY,
-		        CONTENT_ID,
-		        PL_NO,
-		        SP_ORDER,
-		        SP_DISTANCE
-		    )
-		    VALUES
-		    (
-		        SEQ_S_PLANER.nextval,
-		        #{spDay},
-		        #{spSday},
-		        #{spEday},
-		        #{contentId},
-		        #{plNo},
-		        #{spOrder},
-		        #{spDistance}
-		    )
-	</insert>
-	
-	<!-- 장소 선택시 세부플래너 삭제 -->
-	<delete id="deleteDetailPlase" parameterType="detatilPlannerVO">
-		DELETE FROM S_PLANER WHERE SP_NO = #{spNo}
-	</delete>
-	
-	<!-- 전체 삭제시 해당일자 세부플래너 전체 삭제 -->
-	<delete id="detailDeleteAll" parameterType="detatilPlannerVO">
-		DELETE FROM S_PLANER WHERE PL_NO = #{plNo} AND SP_DAY = #{spDay}
-	</delete>
-	
 	<!-- 지역 조회 -->
 	<select id="selectAreaType" resultType="plannerListVO">
 	    SELECT area_code
@@ -193,112 +149,28 @@
 	    AND (sigun.sigungu_name LIKE '%'||#{areaName}||'%' OR area.area_name LIKE '%'||#{areaName}||'%')
 	</select>
 	
-	<!-- 월간 BEST PLAN -->
-	<select id="getSortedByLikes" resultType="plannerVO">
+	<!-- 세부플랜 CRUD 쿼리 -->
+	<!-- 일자별 세부플랜 조회 -->
+	<select id="selectDayById" resultType="touritemsVO" parameterType="detatilPlannerVO">
 		SELECT 
-		    plan.pl_no
-		    , plan.mem_id
-		    , plan.pl_rdate
-		    , NVL(plan.pl_title, '제목 없음') as pl_title
-		    , plan.pl_msize
-		    , plan.pl_private
-		    , plan.pl_theme
-		     ,plan.pl_thumburl,
-		    COUNT(plike.pl_like_no) AS like_count
-		FROM planer plan
-		LEFT JOIN planer_like plike ON plan.pl_no = plike.pl_no
-		WHERE
-		<![CDATA[ 
-			MONTHS_BETWEEN(SYSDATE, plike.pl_like_date) <= 1 OR plike.pl_like_date IS NULL
-		]]>
-		GROUP BY plan.pl_no, plan.mem_id, plan.pl_rdate, plan.pl_title, plan.pl_msize, plan.pl_private, plan.pl_theme, plan.pl_thumburl
-		ORDER BY like_count DESC
+			SP_DAY
+			, SP_ORDER
+			, LATITUDE
+			, LONGITUDE
+			, CONTENT_ID
+			, FIRST_IMAGE
+			, TITLE
+			, ADDRESS
+			, SP_NO
+			, TO_CHAR(SP_SDAY,'YYYY/MM/DD') AS SP_SDAY
+			, TO_CHAR(SP_EDAY,'YYYY/MM/DD') AS SP_EDAY
+			, PL_NO
+			, SP_DISTANCE
+		FROM S_PLANER
+		NATURAL JOIN TOURITEMS
+		WHERE PL_NO = #{plNo} AND SP_DAY= #{spDay} 
+		ORDER BY SP_NO	
 	</select>
-	
-	<!-- 월간 BEST PLAN - 구 -->
-<!-- 	<select id="planList" resultType="planerVO">
-		SELECT 
-		    plan.pl_no
-		    , plan.mem_id
-		    , plan.pl_rdate
-		    , NVL(plan.pl_title, '제목 없음') as pl_title
-		    , plan.pl_msize
-		    , plan.pl_private
-		    , plan.pl_theme
-		     ,plan.pl_thumburl,
-		    COUNT(plike.pl_like_no) AS like_count
-		FROM planer plan
-		LEFT JOIN planer_like plike ON plan.pl_no = plike.pl_no
-		WHERE
-		<![CDATA[ 
-			MONTHS_BETWEEN(SYSDATE, plike.pl_like_date) <= 1 OR plike.pl_like_date IS NULL
-		]]>
-		GROUP BY plan.pl_no, plan.mem_id, plan.pl_rdate, plan.pl_title, plan.pl_msize, plan.pl_private, plan.pl_theme, plan.pl_thumburl
-		ORDER BY like_count DESC
-	</select> -->
-	
-	
-	<!-- 지역별 코스 -->		
-	<select id="plansForArea" parameterType="int" resultType="plannerVO">
-        SELECT 
-			P.PL_NO
-			, P.MEM_ID
-			, P.PL_RDATE
-			, NVL(p.pl_title, '제목 없음') as pl_title
-			, P.PL_MSIZE
-			, P.PL_PRIVATE
-			, P.PL_THEME
-			, P.PL_THUMBURL
-            , COUNT(DISTINCT PLI.mem_id) AS LIKE_COUNT
-		FROM PLANER P
-		JOIN S_PLANER SP ON P.PL_NO = SP.PL_NO
-		JOIN TOURITEMS T ON SP.CONTENT_ID = T.CONTENT_ID
-		JOIN AREA_TB A ON T.AREA_CODE = A.AREA_CODE
-        LEFT JOIN planer_like PLI ON P.pl_no = PLI.pl_no
-		WHERE P.PL_NO IN (
-		    SELECT SP.PL_NO
-		    FROM S_PLANER SP
-		    JOIN TOURITEMS T ON SP.CONTENT_ID = T.CONTENT_ID
-		    GROUP BY SP.PL_NO
-		    HAVING COUNT(DISTINCT T.AREA_CODE) = 1
-		) 
-	    <if test="areaCode > 0">
-		AND A.AREA_CODE = #{areaCode}
-    	</if>
-        GROUP BY P.PL_NO, P.MEM_ID, P.PL_RDATE, P.PL_TITLE, P.PL_MSIZE, P.PL_PRIVATE, P.PL_THEME, P.PL_THUMBURL
-	</select>
-	
-	<!-- 좋아요 관련 -->
-	<insert id="addLike" parameterType="HashMap">
-		INSERT INTO planer_like (
-			pl_like_no
-			, mem_id
-			, pl_like_date
-			, pl_no
-		) VALUES (
-			SEQ_PLANER_LIKE.NEXTVAL
-			, #{memId}
-			, sysdate
-			, #{plNo}
-		)
-	</insert>
-	
-	<delete id="delLike" parameterType="HashMap">
-		DELETE FROM planer_like
-		WHERE mem_id = #{memId}
-		AND pl_no = #{plNo}
-	</delete>
-	
-	<select id="alreadyActivatedLikeList" parameterType="String" resultType="plannerLikeVO">
-		SELECT
-		pl_like_no
-		, mem_id
-		, pl_like_date
-		, pl_no
-		FROM planer_like
-		WHERE mem_id = #{memId}
-	</select>
-	<!--  -->
 	
 	<!-- 하나의 장소만 조회하는 쿼리 -->
 	<select id="getTour" parameterType="String" resultType="touritemsVO">
@@ -307,5 +179,146 @@
 		FROM touritems
 		WHERE content_id = #{contentId}
 	</select>
+	
+	<!-- 장소 선택시 세부플래너에 추가 -->
+	<insert id="insertDetailPlan" parameterType="detatilPlannerVO">
+		<selectKey resultType="long" keyProperty="spNo" order="BEFORE">
+			SELECT SEQ_S_PLANER.nextval FROM dual
+		</selectKey>
+	       INSERT INTO S_PLANER
+		    (
+		        SP_NO,
+		        SP_DAY,
+		        SP_SDAY,
+		        SP_EDAY,
+		        CONTENT_ID,
+		        PL_NO,
+		        SP_ORDER,
+		        SP_DISTANCE
+		    )
+		    VALUES
+		    (
+		        #{spNo},
+		        #{spDay},
+		        #{spSday},
+		        #{spEday},
+		        #{contentId},
+		        #{plNo},
+		        #{spOrder},
+		        #{spDistance}
+		    )
+	</insert>
+	
+	<!-- 전체 삭제시 해당일자 세부플랜 전체 삭제 -->
+	<delete id="deleteAllDetailPlan" parameterType="detatilPlannerVO">
+		DELETE FROM S_PLANER WHERE PL_NO = #{plNo} AND SP_DAY = #{spDay}
+	</delete>
+	
+	<!-- 전체 삭제시 세부플랜 전체 삭제 -->
+	<delete id="deleteAllAllDetailPlan" parameterType="detatilPlannerVO">
+		DELETE FROM S_PLANER WHERE PL_NO = #{plNo}
+	</delete>
+	
+	<!-- 세부플랜 개별 삭제 -->
+	<delete id="deleteOneDetailPlan" parameterType="detatilPlannerVO">
+		DELETE FROM S_PLANER WHERE SP_NO = #{spNo} 
+	</delete>
+	
+	<!-- 세부플랜 개별 조회 -->
+	<select id="getDetailPlan" resultType="touritemsVO" parameterType="detatilPlannerVO">
+		SELECT 
+			SP_DAY
+			, SP_ORDER
+			, SP_DAY
+			, SP_SDAY
+			, SP_EDAY
+			, PL_NO
+			, SP_DISTANCE
+			, LATITUDE
+			, LONGITUDE
+			, CONTENT_ID
+			, FIRST_IMAGE
+			, TITLE
+			, ADDRESS
+			, ZIPCODE
+			, SP_NO
+		FROM S_PLANER
+		NATURAL JOIN TOURITEMS
+		WHERE PL_NO = #{plNo} AND SP_DAY= #{spDay} AND SP_NO = #{spNo} 
+		ORDER BY SP_NO	
+	</select>
+	
+	<!-- 세부플랜 개별 조회2 -->
+<!-- 	<select id="getDetailPlanT" resultType="touritemsVO" parameterType="detatilPlannerVO">
+		SELECT 
+			SP_NO
+			, SP_DAY
+			, SP_SDAY
+			, SP_EDAY
+			, CONTENT_ID
+			, PL_NO
+			, SP_ORDER
+			, SP_DISTANCE
+		FROM S_PLANER
+		NATURAL JOIN TOURITEMS
+		WHERE PL_NO = #{plNo} AND SP_DAY= #{spDay} AND SP_NO = #{spNo} 
+		ORDER BY SP_NO	
+	</select> -->
+	
+	<!-- 플랜 등록 -->
+	<update id="updatePlan" parameterType="plannerVO">
+		UPDATE 
+			planer
+		SET
+			PL_TITLE = #{plTitle}
+			, PL_MSIZE = #{plMsize}
+			, PL_THEME = #{plTheme}
+			, PL_THUMBURL = #{plThumburl}
+		WHERE
+			PL_NO = #{plNo}
+	</update>
+	
+	<!--  -->
+	<insert id="insertMategroup" parameterType="plannerVO">
+		<selectKey keyProperty="mgNo" resultType="long" order="BEFORE">
+			SELECT
+				SEQ_MATEGROUP.NEXTVAL
+			FROM DUAL
+		</selectKey>
+		insert into 
+			mategroup (
+				mg_no
+				, pl_no
+				, mategroup_recruiter
+				, mategroup_currentnum
+				, mategroup_status
+				, mategroup_point
+			) values(
+				#{mgNo}
+				, #{plNo}
+				, #{memId}
+				, '1'
+				, '1단계'
+				, 0
+			)
+	</insert>
+	
+	<!--  -->
+	<insert id="insertMategroupMem" parameterType="plannerVO">
+		insert into 
+			mategroup_member (
+				mategroup_no
+				, mg_no
+				, mategroup_id
+				, mategroup_agree
+				, mategroup_apply
+			) values(
+				SEQ_MATEGROUP_MEMBER.NEXTVAL
+				, #{mgNo}
+				, #{memId}
+				, 0
+				, 'Y'
+			)
+	</insert>
 	
 </mapper>

@@ -50,6 +50,9 @@ public class TouritemsVO {
     private long spNo;
     private long plNo;
     private long spOrder;
+    private double spDistance;
+	private String spSday;
+	private String spEday;
     
 }
 

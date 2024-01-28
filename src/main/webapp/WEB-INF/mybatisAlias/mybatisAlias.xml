@@ -21,6 +21,8 @@
 		<typeAlias type="kr.or.ddit.users.myplan.vo.JourneyinfoVO" alias="journeyinfoVO"/>
 		<typeAlias type="kr.or.ddit.indexsearch.vo.JourneyinfoVO" alias="indexsearchVO"/>
 		
+		<typeAlias type="kr.or.ddit.users.partner.vo.PlanerVO" alias="planerVO"/>
+		
 		<!--  항공  -->
         <typeAlias type="kr.or.ddit.users.reserve.air.vo.FlightVO" alias="flightVO"/>
         <typeAlias type="kr.or.ddit.users.reserve.air.vo.SearchVO" alias="searchVO"/>

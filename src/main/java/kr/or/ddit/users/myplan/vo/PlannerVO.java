@@ -2,6 +2,8 @@ package kr.or.ddit.users.myplan.vo;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +23,11 @@ public class PlannerVO {
 	private int plMsize;		// 플랜 모집인원수
 	private String plPrivate;	// 플랜 공개여부
 	private String plTheme;		// 플랜 테마(혼자, 동행)
-	private List<TouritemsVO> plThumburl;	// 썸네일 이미지
+	private String plThumburl;	// 썸네일 이미지
 	
 	private int likeCount;
+	private MultipartFile fileReal;
+	
+	private List<DetatilPlannerVO> detailList;
+	private long mgNo;
 }

@@ -1,0 +1,244 @@
+/* QNA 게시판 스타일 */
+.cen {
+    width: 1200px;
+}
+
+.qnaListContainer {
+    position: relative;
+}
+
+.communityHeadStyle {
+    height: 310px;
+    position: relative;
+    overflow: hidden;
+}
+
+.comImgBox {
+    position: relative;
+    height: inherit;
+}
+
+.comImgBox img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.17);
+}
+
+.communityHeadStyle>div:last-of-type {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+}
+
+.communityHeadStyle>div:last-of-type h3 {
+    font-weight: 700;
+    font-size: 2.3rem;
+    margin-bottom: 15px;
+}
+
+.communityHeadStyle>div:last-of-type span {
+    color: white;
+    opacity: 0.6;
+}
+
+.qnaListContents {
+    padding: 70px 0px;
+}
+
+.qnaListContents>div:first-of-type {
+    padding: 0px 0px 40px;
+    text-align: center;
+}
+
+.qnaListContents>div:first-of-type>h4 {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 0px;
+}
+
+.qnaListCont {
+    overflow: auto;
+}
+
+.qnaLnb {
+    width: 250px;
+    float: left;
+    background-color: #333;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.qnaLnb a {
+    color: white;
+    display: block;
+}
+
+.qnaLnb .qmain>a {
+    background-color: #444;
+    padding: 10px 20px;
+    transition: all 0.4s;
+}
+
+.qnaLnb .qmain>a:hover {
+    background-color: #eee;
+    color: #333;
+}
+
+.qnaLnb .qsub {
+    display: none;
+}
+
+.qnaLnb .qsub a {
+    background-color: white;
+    color: black;
+    padding: 10px 40px;
+    transition: all 0.4s;
+}
+
+.qnaLnb .qsub a:hover {
+    background-color: #333;
+    color: white;
+}
+
+.qnaListSet {
+    width: calc(100% - 250px);
+    float: left;
+    background-color: #eee;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.qnaListSet ul {
+    list-style: none;
+    padding-left: 0px;
+    margin-bottom: 0px;
+}
+
+.qnaListSet div:first-of-type {
+    background-color: #ddd;
+    padding: 10px 20px;
+    transition: all 0.4s;
+    cursor: pointer;
+}
+
+.qnaListSet div:first-of-type:hover {
+    background-color: #333;
+    color: white;
+}
+
+.qnaListSet div:last-of-type {
+    background-color: white;
+    padding: 15px 30px;
+    display: none;
+}
+
+.qnaBtnGroup {
+	margin-bottom: 20px;
+    text-align: right;
+}
+
+.qnaBtnGroup button {
+    margin-left: 10px;
+}
+
+.qnaBtnGroup button:first-of-type {
+    margin-left: 0px;
+}
+
+/* 모달창 관련 */
+#myModal {
+    position: fixed;
+    width:100%;height:100%;    /* fixed인 경우 먹음 */
+    left:0px;top:0px;
+    background-color: rgba(0, 0, 255, 0.7);
+    display:none;
+    z-index: 1000;  /* 상황에 맞추어 사용, 큰 숫자가 앞으로 나옴 */
+    /* static(브라우저에게 외주), relative(static한 상태에서 내가 조금 조정을하겠다) 
+        absolute(내가 다 하겠음, 기준점 브라우저 왼쪽상단 모서리), fixed(고정좌표),
+        $$ 부모 relative, 자식 absolute (자식의 기준점이 부모 왼쪽상단 모서리)
+    */
+}
+
+/* 모달 속 내용 창 */
+#myCont {
+    width: 60%;
+    height: 70%;
+    margin: 20% auto;  /* 수평가운데 정렬 */
+    background-color: blueviolet;
+    color:white;
+}
+
+
+.menuInfoModalContents {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.3);
+    z-index: 70;
+    display: none;
+}
+
+.menuInfoModalBox {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 60px;
+    overflow: auto;
+    border-radius: 10px;
+}
+
+
+.menuInfoModalBox .cen {
+    width: 600px;
+    height: 600px;
+}
+
+.menu-popheadbox {
+    width: 100%;
+    height: 80px;
+    position: relative;
+}
+
+.menu-popheadbox__span--big {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.menu-popheadbox__button--big {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 120px;
+    height: 45px;
+    background-color: #5882fa;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+#modal_userImg{
+  width:50px;
+  height:50px;
+  border-radius: 75%;
+}
+#modal_userId{
+  width:200px;
+}
+#modal_userFollow{
+  margin:10px;
+  text-align: right;
+}

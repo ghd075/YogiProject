@@ -12,7 +12,7 @@ public interface AirSearchService {
 	
 	public SortVO getSortVO();
 
-	public List<RoundTripVO> selectAllRoundTripFlight(FlightVO flightVO, HttpSession session);
+	public List<RoundTripVO> selectAllRoundTripFlight(FlightVO flightVO, HttpSession session, String type);
 
 
 

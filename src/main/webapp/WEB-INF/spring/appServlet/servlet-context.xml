@@ -37,7 +37,7 @@
 		</beans:property>
 	</beans:bean>
 	
-	<beans:bean id="accessDenielInterceptor" class="kr.or.ddit.utils.AccessDenielInterceptor" />
+	<!-- <beans:bean id="accessDenielInterceptor" class="kr.or.ddit.utils.AccessDenielInterceptor" />
 	<interceptors>
 		<interceptor>
 			<mapping path="/**" />
@@ -70,20 +70,18 @@
 			
 			<beans:ref bean="accessDenielInterceptor" />
 		</interceptor>
-	</interceptors>
-	
+	</interceptors> -->
 	
 	<context:component-scan base-package="kr.or.ddit" />
 	
-	<!-- 웹소켓 -->
-	<beans:bean id="echoHandler" class="kr.or.ddit.utils.EchoHandler" /> 
-
-	<websocket:handlers>
-	    <websocket:mapping handler="echoHandler" path="/echo"/>
-	    <websocket:handshake-interceptors>
-	        <beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
-	    </websocket:handshake-interceptors>
-	    <websocket:sockjs />
+	<beans:bean id="chatHandler" class="kr.or.ddit.utils.EchoHandler" />
+	<websocket:handlers allowed-origins="*">
+		<websocket:mapping handler="chatHandler" path="/echo" />
+		<websocket:handshake-interceptors>
+			<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" />
+		</websocket:handshake-interceptors>
+		<websocket:sockjs />
 	</websocket:handlers>
+	
 	
 </beans:beans>

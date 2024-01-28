@@ -10,7 +10,7 @@
 <section class="bestContainer emptySpace">
 	<article class="bestPlanMainHeadStyle">
 		<div class="comImgBox">
-            <img src="${contextPath }/resources/images/communityBgImg.jpg" alt="커뮤니티 배경 이미지" />
+            <img src="${contextPath }/resources/images/plannerCreateBgImg.jpg" alt="커뮤니티 배경 이미지" />
         </div>
         <div>
         	<h3>플래너 작성</h3>
@@ -33,8 +33,8 @@
 			   	</div>
 		    </div>
 		    <div class="tabcont">
-		    	<div id="areaBoxContainer">
-		    		<select name="areaCode" id=areaCode class="nice-select top-select" style="left:85%;">
+		    	<div id="areaBoxContainer" style="overflow: auto; text-align: right;">
+		    		<select name="areaCode" id=areaCode class="nice-select top-select" style="display:inline-block; float:none;">
 						<option value="0">지역 선택</option>
 					</select> 
 	    		</div>
@@ -54,8 +54,28 @@
 	let likeArr = [];
 	// 세션 아이디
 	let sessionInfo = '${sessionInfo.memId}';
+	console.log("sessionInfo", sessionInfo)
 
 	$(function () {
+		$('.bestContents').on('click', 'article', function(event) {
+			if (!$(event.target).parent().is(".like")) {
+			//console.log(event.target);
+				var plno = $(this).find('div svg').data('plno');
+	      		console.log('data-plno: ' + plno);
+				// ajax 가져오는 경우
+				// $.ajax({
+				// 	type: 'get',
+				// 	url: 	'/myplan/planDetail.do',
+				// 	data : {"plNo" : plno},
+				// 	success : function(data) {
+				// 		console.log("체킁:",data);
+				// 	}
+				// });
+				// 상세페이지 이동 경우
+				
+				location.href="/myplan/planDetail.do?plNo=" + plno;
+			}
+		});
 		// 지역 가져오기
 		draw.getAreas();
 		// 지역별 사용자 코스

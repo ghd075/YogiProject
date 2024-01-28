@@ -236,7 +236,7 @@ var parsing = {
         $.each(data, function (i, item) {
           let html = "";
           html += `<article>`;
-          if(i < 8) {
+          // if(i < 8) {
             // console.log("i",i);
             html += `<div class="infoThumbnailBox">`;
             if(item.plThumburl == "" || item.plThumburl == null) {
@@ -258,7 +258,7 @@ var parsing = {
                     html += `</article>`;
                     // console.log("html", html)    
                     besConEl.append(html);
-            }
+            // }
           });
         }
       }
@@ -272,7 +272,7 @@ var parsing = {
       $.each(data, function (i, item) {
         let html = "";
         html += `<article>`;
-        if(i < 8) {
+        // if(i < 8) {
           // console.log("i",i);
           html += `<div class="infoThumbnailBox">`;
           if(item.plThumburl == "" || item.plThumburl == null) {
@@ -294,7 +294,7 @@ var parsing = {
                   html += `</article>`;
                   // console.log("html", html)    
                   besConEl.append(html);
-          }
+          // }
         });
       }
       draw.alreadyActivatedLike({"memId" : sessionInfo});
@@ -337,7 +337,11 @@ $.areaChange = function(){
 
 /* 좋아요 누르고 다시누르는 부분 */
 $.likeChange = function(sessionInfo){
-  $(document).on("click",".like",function(){
+  $(document).on("click",".like",function(event){
+  // $(event.target).parnet().stopPropagation();
+  event.stopPropagation();
+  
+  
     let thisIs = $(this);
     let likeEl = $(this).parent().siblings().children('span:nth-last-child(1)');
   
@@ -377,3 +381,7 @@ $.likeChange = function(sessionInfo){
     }
   });
 }
+
+// $('.bestContents').on('click', 'article', function() {
+//   alert('Article clicked!');
+// });

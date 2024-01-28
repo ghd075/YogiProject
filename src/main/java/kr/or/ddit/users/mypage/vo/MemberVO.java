@@ -25,5 +25,6 @@ public class MemberVO {
 	
 	private MultipartFile imgFile;
 	private String memProfileimg;
+	private int memPoint;
 	
 }

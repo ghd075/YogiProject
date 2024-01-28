@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.MyTripMapper">
+
+	<select id="myTripList" parameterType="planerVO" resultType="planerVO">
+		select *
+		  from (
+		    SELECT 
+		        '내플랜' as sType, 
+		        A.PL_NO, 
+		        A.MEM_ID, 
+		        M.MEM_NAME, 
+		        A.PL_RDATE, 
+		        A.PL_TITLE, 
+		        A.PL_MSIZE, 
+		        A.PL_PRIVATE, 
+		        A.PL_THEME, 
+		        A.PL_THUMBURL, 
+		        null as MATEGROUP_ID 
+		    FROM 
+		        PLANER A
+		        JOIN MATEGROUP B ON A.PL_NO = B.PL_NO 
+		        JOIN members M ON A.MEM_ID = M.MEM_ID 
+		    WHERE 
+		        A.MEM_ID = #{memId}
+		        AND B.MATEGROUP_RECRUITER = #{memId}
+		    
+		    UNION ALL
+		
+		    SELECT 
+		        '동행참가' as sType, 
+		        A.PL_NO, 
+		        A.MEM_ID, 
+		        M.MEM_NAME, 
+		        A.PL_RDATE, 
+		        A.PL_TITLE, 
+		        A.PL_MSIZE, 
+		        A.PL_PRIVATE, 
+		        A.PL_THEME, 
+		        A.PL_THUMBURL, 
+		        C.MATEGROUP_ID 
+		    FROM 
+		        PLANER A
+		        JOIN MATEGROUP B ON A.PL_NO = B.PL_NO 
+		        JOIN MATEGROUP_MEMBER C ON B.MG_NO = C.MG_NO 
+		        JOIN members M ON A.MEM_ID = M.MEM_ID 
+		    where 1=1 
+		      AND A.PL_NO = B.PL_NO 
+		      AND B.MG_NO = C.MG_NO
+		      AND A.MEM_ID = M.MEM_ID
+		      AND C.MATEGROUP_ID in (
+		        SELECT DISTINCT C.MATEGROUP_ID
+		        FROM 
+		            PLANER A, MATEGROUP B, MATEGROUP_MEMBER C 
+		        WHERE 
+		            A.PL_NO = B.PL_NO AND B.MG_NO = C.MG_NO
+		        )
+		      AND C.MATEGROUP_ID = #{memId}
+		    ORDER BY 
+		        PL_NO DESC, 
+		        sType
+		  ) result
+	</select>
+	
+	<select id="searchPlanerList" parameterType="planerVO" resultType="planerVO">
+		SELECT *
+		  FROM (
+		    SELECT 
+		        '내플랜' as sType, 
+		        A.PL_NO, 
+		        A.MEM_ID, 
+		        M.MEM_NAME, 
+		        A.PL_RDATE, 
+		        A.PL_TITLE, 
+		        A.PL_MSIZE, 
+		        A.PL_PRIVATE, 
+		        A.PL_THEME, 
+		        A.PL_THUMBURL, 
+		        null as MATEGROUP_ID 
+		    FROM 
+		        PLANER A
+		        JOIN MATEGROUP B ON A.PL_NO = B.PL_NO 
+		        JOIN members M ON A.MEM_ID = M.MEM_ID 
+		    WHERE 
+		        A.MEM_ID = #{memId}
+		        AND B.MATEGROUP_RECRUITER = #{memId}
+		    
+		    UNION ALL
+		
+		    SELECT 
+		        '동행참가' as sType, 
+		        A.PL_NO, 
+		        A.MEM_ID, 
+		        M.MEM_NAME, 
+		        A.PL_RDATE, 
+		        A.PL_TITLE, 
+		        A.PL_MSIZE, 
+		        A.PL_PRIVATE, 
+		        A.PL_THEME, 
+		        A.PL_THUMBURL, 
+		        C.MATEGROUP_ID 
+		    FROM 
+		        PLANER A
+		        JOIN MATEGROUP B ON A.PL_NO = B.PL_NO 
+		        JOIN MATEGROUP_MEMBER C ON B.MG_NO = C.MG_NO 
+		        JOIN members M ON A.MEM_ID = M.MEM_ID 
+		    where 1=1 
+		      AND A.PL_NO = B.PL_NO 
+		      AND B.MG_NO = C.MG_NO
+		      AND A.MEM_ID = M.MEM_ID
+		      AND C.MATEGROUP_ID in (
+		        SELECT DISTINCT C.MATEGROUP_ID
+		        FROM 
+		            PLANER A, MATEGROUP B, MATEGROUP_MEMBER C 
+		        WHERE 
+		            A.PL_NO = B.PL_NO AND B.MG_NO = C.MG_NO
+		        )
+		      AND C.MATEGROUP_ID = #{memId}
+		    ORDER BY 
+		        PL_NO DESC, 
+		        sType
+		  ) result
+		where 1=1
+		  and pl_title like '%' || #{plTitle} || '%'
+		  and pl_msize like '%' || #{plMsize} || '%'
+	</select>
+	
+	<update id="chgStatusPlan" parameterType="planerVO">
+		MERGE INTO PLANER A
+		USING (
+		    SELECT A.PL_NO
+		    FROM PLANER A
+		    JOIN MATEGROUP B ON A.PL_NO = B.PL_NO
+		    JOIN members M ON A.MEM_ID = M.MEM_ID
+		    WHERE 
+		        A.MEM_ID = #{memId}
+		        AND B.MATEGROUP_RECRUITER = #{memId}
+		        AND A.PL_NO = #{plNo}
+		) B ON (A.PL_NO = B.PL_NO)
+		WHEN MATCHED THEN
+		    UPDATE SET A.PL_PRIVATE = #{plPrivate}
+	</update>
+
+</mapper>

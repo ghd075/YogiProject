@@ -11,4 +11,6 @@ public interface AirSearchMapper {
 
 	public List<SearchVO> selectAllRoundTripFlight(FlightVO flightVO);
 
+	public List<SearchVO> selectAllRoundTripFlightSub(FlightVO flightVO);
+
 }

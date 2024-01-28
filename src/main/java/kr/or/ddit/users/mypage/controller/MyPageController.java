@@ -102,11 +102,13 @@ public class MyPageController {
 		return "mypage/boardInfo";
 	}
 	
-	// 결제관리 이동
-	@CrossOrigin(origins = "http://localhost")
-	@RequestMapping(value = "/paymentinfo.do", method = RequestMethod.GET)
-	public String paymentinfo() {
-		return "mypage/paymentInfo";
-	}
+	/*
+	 * // 결제관리 이동
+	 * 
+	 * @CrossOrigin(origins = "http://localhost")
+	 * 
+	 * @RequestMapping(value = "/paymentinfo.do", method = RequestMethod.GET) public
+	 * String paymentinfo() { return "mypage/paymentInfo"; }
+	 */
 	
 }

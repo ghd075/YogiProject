@@ -1,5 +1,7 @@
 package kr.or.ddit.users.myplan.vo;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +21,7 @@ public class DetatilPlannerVO {
 	private String contentId;
 	private long plNo;
 	private long spOrder;
-	private long spDistance;
+	private double spDistance;
+	
+	private TouritemsVO tourVO;
 }

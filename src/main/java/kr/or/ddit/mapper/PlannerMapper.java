@@ -15,38 +15,29 @@ import kr.or.ddit.users.myplan.vo.TouritemsVO;
 
 public interface PlannerMapper {
 
+	// 기존 코드
 	public ArrayList<AreaVO> areaList();
-
 	public ArrayList<SigunguVO> sigunguList(String areaCode);
-
 	public void save(TouritemsVO tourItemsList);
-
 	public List<TouritemsVO> searchResult(SearchCodeVO searchCode);
-
 	public int contentCnt(SearchCodeVO searchCode);
-
 	public int newPlanner(PlannerVO plannerVO);
-
-	public void insertDetailPlan(DetatilPlannerVO s_planner);
-
-	public List<TouritemsVO> selectDayById(DetatilPlannerVO s_planner);
-
-	public void deleteDetailPlase(DetatilPlannerVO s_planner);
-
 	public PlannerListVO selectAreaType(String areaName);
-
 	public PlannerListVO selectSigogunType(String areaName);
-	
-	public List<PlannerVO> getSortedByLikes();
-	public List<PlannerVO> planList();
-	public List<PlannerVO> planAreaList();
-	public List<PlannerVO> plansForArea(int areaCode);
-	public int addLike(Map<String, Object> param);
-	public List<PlannerLikeVO> alreadyActivatedLikeList(String memId);
-	public int delLike(Map<String, Object> param);
 
+	// 세부플랜 CRUD
+	public List<TouritemsVO> selectDayById(DetatilPlannerVO s_planner);
 	public TouritemsVO getTour(String contentId);
-
+	public int insertDetailPlan(DetatilPlannerVO s_planner);
 	public void detailDeleteAll(DetatilPlannerVO s_planner);
+	public int deleteAllDetailPlan(DetatilPlannerVO s_planner);
+	public int deleteOneDetailPlan(DetatilPlannerVO s_planner);
+	public TouritemsVO getDetailPlan(DetatilPlannerVO s_planner);
+	public int deleteAllAllDetailPlan(long plNo);
+	public int updatePlan(PlannerVO plan);
+	public List<DetatilPlannerVO> getOneDetailPlan(long plNo);
+	public PlannerVO getOnePlan(long plNo);
+	public void insertMategroup(PlannerVO plan);
+	public void insertMategroupMem(PlannerVO plan);
 	
 }

@@ -13,13 +13,4 @@ public class SortVO {
 	private int recoPrice;        //추천 가격
 	private String recoDuration;  //추천 시간
 	
-	
-	public void setRecoPrice(int lowestPrice) {
-		this.recoPrice = lowestPrice + 15000;
-	}
-	public void setRecoDuration(String shortestDuration) {
-		this.recoDuration = shortestDuration;
-	}
-	
-	
 }

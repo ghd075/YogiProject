@@ -18,6 +18,11 @@ public class FlightVO {
 	private int flightBusinessprice;
 	private int flightFirstclassprice;
 	
+	private String flightDeptime2;
+	private String flightArrtime2;
+	private String originDeptime; 
+	private String originArrtime;
+	
 	//탑승관련
 	private int yuaCnt;
 	private int soaCnt;
@@ -35,18 +40,30 @@ public class FlightVO {
 	
 	//출발시간 문자열로 받기
 	public void setFlightDeptime(String flightDeptime) {
+		this.originDeptime = flightDeptime;
+		System.out.println("검색 시 받은 시간: "+flightDeptime);
 	  String[] depTimeArr =	flightDeptime.split(" ")[0].split("-");
 	  for (String depTime : depTimeArr) {
 		this.flightDeptime += depTime;
 	  }
+	  System.out.println("가공한 시간: "+this.flightDeptime);
+	}
+	
+	public void setFlightDeptime2(String flightDeptime) {
+		this.flightDeptime2 = this.flightDeptime + flightDeptime;
 	}
 	
 	//도착시간 문자열로 받기
 	public void setFlightArrtime(String flightArrtime) {
+		this.originArrtime = flightArrtime;
 		String[] arrTimeArr = flightArrtime.split(" ")[0].split("-");
 		for (String arrTime : arrTimeArr) {
 			this.flightArrtime += arrTime;
 		}
+	}
+	
+	public void setFlightArrtime2(String flightArrtime) {
+		this.flightArrtime2 = this.flightArrtime + flightArrtime;
 	}
 	
 	

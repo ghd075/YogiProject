@@ -3,12 +3,18 @@ package kr.or.ddit.users.myplan.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.filefilter.FalseFileFilter;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.or.ddit.users.login.vo.MemberVO;
@@ -31,6 +38,7 @@ import kr.or.ddit.users.myplan.vo.SearchCodeVO;
 import kr.or.ddit.users.myplan.vo.SearchResultVO;
 import kr.or.ddit.users.myplan.vo.SigunguVO;
 import kr.or.ddit.users.myplan.vo.TouritemsVO;
+import kr.or.ddit.utils.ServiceResult;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -45,17 +53,16 @@ public class MakeMyPlanController {
 	@RequestMapping(value = "/makeplan.do", method = RequestMethod.GET)
 	public String makeplan(HttpServletRequest req, Model model, RedirectAttributes ra, @RequestParam(required = false, value= "infoName") String infoName) {
 		/** 자료수집 및 정의 */ 
-//		HttpSession session = req.getSession();
-//		MemberVO memberVO = (MemberVO) session.getAttribute("sessionInfo");
-//		if(memberVO == null) {
-//			ra.addFlashAttribute("message", "로그인 후 사용 가능합니다!");
-//			return "redirect:/login/signin.do";
-//		}
+		HttpSession session = req.getSession();
+		MemberVO memberVO = (MemberVO) session.getAttribute("sessionInfo");
+		if(memberVO == null) {
+			ra.addFlashAttribute("message", "로그인 후 사용 가능합니다!");
+			return "redirect:/login/signin.do";
+		}
 		//테스트용
-		MemberVO memberVO = new MemberVO();
-		memberVO.setMemId("chantest1");
+//		MemberVO memberVO = new MemberVO();
+//		memberVO.setMemId("chantest1");
 		String memId = memberVO.getMemId();
-		
 		String chageToEng = "";
 		String planType = "";
 		PlannerListVO planList = null;
@@ -133,16 +140,16 @@ public class MakeMyPlanController {
 		return result;
 	}
 	
-	//세부 플랜 추가
-	@PostMapping("/insertDetailPlan")
+	@PostMapping("/detailDeleteAll")
 	@ResponseBody
-	public  List<TouritemsVO> insertDetailPlan(@RequestBody DetatilPlannerVO s_planner) {
-		log.info("detatilPlannerVO 형태 : " + s_planner);
-		planService.insertDetailPlan(s_planner);
-		log.info("# " + s_planner.getPlNo() + "번 플래너의 DAY " + s_planner.getSpDay() + " 세부 플랜에 " + s_planner.getContentId() + " 추가");
-		List<TouritemsVO> list = planService.selectDayById(s_planner);
+	public List<TouritemsVO> detailDeleteAll(@RequestBody DetatilPlannerVO s_planner) {
+		log.info("detatilPlannerVO 형태2 : " + s_planner.toString());
+		List<TouritemsVO> list = planService.detailDeleteAll(s_planner);
 		return list;
 	}
+	
+	
+	/* 세부플랜 CRUD */
 	
 	//세부플랜 리스트 조회
 	@PostMapping("/dayselect")
@@ -152,30 +159,113 @@ public class MakeMyPlanController {
 		return list;
 	}
 	
-	//세부 플랜 삭제
-	@PostMapping("/deleteDetailPlase")
-	@ResponseBody
-	public List<TouritemsVO> delete_sp(@RequestBody DetatilPlannerVO s_planner) {
-		log.info("detatilPlannerVO 형태 : " + s_planner);
-		List<TouritemsVO> list = planService.deleteDetailPlase(s_planner);
-		log.info("# "+ s_planner.getPlNo() +"번 플래너의  " + s_planner.getSpNo() + " 번 세부 플랜 삭제");
-		return list;
-	}
-	
-	@PostMapping("/detailDeleteAll")
-	@ResponseBody
-	public List<TouritemsVO> detailDeleteAll(@RequestBody DetatilPlannerVO s_planner) {
-		log.info("detatilPlannerVO 형태2 : " + s_planner.toString());
-		List<TouritemsVO> list = planService.detailDeleteAll(s_planner);
-		return list;
-	}
-	
+	/**
+	 * 하나의 장소를 조회
+	 * @param contentId
+	 * @return
+	 */
 	@GetMapping("/getTour")
 	@ResponseBody
 	public TouritemsVO getTour(@RequestParam String contentId) {
 		log.info("contentId : " + contentId);
 		TouritemsVO tvo = planService.getTour(contentId);
 		return tvo;
+	}
+	
+	/**
+	 * 세부플랜 인서트
+	 * @param s_planner
+	 * @return
+	 */
+	@PostMapping("/insDp")
+	@ResponseBody
+	public TouritemsVO insertDetailPlan(@RequestBody DetatilPlannerVO s_planner) {
+		log.debug("s_plannerIns : {}", s_planner);
+		TouritemsVO tvo = planService.insertDetailPlan(s_planner);
+		log.debug("# " + s_planner.getPlNo() + "번 플래너의 DAY " + s_planner.getSpDay() + " 세부 플랜에 " + s_planner.getContentId() + " 추가");
+		return tvo;
+	}
+
+	/**
+	 * 날짜에 해당하는 세부플랜 삭제
+	 * @param s_planner
+	 * @return
+	 */
+	@PostMapping("/delAllDp")
+	@ResponseBody
+	public ResponseEntity<String> deleteAllDetailPlan(@RequestBody DetatilPlannerVO s_planner) {
+		log.debug("s_plannerDel : {}", s_planner);
+		ServiceResult sres = planService.deleteAllDetailPlan(s_planner);
+		log.debug("# " + s_planner.getPlNo() + "번 플래너의 DAY " + s_planner.getSpDay() + " 세부 플랜 전체 삭제");
+		return new ResponseEntity<String>(sres.toString(), HttpStatus.OK);
+	}
+	
+	/**
+	 * 날짜 상관없이 모든 세부플랜 삭제
+	 * @param s_planner
+	 * @return
+	 */
+	@PostMapping("/delAllAllDp")
+	@ResponseBody
+	public ResponseEntity<String> deleteAllAllDetailPlan(@RequestBody DetatilPlannerVO s_planner) {
+		log.debug("s_plannerDel : {}", s_planner);
+		ServiceResult sres = planService.deleteAllAllDetailPlan(s_planner.getPlNo());
+		return new ResponseEntity<String>(sres.toString(), HttpStatus.OK);
+	}
+	
+	/**
+	 * 하나의 세부플랜만 선택하여 삭제
+	 * @param s_planner
+	 * @return
+	 */
+	@PostMapping("/delOneDp")
+	@ResponseBody
+	public ResponseEntity<String> deleteOneDetailPlan(@RequestBody DetatilPlannerVO s_planner) {
+		log.debug("s_plannerOneDel : {}", s_planner);
+//		ServiceResult sres = planService.deleteOneDetailPlan(s_planner);
+		ServiceResult sres = planService.deleteOneDetailPlan(s_planner);
+		log.debug("# " + s_planner.getPlNo() + "번 플래너의 DAY " + s_planner.getSpDay()  + s_planner.getSpNo() + " 번 플랜 삭제");
+		return new ResponseEntity<String>(sres.toString(), HttpStatus.OK);
+	}
+
+	/**
+	 * 세부플랜 저장
+	 * @param req
+	 * @param planVO
+	 * @param model
+	 * @param ra
+	 * @param imgFile
+	 * @return
+	 */
+	@PostMapping("/updatePlan")
+	public String updatePlan(
+			HttpServletRequest req, 
+			PlannerVO planVO, 
+			Model model, 
+			RedirectAttributes ra,
+			@RequestParam("fileReal") MultipartFile imgFile
+			) {
+		
+		log.info("imgFile : " + imgFile.getOriginalFilename());
+		log.info("planVO : " + planVO.toString());
+		HttpSession session = req.getSession();
+		MemberVO memberVO = (MemberVO) session.getAttribute("sessionInfo");
+		planVO.setMemId(memberVO.getMemId());
+		
+		
+		String goPage = "";
+		
+		ServiceResult result = planService.updatePlan(req, planVO, imgFile);
+		
+		if(result == ServiceResult.OK) {
+			ra.addFlashAttribute("message", "등록 성공!");
+		} else {
+			ra.addFlashAttribute("message", "등록 실패!");
+		}
+		
+		goPage = "redirect:/partner/mygroup.do";
+		
+		return goPage;
 	}
 	
 	

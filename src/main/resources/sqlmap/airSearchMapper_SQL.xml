@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.mapper.AirSearchMapper">
 
-  <!-- 가는편/돌아오는편에 따라 동적조건 적용 -->
+  <!-- 가는편/돌아오는편에 따라 동적조건 적용 날짜기준으로 검색 -->
   <sql id="normalSearch">
     <if test="flightType == 'departure'">
       flight_depairport LIKE #{flightDepairport} || '%' 
@@ -35,6 +35,58 @@
     </if>
   </sql>
   
+  
+  <!-- 가는편시간,돌아오는편시간,운항시간 기준으로 조회 -->
+  <sql id="sideSearch">
+   <if test="flightType == 'departure'">
+      flight_depairport LIKE #{flightDepairport} || '%' 
+      AND flight_arrairport LIKE #{flightArrairport} || '%' 
+      <if test="flightDeptime2 == null or flightDeptime2 == ''">
+        AND flight_deptime LIKE #{flightDeptime} || '%'
+      </if>
+      <if test="flightDeptime2 != null and flightDeptime2 != ''">
+        AND flight_deptime >= #{flightDeptime} || '0000' 
+        AND <![CDATA[ flight_deptime <= #{flightDeptime2} ]]>
+      </if>
+      <if test="flightDuration != null and flightDuration != ''">
+        AND #{flightDuration} > flight_duration
+      </if>
+	    <if test="seatClass == 'economy'">
+	      AND a.airplane_remaineconomy >= #{totalCnt}
+	    </if>
+	    <if test="seatClass == 'business'">
+	      AND a.airplane_remainbusiness >= #{totalCnt}
+	    </if>
+	    <if test="seatClass == 'firstClass'">
+	      AND a.airplane_remainfirst >= #{totalCnt}
+	    </if>
+    </if>
+    
+    <if test="flightType == 'arrival'">
+      flight_depairport LIKE #{flightArrairport} || '%' 
+      AND flight_arrairport LIKE #{flightDepairport} || '%' 
+     <if test="flightArrtime2 == null or flightArrtime2 == ''">
+        AND flight_deptime LIKE #{flightArrtime} || '%'
+     </if>
+     <if test="flightArrtime2 != null and flightArrtime2 != ''">
+       AND flight_deptime >= #{flightArrtime} || '0000'
+       AND <![CDATA[ flight_deptime <= #{flightArrtime2} ]]>
+     </if>
+     <if test="flightDuration != null and flightDuration != ''">
+       AND #{flightDuration} > flight_duration
+     </if>
+	    <if test="seatClass == 'economy'">
+	      AND a.airplane_remaineconomy >= #{totalCnt}
+	    </if>
+	    <if test="seatClass == 'business'">
+	      AND a.airplane_remainbusiness >= #{totalCnt}
+	    </if>
+	    <if test="seatClass == 'firstClass'">
+	      AND a.airplane_remainfirst >= #{totalCnt}
+	    </if>
+    </if>
+  </sql>
+  
   <!-- 왕복항공편 검색 -->
   <select id="selectAllRoundTripFlight" parameterType="flightVO" resultType="searchVO">
     SELECT f.flight_code,
@@ -52,6 +104,24 @@
            flight_firstclassprice
     FROM flight f INNER JOIN airplane a ON(f.flight_code = a.flight_code)
     WHERE <include refid="normalSearch"/>
+  </select>
+  
+  <select id="selectAllRoundTripFlightSub" parameterType="flightVO" resultType="searchVO">
+    SELECT f.flight_code,
+           f.airline_code,
+           airline_name,
+           flight_depairport,
+           flight_depportcode,
+           flight_deptime,
+           flight_arrairport,
+           flight_arrportcode,
+           flight_arrtime,
+           flight_duration,
+           flight_economyprice,
+           flight_businessprice,
+           flight_firstclassprice
+    FROM flight f INNER JOIN airplane a ON(f.flight_code = a.flight_code)
+    WHERE <include refid="sideSearch"/>
   </select>
   
 
