@@ -9,5 +9,96 @@
 		FROM MEMBERS
 		WHERE MEM_ID = #{memId}
 	</select>
+	
+	<update id="updatePoint" parameterType="kr.or.ddit.users.mypage.vo.PointVO">
+		UPDATE 
+			MEMBERS 
+		SET MEM_POINT = MEM_POINT + #{pointAccount}
+		WHERE MEM_ID = #{memId}
+	</update>
+	
+	<insert id="insertPointHistory" parameterType="kr.or.ddit.users.mypage.vo.PointVO">
+	    INSERT INTO POINTPAYMENT
+	    (
+	        POINT_NO,
+	        POINT_ACCOUNT,
+	        POINT_DATE,
+	        POINT_TYPE,
+	        POINT_CONTENT,
+	        MEM_ID
+	    )
+	    VALUES
+	    (
+	        SEQ_POINTPAYMENT.NEXTVAL, 
+	        #{pointAccount},        
+	        SYSDATE,                
+	        '충전',          
+	        #{pointContent}, 
+	        #{memId}         
+	    )
+	</insert>
+	
+	<select id="selectUserPointList" parameterType="java.util.Map" resultType="kr.or.ddit.users.mypage.vo.PointVO">
+		SELECT b.*
+		FROM(
+		    SELECT ROW_NUMBER() OVER (ORDER BY a.POINT_DATE DESC)  AS POINT_NO,
+				    a.POINT_DATE,
+				    a.POINT_TYPE,
+				    a.POINT_CONTENT,
+				    a.POINT_ACCOUNT,
+				    a.MEM_POINT,
+				    a.REMAINING_POINT
+		    FROM (
+				SELECT
+				    PAY.POINT_NO,
+				    PAY.POINT_DATE,
+				    PAY.POINT_TYPE,
+				    PAY.POINT_CONTENT,
+				    PAY.POINT_ACCOUNT,
+				    MEM.MEM_POINT,
+				    SUM(
+				        CASE
+				            WHEN PAY.POINT_TYPE = '충전' THEN
+				                PAY.POINT_ACCOUNT
+				            ELSE
+				                - PAY.POINT_ACCOUNT
+				        END
+				    )
+				    OVER(PARTITION BY PAY.MEM_ID
+				         ORDER BY
+				             PAY.POINT_NO
+				    ) AS REMAINING_POINT
+				FROM
+				    POINTPAYMENT PAY,
+				    MEMBERS      MEM
+				WHERE
+				        1 = 1
+				    AND MEM.MEM_ID = PAY.MEM_ID
+				    AND MEM.MEM_ID = #{memId}
+				<if test="filter != null and filter == 'priceSelect'">
+					AND PAY.POINT_TYPE = '충전'
+				</if>
+				<if test="filter != null and filter == 'recoSelect'">
+					AND PAY.POINT_TYPE = '차감'
+				</if>
+		    ) a
+		) b
+		<![CDATA[
+			WHERE b.POINT_NO >= #{startIndex} AND b.POINT_NO <= #{endIndex}
+		]]>
+	</select>
+	
+	<select id="selectUserPointCount" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(*)
+		FROM POINTPAYMENT
+		WHERE MEM_ID = #{memId}
+		<if test="filter != null and filter == 'priceSelect'">
+			AND POINT_TYPE = '충전'
+		</if>
+		<if test="filter != null and filter == 'recoSelect'">
+			AND POINT_TYPE = '차감'
+		</if>
+	</select>
+
 
 </mapper>

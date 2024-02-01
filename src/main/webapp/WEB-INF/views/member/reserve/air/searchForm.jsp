@@ -21,11 +21,11 @@
         <div class="airTabbtnGroup">
             <div class="tabbtn tactive">
                 <i class="fas fa-ticket-alt"></i>
-                왕복
+                                 왕복
             </div>
             <div class="tabbtn">
                 <i class="fas fa-ticket-alt"></i>
-                편도
+                                 편도
             </div>
         </div>
         <div class="airTabcontBox">

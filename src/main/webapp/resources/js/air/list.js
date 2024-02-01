@@ -371,8 +371,6 @@ $.sortBtnFn = function(){
    }
 
 
-
-
      //페이지 생성 함수
 	 function getRenderingPage(pageList){
 		var rendering = '';
@@ -440,7 +438,6 @@ $.sortBtnFn = function(){
 		   });  //each문 끝
 		 return rendering;
 	 }
-
 	 errorPage += '<div class="mainContent">';
 	 errorPage += '  <div class="row">';
 	 errorPage += '	<div class="col-sm-12" style="padding-left: 280px;">';
@@ -450,34 +447,26 @@ $.sortBtnFn = function(){
 	 errorPage += '	</div>';
 	 errorPage += '  </div>';
 	 errorPage += '</div>';
-
 }
 
 
+
+	//시간형태를 변환하는 함수
+	function timeFormatter(date){
+	  var time = date.substr(8);
+	  var hourStr = time.substr(0, 2);
+	  var minute = time.substr(2);
 	
-
-   
-
-
-
-
-
-//시간형태를 변환하는 함수
-function timeFormatter(date){
-  var time = date.substr(8);
-  var hourStr = time.substr(0, 2);
-  var minute = time.substr(2);
-
-  var hour = parseInt(hourStr, 10) % 12;
-  var ampm = parseInt(hourStr, 10) >= 12 ? '오후' : '오전';
-
-  return ampm+' '+hour+':'+minute;
-}
-
-//숫자의 형태를 변환하는 함수
-function numberFormatter(number){
-	return '₩'+number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
+	  var hour = parseInt(hourStr, 10) % 12;
+	  var ampm = parseInt(hourStr, 10) >= 12 ? '오후' : '오전';
+	
+	  return ampm+' '+hour+':'+minute;
+	}
+	
+	//숫자의 형태를 변환하는 함수
+	function numberFormatter(number){
+		return '₩'+number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	}
 
 
 

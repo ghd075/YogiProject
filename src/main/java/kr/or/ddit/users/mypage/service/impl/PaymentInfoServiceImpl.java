@@ -1,5 +1,6 @@
 package kr.or.ddit.users.mypage.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import kr.or.ddit.mapper.PaymentInfoMapper;
 import kr.or.ddit.users.mypage.service.PaymentInfoService;
+import kr.or.ddit.users.mypage.vo.PointVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -34,6 +36,32 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
 		
 		/** 반환자료 저장 */
 		param.put("memPoint", memPoint);
+	}
+
+	@Override
+	public void updatePoint(PointVO pointVO) {
+		int status = 0;
+		String pointContext = String.format("%s님이 %d포인트를 충전하였습니다.", pointVO.getMemName(), pointVO.getPointAccount());
+		
+		pointVO.setPointContent(pointContext);
+		
+		status = paymentInfoMapper.updatePoint(pointVO);
+
+		// 수정 성공
+		if(status > 0) {
+			paymentInfoMapper.insertPointHistory(pointVO);
+		}
+		
+	}
+
+	@Override
+	public List<PointVO> selectUserPointList(Map<String, String> searchParam) {
+		return paymentInfoMapper.selectUserPointList(searchParam);
+	}
+
+	@Override
+	public int selectUserPointCount(Map<String, String> searchParam) {
+		return paymentInfoMapper.selectUserPointCount(searchParam);
 	}
 
 }

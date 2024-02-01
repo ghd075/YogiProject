@@ -7,6 +7,10 @@
         $.footerRelatedSiteFn();
         $.mmainClickEvent700();
         
+     	// 로그인/로그아웃 감지 기능
+     	var memId = "${sessionInfo.memId}";
+        $.loginDetectWebSocketFn(memId);
+        
         // 종횡비 함수
         var pcgnbMainProfileImgCont = $(".pcgnb .mainProfileImgCont");
         var pcgnbMainProfileImg = $(".pcgnb .mainProfileImgCont img")

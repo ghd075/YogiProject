@@ -30,4 +30,10 @@ public class PlannerVO {
 	
 	private List<DetatilPlannerVO> detailList;
 	private long mgNo;
+	private long mgCurNum;
+	private String mategroupApply;
+	
+	private int mategroupPoint;
+	
+	
 }

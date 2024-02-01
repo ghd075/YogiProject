@@ -10,6 +10,7 @@ import kr.or.ddit.users.reserve.air.service.AirSearchService;
 import kr.or.ddit.users.reserve.air.utils.DurationSort;
 import kr.or.ddit.users.reserve.air.utils.PriceSort;
 import kr.or.ddit.users.reserve.air.utils.TimeGenerator;
+import kr.or.ddit.users.reserve.air.utils.api.AirApiVoMapper;
 import kr.or.ddit.users.reserve.air.vo.FlightVO;
 import kr.or.ddit.users.reserve.air.vo.RoundTripVO;
 import kr.or.ddit.users.reserve.air.vo.SearchVO;
@@ -78,8 +79,8 @@ public class AirSearchServiceImpl implements AirSearchService{
 	          SearchVO depVO = depList.get(i);
 	          SearchVO arrVO = arrList.get(j);
 	          //3.로고이미지 설정
-	          setAirlineLogoURL(depVO.getAirlineName(), depVO);
-	          setAirlineLogoURL(arrVO.getAirlineName(), arrVO);
+	          AirApiVoMapper.setAirlineLogoURL(depVO.getAirlineName(), depVO);
+	          AirApiVoMapper.setAirlineLogoURL(arrVO.getAirlineName(), arrVO);
 	          
 	          //4.출발편, 돌아오는편 세팅
 	    	  roundVO.setDeparture(depVO);
@@ -137,22 +138,7 @@ public class AirSearchServiceImpl implements AirSearchService{
 	}
 	
 	
-	//항공사 로고 경로 설정을 위한 메서드
-	private void setAirlineLogoURL(String airlineName, SearchVO searchVO) {
-		 switch(airlineName) {
-		    case "아시아나항공" : searchVO.setAirlineLogo("/resources/images/air/list/아시아나항공.PNG"); break;
-		    case "에어부산" : searchVO.setAirlineLogo("/resources/images/air/list/에어부산.PNG"); break;
-		    case "에어서울" : searchVO.setAirlineLogo("/resources/images/air/list/에어서울.PNG"); break;
-		    case "이스타항공" : searchVO.setAirlineLogo("/resources/images/air/list/이스타항공.PNG"); break;
-		    case "플라이강원" : searchVO.setAirlineLogo("/resources/images/air/list/플라이강원.PNG"); break;
-		    case "하이에어" : searchVO.setAirlineLogo("/resources/images/air/list/하이에어.PNG"); break;
-		    case "제주항공" : searchVO.setAirlineLogo("/resources/images/air/list/제주항공.PNG"); break;
-		    case "진에어" : searchVO.setAirlineLogo("/resources/images/air/list/진에어.PNG"); break;
-		    case "대한항공" : searchVO.setAirlineLogo("/resources/images/air/list/대한항공.PNG"); break;
-		    case "티웨이항공" : searchVO.setAirlineLogo("/resources/images/air/list/티웨이항공.PNG"); break;
-		    case "에어로케이" : searchVO.setAirlineLogo("/resources/images/air/list/에어로케이.PNG"); break;
-		    default : break;
-		  }
+
 	}
 
 
@@ -164,4 +150,4 @@ public class AirSearchServiceImpl implements AirSearchService{
     
 	
 
-}
+

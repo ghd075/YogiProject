@@ -18,7 +18,11 @@ public class SearchVO {
 	private int flightBusinessprice;
 	private int flightFirstclassprice;
 	
-	private String airlineLogo;
+	private String airlineLogo;  //항공사 로고 경로
+	
+	//공항 풀네임
+	private String depAirportFullname;
+	private String arrAirportFullname;
 	
 	
 	

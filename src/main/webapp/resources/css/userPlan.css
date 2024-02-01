@@ -548,11 +548,15 @@
 
 .profileContents {
     position: relative;
+    height:350px;
+    text-align: center;
 }
 
 .profileContents div {
-    width: 200px;
-    height: 200px;
+	width: 100%;
+	height: 100%;
+    /* width: 200px;
+    height: 200px; */
     /* overflow: hidden; */
     /* border-radius: 50%; */
     /* position: absolute; */
@@ -697,25 +701,34 @@
     display: none;
 }
 .form-control[type=file] {
-    margin-top:100px;
+    /* margin-top:50px; */
 }
 
 #profileImg {
     position:relative;
     /* left:30%; */
+    /* transform : translate(70%, 10%); */
 }
 
-.btn.modalClose {
+/* .btn.modalClose {
     margin: 0 auto;
     position: relative;
     left: 45%;
     margin-top: 100px
-}
+} */
 
 /* .btn{
     background-color : #446d89;
     border-color : #446d89;
 } */
+
+.modalBtnsWrap {
+	text-align: center;
+	/* padding-top : 110px; */
+}
+.modalBtn {
+	display: inline-block;
+}
 
 #addImgBtn, #testbtn {
     border-radius: 8px;

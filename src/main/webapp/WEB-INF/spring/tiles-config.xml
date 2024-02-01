@@ -6,6 +6,7 @@
 		<put-attribute name="header" value="/WEB-INF/views/layout/member/header.jsp"/>
 		<put-attribute name="footer" value="/WEB-INF/views/layout/member/footer.jsp"/>
 		<put-attribute name="settings" value="/WEB-INF/views/layout/member/settings.jsp"/>
+		<put-attribute name="headerSettings" value="/WEB-INF/views/layout/member/headerSettings.jsp"/>
 	</definition>
 
 	<definition name="user/*" extends="mainTemplate">
@@ -16,6 +17,7 @@
 		<put-attribute name="header" value="/WEB-INF/views/layout/member/header.jsp"/>
 		<put-attribute name="footer" value="/WEB-INF/views/layout/member/footer.jsp"/>
 		<put-attribute name="settings" value="/WEB-INF/views/layout/member/settings.jsp"/>
+		<put-attribute name="headerSettings" value="/WEB-INF/views/layout/member/headerSettings.jsp"/>
 	</definition>
 
 	<definition name="board/*" extends="boardTemplate">
@@ -26,6 +28,7 @@
 		<put-attribute name="header" value="/WEB-INF/views/layout/member/header.jsp"/>
 		<put-attribute name="footer" value="/WEB-INF/views/layout/member/footer.jsp"/>
 		<put-attribute name="settings" value="/WEB-INF/views/layout/member/settings.jsp"/>
+		<put-attribute name="headerSettings" value="/WEB-INF/views/layout/member/headerSettings.jsp"/>
 	</definition>
 
 	<definition name="reserve/air/*" extends="reserveTemplate">
@@ -40,6 +43,7 @@
 		<put-attribute name="header" value="/WEB-INF/views/layout/member/header.jsp"/>
 		<put-attribute name="footer" value="/WEB-INF/views/layout/member/footer.jsp"/>
 		<put-attribute name="settings" value="/WEB-INF/views/layout/member/settings.jsp"/>
+		<put-attribute name="headerSettings" value="/WEB-INF/views/layout/member/headerSettings.jsp"/>
 	</definition>
 
 	<definition name="partner/*" extends="partnerTemplate">
@@ -50,6 +54,7 @@
 		<put-attribute name="header" value="/WEB-INF/views/layout/member/header.jsp"/>
 		<put-attribute name="footer" value="/WEB-INF/views/layout/member/footer.jsp"/>
 		<put-attribute name="settings" value="/WEB-INF/views/layout/member/settings.jsp"/>
+		<put-attribute name="headerSettings" value="/WEB-INF/views/layout/member/headerSettings.jsp"/>
 	</definition>
 
 	<definition name="myplan/*" extends="myPlanTemplate">
@@ -60,6 +65,7 @@
 		<put-attribute name="header" value="/WEB-INF/views/layout/member/header.jsp"/>
 		<put-attribute name="footer" value="/WEB-INF/views/layout/member/footer.jsp"/>
 		<put-attribute name="settings" value="/WEB-INF/views/layout/member/settings.jsp"/>
+		<put-attribute name="headerSettings" value="/WEB-INF/views/layout/member/headerSettings.jsp"/>
 	</definition>
 
 	<definition name="mypage/*" extends="myPageTemplate">

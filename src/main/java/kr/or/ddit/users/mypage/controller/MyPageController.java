@@ -5,16 +5,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import kr.or.ddit.users.login.service.LoginService;
+import kr.or.ddit.users.login.vo.MemberVO;
 import kr.or.ddit.users.mypage.service.MyPageService;
-import kr.or.ddit.users.mypage.vo.MemberVO;
 import kr.or.ddit.utils.ServiceResult;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,7 +32,6 @@ public class MyPageController {
 	}
 	
 	// 회원정보수정 메서드
-	@Transactional
 	@RequestMapping(value = "/myinfoupd.do", method = RequestMethod.POST)
 	public String myinfoUpd(
 			HttpSession session,
@@ -54,14 +51,17 @@ public class MyPageController {
 				int intervalInSeconds = 60 * 60; // 1시간을 초로 계산합니다
 				session.setMaxInactiveInterval(intervalInSeconds);
 				ra.addFlashAttribute("message", "회원 정보 수정이 완료되었습니다.");
+				ra.addFlashAttribute("msgflag", "su");
 				goPage = "redirect:/mypage/myinfo.do";
 			}else {
 				model.addAttribute("message", "서버에러, 다시 시도해 주세요.");
+				model.addAttribute("msgflag", "in");
 				model.addAttribute("member", memberVO);
 				goPage = "login/signin";
 			}
 		}else {
 			model.addAttribute("message", "회원 정보 수정에 실패했습니다.");
+			model.addAttribute("msgflag", "fa");
 			goPage = "mypage/myInfo";
 		}
 		
@@ -70,7 +70,6 @@ public class MyPageController {
 	}
 	
 	// 회원 탈퇴 메서드
-	@Transactional
 	@RequestMapping(value = "/memDelete.do", method = RequestMethod.GET)
 	public String memDelete(
 			String memId,
@@ -85,9 +84,11 @@ public class MyPageController {
 		if(result.equals(ServiceResult.OK)) { // 회원 삭제 성공
 			session.invalidate();
 			ra.addFlashAttribute("message", "회원 탈퇴가 되었습니다. 안녕히 가세요.");
+			ra.addFlashAttribute("msgflag", "su");
 			goPage = "redirect:/login/signin.do";
 		}else { // 회원 삭제 실패
 			model.addAttribute("message", "서버 에러, 다시 시도해주세요!");
+			model.addAttribute("msgflag", "in");
 			goPage = "mypage/myInfo";
 		}
 		

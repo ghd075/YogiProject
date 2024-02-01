@@ -1,6 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<style>
+	body {
+		padding-right:0px!important;
+	}
+</style>
      
 <!-- 마이플랜 css -->
 <link rel="stylesheet" href="${contextPath }/resources/css/nice-select.css">
@@ -58,9 +64,9 @@
 
 	$(function () {
 		$('.bestContents').on('click', 'article', function(event) {
+			// 이벤트 버블링 방지
 			if (!$(event.target).parent().is(".like")) {
-			//console.log(event.target);
-				var plno = $(this).find('div svg').data('plno');
+				var plno = $(this).data('plnor');
 	      		console.log('data-plno: ' + plno);
 				// ajax 가져오는 경우
 				// $.ajax({
@@ -88,22 +94,15 @@
 	});
 
 	// 탭버튼 처리
-	//$.bestPlansTabbtnFn();
 	$.bestPlansTabbtnFn();
-	// 이미지 리사이징
-	//$.eachBestImgResizeFn();
 	// 지역 변경시 이벤트
 	$.areaChange();
 	// 좋아요 누를 시 버튼 이벤트
 	$.likeChange(sessionInfo);
 	
-/*     $(".bestContents article").each(function(i, v){
-        var thisIs = $(this);
-
-    }); */
-
     // 종횡비 함수
     var comImgBox = $(".comImgBox");
     var comImg = $(".comImgBox img");
     $.ratioBoxH(comImgBox, comImg);
+	
 </script>

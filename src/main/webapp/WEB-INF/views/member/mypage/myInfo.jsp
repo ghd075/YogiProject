@@ -111,7 +111,7 @@
                             </label>
                             <label>
                                 <span>비밀번호</span>
-                                <input class="form-control" type="password" id="memPw" name="memPw" value="${sessionInfo.memPw }" autocomplete="off" />
+                                <input class="form-control" type="password" id="memPw" name="memPw" value="" autocomplete="off" />
                             </label>
                             <label>
                                 <span>이름</span>

@@ -55,3 +55,62 @@ $.qnaListSetAccordianBoardFn = function(){
         $.qnaLnbHequalContHFn();
     });
 };
+
+// 메뉴 등록 모달 창
+$.qnaMenuAddClickFn = function() {
+	var qnaMenuAddBtn = $("#qnaMenuAddBtn");
+	qnaMenuAddBtn.click(function(){
+        $("#popup").fadeIn();		// 모달창 보이기
+        $('#addMenuForm').hide();
+	}); 
+}
+
+// 메뉴 등록 모달 창 닫기
+$.popdownClickFn = function() {
+	var popdown = $("#popdown");
+	popdown.click(function(){
+        $("#popup").fadeOut();		// 모달창 감추기
+	}); 
+}
+
+// 새 메뉴 등록 폼 보이기
+$.addMenuClickFn = function() {
+	var addMenuButton = $("#addMenuButton");
+	addMenuButton.click(function(){
+        $('#addMenuForm').show(); // 새 메뉴 등록 폼 보이기
+	}); 
+}
+
+function addMainMenu() {
+    var menuName = $("#mainMenuNameInput").val();
+    var menuOrder = $("#mainMenuOrderInput").val();
+    var menuYn = $("#mainMenuYnInput").val();
+    var menuUrl = "/yourMenuUrl";  // 대분류 메뉴의 URL을 여기에 입력하세요.
+    
+    $.ajax({
+        url: '/menu/addMainMenu',
+        type: 'POST',
+        data: JSON.stringify({
+            "menuName": menuName,
+            "menuOrder": menuOrder,
+            "menuYn": menuYn,
+            "menuUrl": menuUrl,
+            "menuDiv": "main" // 대분류 메뉴임을 나타냅니다.
+        }),
+        contentType: 'application/json; charset=utf-8',
+        success: function(response) {
+            if (response === "Success") {
+                // 메뉴 추가 성공
+                alert("메뉴가 성공적으로 추가되었습니다.");
+                // 필요한 경우 여기에 추가적인 작업을 수행하세요.
+            } else {
+                // 메뉴 추가 실패
+                alert("메뉴 추가에 실패하였습니다. 다시 시도해주세요.");
+            }
+        },
+        error: function(xhr, status, error) {
+            // 서버에 요청을 보내는 중에 오류 발생
+            alert("오류가 발생했습니다. 다시 시도해주세요.");
+        }
+    });
+}

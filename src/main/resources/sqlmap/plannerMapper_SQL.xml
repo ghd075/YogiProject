@@ -219,6 +219,11 @@
 		DELETE FROM S_PLANER WHERE PL_NO = #{plNo}
 	</delete>
 	
+	<!-- 플랜 삭제 -->
+	<delete id="delPlan">
+		DELETE FROM PLANER WHERE PL_NO = #{plNo}
+	</delete>
+	
 	<!-- 세부플랜 개별 삭제 -->
 	<delete id="deleteOneDetailPlan" parameterType="detatilPlannerVO">
 		DELETE FROM S_PLANER WHERE SP_NO = #{spNo} 
@@ -248,24 +253,8 @@
 		ORDER BY SP_NO	
 	</select>
 	
-	<!-- 세부플랜 개별 조회2 -->
-<!-- 	<select id="getDetailPlanT" resultType="touritemsVO" parameterType="detatilPlannerVO">
-		SELECT 
-			SP_NO
-			, SP_DAY
-			, SP_SDAY
-			, SP_EDAY
-			, CONTENT_ID
-			, PL_NO
-			, SP_ORDER
-			, SP_DISTANCE
-		FROM S_PLANER
-		NATURAL JOIN TOURITEMS
-		WHERE PL_NO = #{plNo} AND SP_DAY= #{spDay} AND SP_NO = #{spNo} 
-		ORDER BY SP_NO	
-	</select> -->
 	
-	<!-- 플랜 등록 -->
+	<!-- 플랜 등록(업데이트) -->
 	<update id="updatePlan" parameterType="plannerVO">
 		UPDATE 
 			planer
@@ -278,7 +267,7 @@
 			PL_NO = #{plNo}
 	</update>
 	
-	<!--  -->
+	<!-- 플랜 그룹 등록 -->
 	<insert id="insertMategroup" parameterType="plannerVO">
 		<selectKey keyProperty="mgNo" resultType="long" order="BEFORE">
 			SELECT
@@ -303,7 +292,7 @@
 			)
 	</insert>
 	
-	<!--  -->
+	<!-- 플랜 그룹 멤버로 작성자를 등록 -->
 	<insert id="insertMategroupMem" parameterType="plannerVO">
 		insert into 
 			mategroup_member (
@@ -318,6 +307,29 @@
 				, #{memId}
 				, 0
 				, 'Y'
+			)
+	</insert>
+	
+	<update id="updateSEdays" parameterType="Map">
+		UPDATE 
+			S_PLANER
+		SET
+			SP_SDAY = #{spSday}
+			, SP_EDAY = #{spEday}
+		WHERE
+			PL_NO = #{plNo}
+	</update>
+	
+	<insert id="insertChatRoom" parameterType="plannerVO">
+		insert into 
+			chatroom (
+				room_no
+				, room_regdate
+				, mg_no
+			) values(
+				SEQ_CHATROOM.NEXTVAL
+				, sysdate
+				, #{mgNo}
 			)
 	</insert>
 	

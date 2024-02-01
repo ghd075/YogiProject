@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
+<!-- 2024.01.26 이건정 커밋점 지정 -->
 <!-- 마이 트립 css -->
 <link href="${contextPath }/resources/css/myTrip.css" rel="stylesheet" />
 
@@ -60,7 +60,7 @@
 				                    	</c:choose>
 				                    </div>
 				                    <div class="meetAreaLists">
-				                        <a href="javascript:void(0);">
+				                        <a href="/partner/meetsquare.do?plNo=${planer.plNo }">
 				                            <span class="meetTitle textDrop">
 				                                <span class="badge bg-dark">제목</span>
 				                                ${planer.plTitle }
@@ -70,8 +70,9 @@
 				                                ${planer.plTheme }
 				                            </span>
 				                            <span class="meetMsize textDrop">
-				                                <span class="badge bg-dark">인원</span>
-				                                ${planer.plMsize }명
+				                                <span class="badge bg-dark">현재멤버</span>
+				                                <!-- ${planer.plMsize }명 -->
+												${planer.mategroupCurrentnum}명
 				                            </span>
 				                            <fmt:parseDate var="impParseData" value="${planer.plRdate }" pattern="yyyy-MM-dd HH:mm:ss" />
 				                            <span class="meetRdate textDrop">
@@ -91,13 +92,49 @@
 					                        	<input type="hidden" value="${planer.plNo }" id="plNoVal" name="plNo" />
 					                        	<input type="hidden" value="${planer.plPrivate }" id="plPrivateVal" name="plPrivate" />
 					                        </form>
-					                        <button type="button" class="btn btn-danger" id="myTripDeleteBtn">일정 삭제</button>
-					                        <c:if test="${planer.plPrivate eq 'N' }">
-					                        	<button type="button" class="btn btn-primary myTripPrivatePublicBtn">공개</button>
+					                        <c:choose>
+					                        	<c:when test="${planer.mategroupStatus eq '1단계' }">
+							                        <button type="button" class="btn btn-danger myTripDeleteBtn">일정 삭제</button>
+							                        <c:if test="${planer.plPrivate eq 'N' }">
+							                        	<button type="button" class="btn btn-primary myTripPrivatePublicBtn">공개</button>
+							                        </c:if>
+							                        <c:if test="${planer.plPrivate eq 'Y' }">
+							                        	<button type="button" class="btn btn-warning myTripPrivatePublicBtn">비공개</button>
+							                        </c:if>
+					                        	</c:when>
+					                        	<c:otherwise>
+					                        		<button type="button" class="btn btn-secondary myTripStatusPlanerBtn">모집 마감</button>
+					                        	</c:otherwise>
+					                        </c:choose>
+					                    </div>
+				                    </c:if>
+				                    <c:if test="${planer.memId ne sessionInfo.memId }">
+				                    	<div class="myTripListBtnGroup">
+					                        <form action="/partner/chgStatusJoiner.do" method="post" id="chgStatusJoiner" name="chgStatusJoiner">
+					                        	<input type="hidden" value="${planer.mategroupId }" id="memIdVal" name="memId" />
+					                        	<input type="hidden" value="${planer.plNo }" id="plNoVal" name="plNo" />
+					                        </form>
+					                        
+					                        <c:if test="${planer.mategroupApply eq 'Y' }">
+					                        	<button type="button" class="btn btn-success myTripStatusJoinerBtn">승인</button>
 					                        </c:if>
-					                        <c:if test="${planer.plPrivate eq 'Y' }">
-					                        	<button type="button" class="btn btn-warning myTripPrivatePublicBtn">비공개</button>
+					                        <c:if test="${planer.mategroupApply eq 'N' }">
+					                        	<button type="button" class="btn btn-danger myTripStatusJoinerBtn">거절</button>
 					                        </c:if>
+					                        <c:if test="${planer.mategroupApply eq 'W' }">
+					                        	<button type="button" class="btn btn-warning myTripStatusJoinerBtn">대기</button>
+					                        </c:if>
+					                        <c:if test="${planer.mategroupApply eq 'E' }">
+					                        	<button type="button" class="btn btn-dark myTripStatusJoinerBtn">모집 마감</button>
+					                        </c:if>
+					                        
+					                        <c:if test="${planer.mategroupApply ne 'C' }">
+						                        <button type="button" class="btn btn-info myTripCancelBtn">일정 취소</button>
+					                        </c:if>
+					                        <c:if test="${planer.mategroupApply eq 'C' }">
+					                        	<button type="button" class="btn btn-secondary myTripStatusJoinerBtn">취소</button>
+					                        </c:if>
+					                        
 					                    </div>
 				                    </c:if>
 				                </li>
@@ -118,6 +155,9 @@
     	var memId = '${sessionInfo.memId}';
     	$.ajaxPlannerListSearchFn(memId);
     	$.myTripPrivatePublicChgFn();
+    	$.myTripDeleteFn();
+    	$.excludeNonUserFn(memId);
+    	$.myTripCancelFn();
     	
     	/* 종횡비 함수 */
         var myTripImgBox = $(".myTripImgBox");

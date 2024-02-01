@@ -2,7 +2,7 @@ package kr.or.ddit.users.mypage.service;
 
 import javax.servlet.http.HttpServletRequest;
 
-import kr.or.ddit.users.mypage.vo.MemberVO;
+import kr.or.ddit.users.login.vo.MemberVO;
 import kr.or.ddit.utils.ServiceResult;
 
 public interface MyPageService {

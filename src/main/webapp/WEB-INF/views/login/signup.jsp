@@ -25,27 +25,59 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <!-- flatpickr css -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-        <!-- flatpickr JS -->
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+        <!-- 스위트 얼럿 모듈 -->
+    	<link href="${contextPath }/resources/css/sweetalert2.min.css" rel="stylesheet" />
+    	<script defer src="${contextPath }/resources/js/sweetalert2.all.min.js"></script>
         
         <c:if test="${not empty message }">
 		    <script>
-		        alert("${message}"); 
+		        //alert("${message}");
+		        $(function(){
+		        	// 성공시
+		        	<c:if test="${msgflag eq 'su'}">
+		        		Swal.fire({
+		                    title: "성공",
+		                    text: "${message}",
+		                    icon: "success"
+		                });
+		        	</c:if>
+		        	// 실패시
+		        	<c:if test="${msgflag eq 'fa'}">
+			        	Swal.fire({
+		                    title: "실패",
+		                    text: "${message}",
+		                    icon: "error"
+		                });
+		        	</c:if>
+		        	// 정보성 메시지
+		        	<c:if test="${msgflag eq 'in'}">
+			        	Swal.fire({
+		                    title: "안내",
+		                    text: "${message}",
+		                    icon: "info"
+		                });
+		        	</c:if>
+		        });
 		        <c:remove var="message" scope="request" />
 		        <c:remove var="message" scope="session" />
 		    </script>
 		</c:if>
         
-		<c:if test="${not empty errors }">
+		<c:if test="${not empty errors && msgflag eq 'in'}">
 		    <script>
-		        alert("${errors}"); 
-		        <c:remove var="errors" scope="request" />
-		        <c:remove var="errors" scope="session" />
+		        // alert("${errors}"); 
+			    $(function(){
+		        	Swal.fire({
+	                    title: "서버오류",
+	                    text: "${errors}",
+	                    icon: "error"
+	                });
+			    });
+		    	<c:remove var="errors" scope="request" />
+		    	<c:remove var="errors" scope="session" />
 		    </script>
 		</c:if>
+
 		
     </head>
 
@@ -259,16 +291,20 @@
                             	if(emailChkFlag) {
 	                                signForm.submit();
                             	}else {
-                            		alert("이메일 중복체크를 해주세요.");
+                            		// alert("이메일 중복체크를 해주세요.");
+                            		$.showWarningPopupFn("이메일 중복체크", "이메일 중복체크를 해주세요.");
                             	}
                             }else {
-                                alert("비밀번호 중복체크를 해주세요.");
+                                // alert("비밀번호 중복체크를 해주세요.");
+                            	$.showWarningPopupFn("비밀번호 중복체크", "비밀번호 중복체크를 해주세요.");
                             }
                         }else {
-                            alert("아이디 중복체크를 해주세요.");
+                            // alert("아이디 중복체크를 해주세요.");
+                        	$.showWarningPopupFn("아이디 중복체크", "아이디 중복체크를 해주세요.");
                         }
                     }else {
-                        alert("개인정보 동의를 체크해 주세요.");
+                        // alert("개인정보 동의를 체크해 주세요.");
+                       	$.showWarningPopupFn("개인정보 동의 체크", "개인정보 동의를 체크해 주세요.");
                     }
 
                 });

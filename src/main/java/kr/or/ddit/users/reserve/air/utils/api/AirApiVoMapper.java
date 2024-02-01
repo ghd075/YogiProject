@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import kr.or.ddit.users.reserve.air.vo.FlightVO;
+import kr.or.ddit.users.reserve.air.vo.SearchVO;
 
 /*[DB에 저장하기 위해 AirApiVO -> FlightVO로 매핑]*/
 public class AirApiVoMapper {
@@ -60,17 +61,6 @@ public class AirApiVoMapper {
 	 }
 	   return fVOList;
 	}
-
-	/*
-	 * private static String makeFlightCode(String fCode, String airlineCode, String
-	 * depAirCode) { StringBuffer flightCode = new StringBuffer();
-	 * flightCode.append(fCode); flightCode.append(airlineCode);
-	 * flightCode.append("-"); flightCode.append(depAirCode);
-	 * flightCode.append("-"); int ran = (int) (Math.random() * 99999);
-	 * flightCode.append(new DecimalFormat("00000").format(ran));
-	 * 
-	 * return flightCode.toString(); }
-	 */
 
 
 	/* 운항시간 계산 (도착시간 - 출발시간) */
@@ -167,6 +157,69 @@ public class AirApiVoMapper {
 	    default : break;
 	  }
     }
+	
+	
+	/* 출발공항풀네임 설정 */
+	public static void setDepAirportFullname(SearchVO searchVO, String airportName) {
+		switch(airportName) {
+		  case "무안" : searchVO.setDepAirportFullname("무안국제공항"); break;
+		  case "광주" : searchVO.setDepAirportFullname("광주공항"); break;
+		  case "군산" : searchVO.setDepAirportFullname("군산공항"); break;
+		  case "여수" : searchVO.setDepAirportFullname("여수공항"); break;
+		  case "원주" : searchVO.setDepAirportFullname("원주공항"); break;
+		  case "양양" : searchVO.setDepAirportFullname("양양국제공항"); break;
+		  case "제주" : searchVO.setDepAirportFullname("제주국제공항"); break;
+		  case "김해" : searchVO.setDepAirportFullname("김해국제공항"); break;
+		  case "사천" : searchVO.setDepAirportFullname("사천공항"); break;
+		  case "울산" : searchVO.setDepAirportFullname("울산공항"); break;
+		  case "인천" : searchVO.setDepAirportFullname("인천국제공항"); break;
+		  case "김포" : searchVO.setDepAirportFullname("김포국제공항"); break;
+		  case "포항" : searchVO.setDepAirportFullname("포항경주공항"); break;
+		  case "대구" : searchVO.setDepAirportFullname("대구국제공항"); break;
+		  case "청주" : searchVO.setDepAirportFullname("청주국제공항"); break;
+		default : break;
+		}
+	}
+	
+	/* 도착공항풀네임 설정 */
+	public static void setArrAirportFullname(SearchVO searchVO, String airportName) {
+		switch(airportName) {
+		case "무안" : searchVO.setArrAirportFullname("무안국제공항"); break;
+		case "광주" : searchVO.setArrAirportFullname("광주공항"); break;
+		case "군산" : searchVO.setArrAirportFullname("군산공항"); break;
+		case "여수" : searchVO.setArrAirportFullname("여수공항"); break;
+		case "원주" : searchVO.setArrAirportFullname("원주공항"); break;
+		case "양양" : searchVO.setArrAirportFullname("양양국제공항"); break;
+		case "제주" : searchVO.setArrAirportFullname("제주국제공항"); break;
+		case "김해" : searchVO.setArrAirportFullname("김해국제공항"); break;
+		case "사천" : searchVO.setArrAirportFullname("사천공항"); break;
+		case "울산" : searchVO.setArrAirportFullname("울산공항"); break;
+		case "인천" : searchVO.setArrAirportFullname("인천국제공항"); break;
+		case "김포" : searchVO.setArrAirportFullname("김포국제공항"); break;
+		case "포항" : searchVO.setArrAirportFullname("포항경주공항"); break;
+		case "대구" : searchVO.setArrAirportFullname("대구국제공항"); break;
+		case "청주" : searchVO.setArrAirportFullname("청주국제공항"); break;
+		default : break;
+		}
+	}
+	
+	//항공사 로고 경로 설정을 위한 메서드
+	public static void setAirlineLogoURL(String airlineName, SearchVO searchVO) {
+		 switch(airlineName) {
+		    case "아시아나항공" : searchVO.setAirlineLogo("/resources/images/air/list/아시아나항공.PNG"); break;
+		    case "에어부산" : searchVO.setAirlineLogo("/resources/images/air/list/에어부산.PNG"); break;
+		    case "에어서울" : searchVO.setAirlineLogo("/resources/images/air/list/에어서울.PNG"); break;
+		    case "이스타항공" : searchVO.setAirlineLogo("/resources/images/air/list/이스타항공.PNG"); break;
+		    case "플라이강원" : searchVO.setAirlineLogo("/resources/images/air/list/플라이강원.PNG"); break;
+		    case "하이에어" : searchVO.setAirlineLogo("/resources/images/air/list/하이에어.PNG"); break;
+		    case "제주항공" : searchVO.setAirlineLogo("/resources/images/air/list/제주항공.PNG"); break;
+		    case "진에어" : searchVO.setAirlineLogo("/resources/images/air/list/진에어.PNG"); break;
+		    case "대한항공" : searchVO.setAirlineLogo("/resources/images/air/list/대한항공.PNG"); break;
+		    case "티웨이항공" : searchVO.setAirlineLogo("/resources/images/air/list/티웨이항공.PNG"); break;
+		    case "에어로케이" : searchVO.setAirlineLogo("/resources/images/air/list/에어로케이.PNG"); break;
+		    default : break;
+	     }
+     }
 
 
 }

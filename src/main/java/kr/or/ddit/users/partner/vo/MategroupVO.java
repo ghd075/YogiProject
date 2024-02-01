@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class MategroupVO {
-
+ 
 	private int mgNo;
 	private int plNo;
 	private String mategroupRecruiter;

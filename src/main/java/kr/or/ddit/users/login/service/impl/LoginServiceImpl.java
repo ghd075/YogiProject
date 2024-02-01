@@ -17,6 +17,7 @@ import kr.or.ddit.users.login.vo.MemberVO;
 import kr.or.ddit.utils.ServiceResult;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class LoginServiceImpl implements LoginService {
 
 	@Inject
@@ -107,6 +108,42 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public MemberVO loginCheck(MemberVO memberVO) {
 		return loginMapper.loginCheck(memberVO);
+	}
+
+	@Override
+	public void changePw(Map<String, Object> param) {
+		/** 파라미터 조회 */
+		String memId = (String) param.get("memId");
+		String memPw = (String) param.get("memPw");
+		
+		/** 파라미터 정의 */
+		MemberVO memberVO = new MemberVO();
+		int status = 0;
+		ServiceResult result = null;
+		String message = "";
+		String goPage = "";
+		
+		/** 메인로직 처리 */
+		// 해당 회원의 비밀번호를 변경
+		memberVO.setMemId(memId);
+		memberVO.setMemPw(memPw);
+		
+		status = loginMapper.changePw(memberVO);
+		
+		if(status > 0) { // 비밀번호 변경 성공
+			result = ServiceResult.OK;
+			message = memId + " 회원의 비밀번호 변경에 성공했습니다. 로그인 페이지로 이동합니다.";
+			goPage = "redirect:/login/signin.do"; // 로그인 페이지로 이동
+		}else { // 비밀번호 변경 실패
+			result = ServiceResult.FAILED;
+			message = "서버 오류, 다시 시도해 주세요.";
+			goPage = "login/findIdPw"; // 아이디/비밀번호 페이지로 이동
+		}
+		
+		/** 반환자료 저장 */
+	    param.put("result", result);
+	    param.put("message", message);
+	    param.put("goPage", goPage);
 	}
 
 }

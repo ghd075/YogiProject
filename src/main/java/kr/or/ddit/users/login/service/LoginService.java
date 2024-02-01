@@ -15,5 +15,6 @@ public interface LoginService {
 	public MemberVO findId(Map<String, String> map);
 	public MemberVO findPw(Map<String, String> map);
 	public MemberVO loginCheck(MemberVO memberVO);
+	public void changePw(Map<String, Object> param);
 
 }

@@ -1,26 +1,21 @@
 package kr.or.ddit.users.myplan.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.ddit.mapper.PlannerMainMapper;
-import kr.or.ddit.mapper.PlannerMapper;
 import kr.or.ddit.users.myplan.service.PlannerMainService;
-import kr.or.ddit.users.myplan.vo.DetatilPlannerVO;
 import kr.or.ddit.users.myplan.vo.PlannerLikeVO;
 import kr.or.ddit.users.myplan.vo.PlannerVO;
-import kr.or.ddit.users.myplan.vo.TouritemsVO;
 import kr.or.ddit.utils.ServiceResult;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class PlannerMainServiceImpl implements PlannerMainService {
 
 	@Inject
@@ -78,36 +73,6 @@ public class PlannerMainServiceImpl implements PlannerMainService {
 			sr = ServiceResult.FAILED;
 		}
 		return sr; 
-	}
-
-	@Override
-	public Map<String, Object> getPlanDetail(long plNo) {
-		Map<String, Object> param = new HashMap<String, Object>();
-		
-		PlannerVO pvo = plannerMainMapper.getPlanDetail(plNo);
-		param.put("pvo", pvo);
-		log.debug("pvo : {}", pvo);
-		
-		DetatilPlannerVO dpParam = null; 
-		
-		int cnt = 0;
-				
-		for(int i = 0; i < 5; i++) {
-			dpParam = new DetatilPlannerVO();
-			dpParam.setSpDay(i+1);
-			dpParam.setPlNo(plNo);
-			List<DetatilPlannerVO> daydpList = plannerMainMapper.getPlanDetailDay(dpParam);
-			if(daydpList.size() > 0) {
-				param.put("day" + (i+1), daydpList);
-				cnt = cnt + 1;
-			}
-		}
-		
-		param.put("dayCnt", cnt);
-		
-		log.debug("param : {}", param.toString());
-		
-		return param;
 	}
 
 }

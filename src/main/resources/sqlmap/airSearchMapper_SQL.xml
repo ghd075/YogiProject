@@ -87,7 +87,7 @@
     </if>
   </sql>
   
-  <!-- 왕복항공편 검색 -->
+  <!-- 왕복항공편 기본검색 -->
   <select id="selectAllRoundTripFlight" parameterType="flightVO" resultType="searchVO">
     SELECT f.flight_code,
            f.airline_code,
@@ -106,6 +106,7 @@
     WHERE <include refid="normalSearch"/>
   </select>
   
+  <!-- 왕복항공편 sub검색 -->
   <select id="selectAllRoundTripFlightSub" parameterType="flightVO" resultType="searchVO">
     SELECT f.flight_code,
            f.airline_code,

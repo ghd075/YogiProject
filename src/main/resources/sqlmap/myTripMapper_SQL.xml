@@ -3,25 +3,29 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.mapper.MyTripMapper">
-
+ 
 	<select id="myTripList" parameterType="planerVO" resultType="planerVO">
-		select *
-		  from (
+		SELECT *
+		  FROM (
 		    SELECT 
 		        '내플랜' as sType, 
 		        A.PL_NO, 
 		        A.MEM_ID, 
 		        M.MEM_NAME, 
+		        B.MATEGROUP_STATUS,
 		        A.PL_RDATE, 
 		        A.PL_TITLE, 
 		        A.PL_MSIZE, 
 		        A.PL_PRIVATE, 
 		        A.PL_THEME, 
 		        A.PL_THUMBURL, 
-		        null as MATEGROUP_ID 
+		        C.MATEGROUP_ID,
+		        C.MATEGROUP_APPLY,
+		        B.MATEGROUP_CURRENTNUM
 		    FROM 
 		        PLANER A
 		        JOIN MATEGROUP B ON A.PL_NO = B.PL_NO 
+		        JOIN MATEGROUP_MEMBER C ON B.MG_NO = C.MG_NO 
 		        JOIN members M ON A.MEM_ID = M.MEM_ID 
 		    WHERE 
 		        A.MEM_ID = #{memId}
@@ -34,13 +38,16 @@
 		        A.PL_NO, 
 		        A.MEM_ID, 
 		        M.MEM_NAME, 
+		        B.MATEGROUP_STATUS,
 		        A.PL_RDATE, 
 		        A.PL_TITLE, 
 		        A.PL_MSIZE, 
 		        A.PL_PRIVATE, 
 		        A.PL_THEME, 
 		        A.PL_THUMBURL, 
-		        C.MATEGROUP_ID 
+		        C.MATEGROUP_ID,
+		        C.MATEGROUP_APPLY,
+		        B.MATEGROUP_CURRENTNUM
 		    FROM 
 		        PLANER A
 		        JOIN MATEGROUP B ON A.PL_NO = B.PL_NO 
@@ -72,16 +79,19 @@
 		        A.PL_NO, 
 		        A.MEM_ID, 
 		        M.MEM_NAME, 
+		        B.MATEGROUP_STATUS,
 		        A.PL_RDATE, 
 		        A.PL_TITLE, 
 		        A.PL_MSIZE, 
 		        A.PL_PRIVATE, 
 		        A.PL_THEME, 
 		        A.PL_THUMBURL, 
-		        null as MATEGROUP_ID 
+		        C.MATEGROUP_ID,
+		        C.MATEGROUP_APPLY
 		    FROM 
 		        PLANER A
 		        JOIN MATEGROUP B ON A.PL_NO = B.PL_NO 
+		        JOIN MATEGROUP_MEMBER C ON B.MG_NO = C.MG_NO 
 		        JOIN members M ON A.MEM_ID = M.MEM_ID 
 		    WHERE 
 		        A.MEM_ID = #{memId}
@@ -94,13 +104,15 @@
 		        A.PL_NO, 
 		        A.MEM_ID, 
 		        M.MEM_NAME, 
+		        B.MATEGROUP_STATUS,
 		        A.PL_RDATE, 
 		        A.PL_TITLE, 
 		        A.PL_MSIZE, 
 		        A.PL_PRIVATE, 
 		        A.PL_THEME, 
 		        A.PL_THUMBURL, 
-		        C.MATEGROUP_ID 
+		        C.MATEGROUP_ID,
+		        C.MATEGROUP_APPLY
 		    FROM 
 		        PLANER A
 		        JOIN MATEGROUP B ON A.PL_NO = B.PL_NO 
@@ -142,5 +154,394 @@
 		WHEN MATCHED THEN
 		    UPDATE SET A.PL_PRIVATE = #{plPrivate}
 	</update>
+	
+	<delete id="deleteSPlaner" parameterType="int">
+		DELETE FROM s_planer
+		WHERE pl_no = #{plNo}
+	</delete>
+	
+	<delete id="deletePlanerLike" parameterType="int">
+		DELETE FROM planer_like
+		WHERE pl_no = #{plNo}
+	</delete>
+	
+	<delete id="deleteMategrpMem" parameterType="int">
+		DELETE FROM mategroup_member
+		where mg_no = (
+		    select distinct a.mg_no
+		      from mategroup a,
+		           mategroup_member b
+		     where 1=1 
+		       and a.mg_no = b.mg_no
+		       and a.pl_no = #{plNo}
+		)
+	</delete>
+	
+	<delete id="deleteMategrp" parameterType="int">
+		DELETE FROM mategroup
+		WHERE pl_no = #{plNo}
+	</delete>
+	
+	<delete id="deletePlan" parameterType="int">
+		DELETE FROM planer
+		WHERE pl_no = #{plNo}
+	</delete>
+	
+	<delete id="deleteChatAll" parameterType="int">
+		DELETE 
+		FROM 
+		    chat
+		WHERE 
+		    room_no = (
+		        SELECT 
+		            room_no 
+		        FROM 
+		            chatroom 
+		        WHERE mg_no = (
+		            SELECT
+		                mg_no
+		            FROM
+		                mategroup
+		            WHERE 
+		                pl_no = #{plNo}
+		    )
+		)
+	</delete>
+	
+	<delete id="deleteChatRoom" parameterType="int">
+		DELETE FROM chatroom
+		WHERE mg_no = (
+			select distinct a.mg_no
+			from mategroup a,
+				chatroom b
+			where 1=1
+				and a.mg_no = b.mg_no
+				and a.pl_no = #{plNo}
+		)
+	</delete>
+	
+	<select id="meetsquareRoomOne" parameterType="int" resultType="planerVO">
+		select d.*
+		     , e.*
+		  from (
+		    select a.*
+		         , b.mategroup_no
+		         , b.mategroup_id
+		         , b.mategroup_agree
+		         , b.mategroup_apply
+		         , c.pl_private
+		         , c.pl_title
+		         , c.pl_theme
+		         , c.pl_thumburl
+		         , c.pl_msize
+		         , c.pl_rdate
+		      from mategroup a
+		         , mategroup_member b
+		         , planer c
+		     where 1=1
+		       and a.mg_no = b.mg_no
+		       and a.pl_no = c.pl_no
+		       and a.pl_no = #{plNo}
+		  ) d,
+		  members e
+		 where 1=1
+		   and d.mategroup_id = e.mem_id
+		   and d.mategroup_recruiter = d.mategroup_id
+	</select>
+	
+	<select id="meetsquareRoomList" parameterType="int" resultType="planerVO">
+		select d.*
+		     , e.*
+		  from (
+		    select a.*
+		         , b.mategroup_no
+		         , b.mategroup_id
+		         , b.mategroup_agree
+		         , b.mategroup_apply
+		         , c.pl_private
+		         , c.pl_title
+		         , c.pl_theme
+		         , c.pl_thumburl
+		         , c.pl_msize
+		         , c.pl_rdate
+		      from mategroup a
+		         , mategroup_member b
+		         , planer c
+		     where 1=1
+		       and a.mg_no = b.mg_no
+		       and a.pl_no = c.pl_no
+		       and a.pl_no = #{plNo}
+		  ) d,
+		  members e
+		 where 1=1
+		   and d.mategroup_id = e.mem_id
+		   and d.mategroup_recruiter != d.mategroup_id
+		 order by d.mategroup_no asc
+	</select>
+	
+	<select id="excludeNonUser" parameterType="planerVO" resultType="planerVO">
+		select d.*
+		     , e.*
+		  from (
+		    select a.*
+		         , b.mategroup_no
+		         , b.mategroup_id
+		         , b.mategroup_agree
+		         , b.mategroup_apply
+		         , c.pl_private
+		         , c.pl_title
+		         , c.pl_theme
+		         , c.pl_thumburl
+		         , c.pl_msize
+		         , c.pl_rdate
+		      from mategroup a
+		         , mategroup_member b
+		         , planer c
+		     where 1=1
+		       and a.mg_no = b.mg_no
+		       and a.pl_no = c.pl_no
+		       and a.pl_no = #{plNo}
+		  ) d,
+		  members e
+		 where 1=1
+		   and d.mategroup_id = e.mem_id
+		   and d.mategroup_id = #{memId}
+	</select>
+	
+	<select id="mateCnt" parameterType="int" resultType="int">
+		select count(*) as cnt
+		  from (
+		    select a.*
+		         , b.mategroup_no
+		         , b.mategroup_id
+		         , b.mategroup_agree
+		         , b.mategroup_apply
+		         , c.pl_private
+		         , c.pl_title
+		         , c.pl_theme
+		         , c.pl_thumburl
+		         , c.pl_msize
+		         , c.pl_rdate
+		      from mategroup a
+		         , mategroup_member b
+		         , planer c
+		     where 1=1
+		       and a.mg_no = b.mg_no
+		       and a.pl_no = c.pl_no
+		       and a.pl_no = #{plNo}
+		  ) d,
+		  members e
+		 where 1=1
+		   and d.mategroup_id = e.mem_id
+		   and d.mategroup_apply = 'Y'
+	</select>
+	
+	<update id="acceptMemUpd" parameterType="planerVO">
+		UPDATE mategroup_member m
+		   SET m.mategroup_apply = 'Y'
+		 WHERE m.mg_no = (
+		       SELECT a.mg_no
+		         FROM mategroup a, planer c
+		        WHERE a.mg_no = m.mg_no
+		          AND a.pl_no = c.pl_no
+		          AND a.pl_no = #{plNo}
+		      )
+		   AND m.mategroup_id = #{memId}
+	</update>
+	
+	<update id="rejectMemUpd" parameterType="planerVO">
+		UPDATE mategroup_member m
+		   SET m.mategroup_apply = 'N'
+		 WHERE m.mg_no = (
+		       SELECT a.mg_no
+		         FROM mategroup a, planer c
+		        WHERE a.mg_no = m.mg_no
+		          AND a.pl_no = c.pl_no
+		          AND a.pl_no = #{plNo}
+		      )
+		   AND m.mategroup_id = #{memId}
+	</update>
+	
+	<update id="chgStatusJoiner" parameterType="planerVO">
+		UPDATE mategroup_member m
+		   SET m.mategroup_apply = 'C'
+		 WHERE m.mg_no = (
+		       SELECT a.mg_no
+		         FROM mategroup a, planer c
+		        WHERE a.mg_no = m.mg_no
+		          AND a.pl_no = c.pl_no
+		          AND a.pl_no = #{plNo}
+		      )
+		   AND m.mategroup_id = #{memId}
+	</update>
+	
+	<update id="updateCurMemCnt" parameterType="int">
+    	UPDATE 
+           mategroup
+		SET 
+            mategroup_currentnum = (
+	            SELECT 
+	                count(a.mategroup_id) 
+	            FROM 
+	            	mategroup_member a, mategroup b 
+	            WHERE a.mg_no = b.mg_no and a.mategroup_apply = 'Y' and b.pl_no = #{plNo}
+            )
+        where 
+            pl_no = #{plNo}
+	</update>
+	
+	<select id="chatInfoList" parameterType="planerVO" resultType="planerVO">
+		SELECT 
+		      c.*
+		    , m.mem_name
+		    , m.mem_profileimg
+		  FROM 
+		      chat c, members m 
+		  WHERE room_no = (
+		      SELECT 
+		          room_no 
+		      FROM 
+		          chatroom 
+		      WHERE mg_no = (
+		          SELECT
+		              mg_no 
+		          FROM
+		              mategroup 
+		          WHERE pl_no = #{plNo}
+		          )
+		      )
+		      AND c.mem_id = m.mem_id
+		  ORDER BY chat_no ASC
+	</select>
+	
+	<insert id="ajaxChatContSave" parameterType="chatroomVO">
+		INSERT INTO chat (
+		    chat_no,
+		    mem_id,
+		    room_no,
+		    chat_file,
+		    chat_content,
+		    chat_ymd,
+		    chat_hms,
+		    chat_cnt
+		) VALUES (
+		    seq_chat.nextval,
+		    #{memId},
+		    #{roomNo},
+		    #{chatFile},
+		    #{chatContent},
+		    #{chatYmd},
+		    #{chatHms},
+		    #{chatCnt}
+		)
+	</insert>
+	
+	<select id="chatRoomInfo" parameterType="planerVO" resultType="planerVO">
+		SELECT sub.*
+		     , m.*
+		     , cr.room_no
+		     , cr.room_regdate
+		FROM (
+		    SELECT 
+		        a.*, 
+		        b.mategroup_no, 
+		        b.mategroup_id, 
+		        b.mategroup_agree, 
+		        b.mategroup_apply, 
+		        c.pl_private, 
+		        c.pl_title, 
+		        c.pl_theme, 
+		        c.pl_thumburl, 
+		        c.pl_msize, 
+		        c.pl_rdate
+		    FROM 
+		        mategroup a, 
+		        mategroup_member b, 
+		        planer c
+		    WHERE 
+		        a.mg_no = b.mg_no
+		        AND a.pl_no = c.pl_no
+		        AND a.pl_no = #{plNo}
+		) sub
+		, chatroom cr
+		, members m
+		WHERE 
+		    1 = 1
+		    AND cr.mg_no = sub.mg_no
+		    AND sub.mategroup_id = m.mem_id
+		    AND sub.mategroup_apply = 'Y'
+	</select>
+	
+	<update id="mategroupApplyCancel" parameterType="int">
+		UPDATE mategroup_member m
+		   SET m.mategroup_apply = 'E'
+		 WHERE m.mg_no = (
+		       SELECT a.mg_no
+		         FROM mategroup a, planer c
+		        WHERE a.mg_no = m.mg_no
+		          AND a.pl_no = c.pl_no
+		          AND a.pl_no = #{plNo}
+		      )
+		   AND m.mategroup_apply = 'W'
+	</update>
+	
+	<update id="mategroupStatusSecondStage" parameterType="int">
+		UPDATE mategroup m
+		   SET m.mategroup_status = '2단계'
+		 WHERE m.mg_no = (
+		    SELECT a.mg_no
+		     FROM mategroup a, planer c
+		    WHERE a.mg_no = m.mg_no
+		      AND a.pl_no = c.pl_no
+		      AND a.pl_no = #{plNo}
+		)
+	</update>
+	
+	<!-- 찬섭 추가 채팅 다운로드 밑작업 쿼리  -->
+	<select id="chatContTxtDown" parameterType="planerVO" resultType="planerVO">
+		SELECT 
+		      c.*
+		    , m.mem_name
+		    , m.mem_profileimg
+		  FROM 
+		      chat c, members m 
+		  WHERE room_no = (
+		      SELECT 
+		          room_no 
+		      FROM 
+		          chatroom 
+		      WHERE mg_no = (
+		          SELECT
+		              mg_no 
+		          FROM
+		              mategroup 
+		          WHERE pl_no = #{plNo}
+		          )
+		      )
+		      AND c.mem_id = m.mem_id
+		  ORDER BY chat_no ASC
+	</select>
+	
+	<delete id="chatContDelete" parameterType="int">
+		DELETE
+		FROM
+			chat
+		WHERE room_no = (
+		      SELECT 
+		          room_no 
+		      FROM 
+		          chatroom 
+		      WHERE mg_no = (
+		          SELECT
+		              mg_no 
+		          FROM
+		              mategroup 
+		          WHERE pl_no = #{plNo}
+		          )
+		      )
+      <![CDATA[  
+		AND to_date(chat_ymd, 'YY/MM/DD') < TRUNC(sysdate)
+		]]>
+	</delete>
 
 </mapper>

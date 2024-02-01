@@ -52,6 +52,7 @@ public class MakeMyPlanController {
 	// 플랜 작성 페이지로 이동
 	@RequestMapping(value = "/makeplan.do", method = RequestMethod.GET)
 	public String makeplan(HttpServletRequest req, Model model, RedirectAttributes ra, @RequestParam(required = false, value= "infoName") String infoName) {
+		
 		/** 자료수집 및 정의 */ 
 		HttpSession session = req.getSession();
 		MemberVO memberVO = (MemberVO) session.getAttribute("sessionInfo");
@@ -59,9 +60,11 @@ public class MakeMyPlanController {
 			ra.addFlashAttribute("message", "로그인 후 사용 가능합니다!");
 			return "redirect:/login/signin.do";
 		}
-		//테스트용
-//		MemberVO memberVO = new MemberVO();
-//		memberVO.setMemId("chantest1");
+		
+		// 테스트용 (로그인 생략)
+		// MemberVO memberVO = new MemberVO();
+		// memberVO.setMemId("chantest1");
+		
 		String memId = memberVO.getMemId();
 		String chageToEng = "";
 		String planType = "";
@@ -140,14 +143,6 @@ public class MakeMyPlanController {
 		return result;
 	}
 	
-	@PostMapping("/detailDeleteAll")
-	@ResponseBody
-	public List<TouritemsVO> detailDeleteAll(@RequestBody DetatilPlannerVO s_planner) {
-		log.info("detatilPlannerVO 형태2 : " + s_planner.toString());
-		List<TouritemsVO> list = planService.detailDeleteAll(s_planner);
-		return list;
-	}
-	
 	
 	/* 세부플랜 CRUD */
 	
@@ -213,6 +208,13 @@ public class MakeMyPlanController {
 		return new ResponseEntity<String>(sres.toString(), HttpStatus.OK);
 	}
 	
+	@GetMapping("/delPlan")
+	@ResponseBody
+	public ResponseEntity<String> delPlan(@RequestParam long plNo) {
+		ServiceResult sres = planService.delPlan(plNo);
+		return new ResponseEntity<String>(sres.toString(), HttpStatus.OK);
+	}
+	
 	/**
 	 * 하나의 세부플랜만 선택하여 삭제
 	 * @param s_planner
@@ -237,35 +239,48 @@ public class MakeMyPlanController {
 	 * @param imgFile
 	 * @return
 	 */
-	@PostMapping("/updatePlan")
+	@PostMapping("/updatePlan.do")
 	public String updatePlan(
 			HttpServletRequest req, 
 			PlannerVO planVO, 
 			Model model, 
 			RedirectAttributes ra,
-			@RequestParam("fileReal") MultipartFile imgFile
-			) {
+			@RequestParam("fileReal") MultipartFile imgFile,
+			@RequestParam String spSday, 
+			@RequestParam String spEday) {
+		String goPage = "";
 		
-		log.info("imgFile : " + imgFile.getOriginalFilename());
-		log.info("planVO : " + planVO.toString());
+		/** 자료 수집 및 정의 */
+		// 세션 정보에서 아이디를 가져와 업데이트할때 사용하기 위해 planVO에 세팅
 		HttpSession session = req.getSession();
 		MemberVO memberVO = (MemberVO) session.getAttribute("sessionInfo");
 		planVO.setMemId(memberVO.getMemId());
 		
+		Map<String,Object> param = new HashMap<String, Object>();
+		param.put("req", req);
+		param.put("planVO", planVO);
+		param.put("imgFile", imgFile);
+		param.put("spSday", spSday);
+		param.put("spEday", spEday);
 		
-		String goPage = "";
+		/** 서비스 호출 */		
+		planService.updatePlan(param);
 		
-		ServiceResult result = planService.updatePlan(req, planVO, imgFile);
 		
-		if(result == ServiceResult.OK) {
+		/** 자료 검증 */
+		log.debug("serviceResult : {}", param.get("serviceResult"));
+		if(param.get("serviceResult") == ServiceResult.OK) {
 			ra.addFlashAttribute("message", "등록 성공!");
+			ra.addFlashAttribute("msgflag", "su");
+			goPage = "redirect:/partner/mygroup.do";
 		} else {
 			ra.addFlashAttribute("message", "등록 실패!");
+			ra.addFlashAttribute("msgflag", "fa");
+			goPage = "redirect:/myplan/planMain.do";
 		}
 		
-		goPage = "redirect:/partner/mygroup.do";
-		
 		return goPage;
+		
 	}
 	
 	

@@ -17,6 +17,5 @@ public interface PlannerMainService {
 	public ServiceResult addLike(Map<String, Object> param);
 	public List<PlannerLikeVO> alreadyActivatedLikeList(String memId);
 	public ServiceResult delLike(Map<String, Object> param);
-	public Map<String, Object> getPlanDetail(long plNo);
 }
 

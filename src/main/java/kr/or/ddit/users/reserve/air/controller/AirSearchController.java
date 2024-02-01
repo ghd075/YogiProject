@@ -83,6 +83,7 @@ public class AirSearchController {
 	   return "reserve/air/list";
 	}
 	
+	
 	/* 더보기 버튼 클릭 시(4개씩 더보여줌) */
 	@ResponseBody
 	@RequestMapping(value = "/moreList.do", method = RequestMethod.GET)
@@ -100,7 +101,6 @@ public class AirSearchController {
 			map.put("msg", "NO");
 			return map;
 		}
-		
 		SortVO sortVO = null;
 		if(type.equals("price")) {
 		  Collections.sort(roundTripList, new PriceSort());  //최저가 정렬
@@ -117,7 +117,6 @@ public class AirSearchController {
 			map.put("msg", "NO");
 			return map;
 		}
-		
 		//출력 레코드 수 증가
 	    searchVO.setNumOfRecord(searchVO.getNumOfRecord() + 4);
 		
@@ -132,6 +131,7 @@ public class AirSearchController {
 		map.put("sortVO", sortVO);
 		return map;
 	}
+	
 	
 	/* 정렬(최저가,최단시간,추천)탭 버튼 클릭 시 */
 	@ResponseBody
@@ -166,7 +166,6 @@ public class AirSearchController {
 			map.put("msg", "NO");
 			return map;
 		}
-		
 		//디폴트 레코드 갯수 4
 		searchVO.setNumOfRecord(4);
 		List<RoundTripVO> rt = new ArrayList<RoundTripVO>();

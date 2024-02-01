@@ -23,6 +23,45 @@
         <!-- 부트스트랩 모듈 -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- 스위트 얼럿 모듈 -->
+    	<link href="${contextPath }/resources/css/sweetalert2.min.css" rel="stylesheet" />
+    	<script defer src="${contextPath }/resources/js/sweetalert2.all.min.js"></script>
+    	
+        <style>
+            #chgPwModal .modal-body>div {
+                overflow: auto;
+            }
+            
+            #chgPwModal .modal-body>div p,
+            #chgPwModal .modal-body>div .chgPwChkBadge {
+                float: left;
+            }
+            
+            #chgPwModal .modal-body>div .chgPwChkBadge {
+                margin-left: 20px;
+            }
+            
+            #chgPwForm>div {
+                overflow: auto;
+                margin-bottom: 20px;
+            }
+            
+            #chgPwForm label {
+                float: left;
+                width: 150px;
+                padding-top: 5px;
+            }
+            
+            #chgPwForm input {
+                float: left;
+                width: calc(100% - 150px);
+            }
+            
+            .chgPwChkBadge {
+                margin-bottom: 20px;
+            }
+        </style>
+        
     </head>
     
     <body class="scroll">
@@ -47,16 +86,16 @@
                     </form>
                 </div>
                 <div class="findContents">
-                    <h2>비밀번호 찾기</h2>
-                    <p>비밀번호 찾기는 아이디, 이메일, 이름을 입력하여 찾을 수 있습니다.</p>
+                    <h2>비밀번호 재설정</h2>
+                    <p>비밀번호 재설정은 아이디, 이메일, 이름을 입력하여 변경할 수 있습니다.</p>
                     <form action="" id="pwFind" name="pwFind">
                         <input class="form-control" type="text" id="memId" name="memId" placeholder="회원 아이디 입력" autocomplete="off" />
                         <input class="form-control" type="text" id="memEmail2" name="memEmail" placeholder="회원 이메일 입력" autocomplete="off" />
                         <input class="form-control" type="text" id="memName2" name="memName" placeholder="회원 이름 입력" autocomplete="off" />
                         <p class="findPwTxt">
-							<span class="badge bg-warning">비밀번호 찾기 버튼을 눌러 주세요.</span>
+							<span class="badge bg-warning">비밀번호 재설정 버튼을 눌러 주세요.</span>
                         </p>
-                        <button class="btn btn-primary" type="button" id="pwFindBtn">비밀번호 찾기</button>
+                        <button class="btn btn-primary" type="button" id="pwFindBtn">비밀번호 재설정</button>
                         <button class="btn btn-success loginPageGoBtn" type="button">로그인 페이지</button>
                     </form>
                 </div>

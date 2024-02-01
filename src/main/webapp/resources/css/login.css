@@ -361,6 +361,37 @@ nav ul {
     display: none;
 }
 
+/* 테스트 계정 스타일링 */
+.testBtnGroup {
+    padding: 0px 20px 20px!important;
+    text-align: center;
+    display: none;
+}
+
+.testBtnGroup button {
+	margin-right: 10px;
+}
+
+.testBtnGroup button:last-of-type {
+	margin-right: 0px;
+}
+
+.testBtnGroup>div {
+	margin-bottom: 10px;
+}
+
+.testBtnShow {
+	cursor: pointer;
+	transition: all 0.4s;
+	border-radius: 4px;
+}
+
+.testBtnShow:hover {
+	background-color: #333;
+	color: white;
+	padding: 10px 0px;
+}
+
 /* 미디어 쿼리 (PC용) */
 @media all and (max-width: 1410px) {
     

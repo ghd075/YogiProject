@@ -179,10 +179,39 @@
         var noticeDeleteBtn = $("#noticeDeleteBtn");
         var deleteForm = $("#deleteForm");
         noticeDeleteBtn.click(function(){
-        	var agreeFlag = confirm("정말로 삭제하시겠습니까?");
-        	if(agreeFlag) {
-        		deleteForm.submit();
-        	}
+        	
+        	//var agreeFlag = confirm("정말로 삭제하시겠습니까?");
+        	//if(agreeFlag) {
+        	//	deleteForm.submit();
+        	//}
+        	
+        	Swal.fire({
+    		    title: "정말로 삭제하시겠습니까?",
+    		    showDenyButton: true,
+    		    confirmButtonText: "예",
+    		    denyButtonText: "아니오"
+    		}).then((result) => {
+    		    if (result.isConfirmed) {
+    		    	Swal.fire({
+    				    title: "공지사항 삭제",
+    				    text: "공지사항을 삭제합니다.",
+    				    icon: "info"
+    				}).then((result) => {
+    				    // 모달이 닫힌 후에 실행될 코드
+    				    if (result.isConfirmed) {
+    				        // 확인 버튼이 클릭되었을 때
+    				    	deleteForm.submit();
+    				    }
+    				});
+    		    } else if (result.isDenied) {
+    		        Swal.fire({
+    					title: "공지사항 삭제",
+    					text: "공지사항 삭제를 취소합니다.",
+    					icon: "error"
+    				});
+    		    }
+    		});
+        	
         });
         
         // 종횡비 함수

@@ -1,0 +1,292 @@
+@import url('https://fonts.cdnfonts.com/css/spongition');
+
+.cartImg {
+  display: block;
+  width: 80%;
+  height: 80px;
+  margin: auto;
+}
+
+.cart ul {
+  background-color: whitesmoke;
+  padding: 30px;
+  margin-bottom: 50px;
+  border: whitesmoke solid 1px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 300;
+}
+
+.cart ul :first-child {
+  color: limegreen;
+}
+
+table {
+  border-top: solid 1.5px black;
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+
+thead {
+  text-align: center;
+  font-weight: bold;
+}
+
+tbody {
+  font-size: 12px;
+}
+
+td {
+  padding: 15px 0px;
+  border-bottom: 1px solid lightgrey;
+}
+
+.cart__list__detail :nth-child(3) {
+  vertical-align: top;
+}
+
+.cart__list__detail :nth-child(3) a {
+  font-size: 12px;
+}
+
+.cart__list__detail :nth-child(3) p {
+  margin-top: 6px;
+  font-weight: bold;
+}
+
+.cart__list__smartstore {
+  font-size: 12px;
+  color: gray;
+}
+
+.cart__list__option {
+  vertical-align: top;
+  padding: 20px;
+}
+
+.cart__list__option p {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.cart__list__option p::after {
+  content: "";
+  width: 90%;
+  height: 1px;
+  background-color: lightgrey;
+  left: 0px;
+  top: 25px;
+  position: absolute;
+}
+
+.cart__list__optionbtn {
+  background-color: white;
+  font-size: 10px;
+  border: lightgrey solid 1px;
+  padding: 4px 22px;
+}
+
+.cart__list__detail :nth-child(4),
+.cart__list__detail :nth-child(5),
+.cart__list__detail :nth-child(6) {
+  border-left: 2px solid whitesmoke;
+}
+
+.cart__list__detail :nth-child(5),
+.cart__list__detail :nth-child(6) {
+  text-align: center;
+}
+
+.cart__list__detail :nth-child(5) button {
+	background-color: limegreen;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 6px;
+    font-size: 10px;
+    margin-top: 19px;
+}
+
+.price {
+  font-weight: bold;
+}
+
+.cart__mainbtns {
+  width: 420px;
+  height: 200px;
+  padding-top: 40px;
+  display: block;
+  margin: auto;
+}
+
+.cart__bigorderbtn {
+  width: 200px;
+  height: 50px;
+  font-size: 16px;
+  margin: auto;
+  border-radius: 5px;
+}
+
+.cart__bigorderbtn.left {
+  background-color: white;
+  border: 1px lightgray solid;
+}
+
+.cart__bigorderbtn.right {
+  background-color: limegreen;
+  color: white;
+  border: none;
+}
+
+.btn_delete_a{
+	border:0px;
+	background-color:white;
+	font-size:15px;
+	color:gray;
+}
+       
+       
+.groupPlanCont {
+	overflow: auto;
+}
+
+/* .groupPlanCont article {
+  float: left;
+  width: calc(100% / 4 - 40px);
+  width: calc(100% / 4 - 30px);
+  margin-right: 40px;
+  cursor: pointer;
+} */
+
+/* .groupPlanCont article:nth-of-type(4),
+.groupPlanCont article:last-of-type {
+  margin-right: 0px;
+} */
+
+.groupPlanCont h4 {
+  margin-bottom: 5px;
+}
+
+.groupPlanCont article>div:last-of-type {
+  padding: 20px 0px;
+}
+
+.groupPlanCont article>div:last-of-type span {
+  font-weight: 300;
+}
+
+.groupPlanCont article p,
+.groupPlanCont article .airportText {
+  display: none;
+}
+
+.mainContentsBox {
+  width: 100%;
+  height: 600px; 
+  overflow: hidden; 
+}
+
+.mainContentsBoxCenter {
+  height: 100%; 
+  overflow-y: auto; 
+}
+
+.mainContentsBoxCenter::-webkit-scrollbar {
+  display: none;
+}
+
+
+.thumbImg {
+  width:50px;
+  height:50px;
+  border-radius: 50%;
+}
+
+.textDrop {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.list-group-item .col-md-1 {
+  line-height: 50px;
+}
+
+
+ul.list-group li.list-group-item:first-child span {
+  padding:10px 13px 10px 13px;
+}
+
+ul.list-group li.list-group-item:first-child .bg-light {
+  background-color : grey;
+}
+
+.customBadge {
+  display: inline-block;
+  padding: 0.25em 0.4em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  color:#343a40;
+  border-radius: 50rem!important;
+  background-color: #ededed;
+  cursor:pointer;
+}
+
+.customBadge.active {
+  display: inline-block;
+  padding: 0.25em 0.4em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  color:#fff;
+  border-radius: 50rem!important;
+  background-color: #343a40;
+  cursor:pointer;
+}
+
+.customBadge:hover {
+  color:#fff;
+  background-color: #343a40;
+  transition: 0.8s;
+}
+
+.textAdress {
+  color:grey;
+  font-size: 0.8rem;
+}
+
+.totalPointCost {
+	text-align : right;
+	font-size : 0.8rem;
+}
+
+.btnWrap{
+	position : relative;
+	overflow:hidden;
+    height: 60px;
+}
+
+button#returnBtn {
+	position : absolute;
+	right: 0px;
+	color: #414040;
+  background-color: #ededed;
+  border : none;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 15px;
+  cursor: pointer;	
+  margin-bottom : 10px;
+}

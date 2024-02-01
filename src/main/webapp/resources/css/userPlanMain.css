@@ -110,6 +110,10 @@
 	overflow: auto;
 }
 
+.bestContents.forArea {
+	min-height : 800px;
+}
+
 .bestContents article {
   float: left;
   width: calc(100% / 4 - 40px);
@@ -135,6 +139,13 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.bestContents img.planRank {
+  width: 50px;
+  position: absolute;
+  top:30px;
+  left:30px;
 }
 
 .bestContents .like{
@@ -192,4 +203,11 @@
 
 .bestPlanMainHeadStyle span > a {
 	color : white;
+}
+
+.textDrop {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

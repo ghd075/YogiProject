@@ -168,5 +168,13 @@
 		  AND mem_id = #{memId}
 		  AND mem_pw = #{memPw}
 	</select>
+	
+	<update id="changePw" parameterType="memberVO">
+		UPDATE members
+		SET
+		    mem_pw = #{memPw}
+		WHERE
+		    mem_id = #{memId}
+	</update>
 
 </mapper>

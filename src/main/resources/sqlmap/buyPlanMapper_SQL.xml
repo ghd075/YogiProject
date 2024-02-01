@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.BuyPlanMapper">
+
+	<resultMap type="touritemsVO" id="tourMap">
+	<id property="contentId" column="content_id"/>
+	<result property="contentId" column="content_id"/>
+	<result property="areaCode" column="area_code"/>
+	<result property="sigunguCode" column="sigungu_code"/>
+	<result property="tourCate" column="tour_cate"/>
+	<result property="contenttypeId" column="contenttype_id"/>
+	<result property="firstImage" column="first_image"/>
+	<result property="longitude" column="longitude"/>
+	<result property="latitude" column="latitude"/>
+	<result property="address" column="address"/>
+	<result property="tel" column="tel"/>
+	<result property="title" column="title"/>
+	<result property="zipcode" column="zipcode"/>
+	</resultMap>
+	
+	<resultMap type="detatilPlannerVO" id="detailMap">
+	<id property="spNo" column="sp_no"/>
+	<result property="spNo" column="sp_no"/>
+	<result property="spDay" column="sp_day"/>
+	<result property="spSday" column="sp_sday"/>
+	<result property="spEday" column="sp_eday"/>
+	<result property="contentId" column="content_id"/>
+	<result property="plNo" column="pl_no"/>
+	<result property="spOrder" column="sp_order"/>
+	<result property="spDistance" column="sp_distance"/>
+	<collection property="tourVO" resultMap="tourMap"/>
+	</resultMap>
+	
+	<resultMap type="plannerVO" id="planerMap">
+	<id property="plNo" column="pl_no"/>
+	<result property="plNo" column="pl_no"/>
+	<result property="memId" column="mem_id"/>
+	<result property="plRdate" column="pl_rdate"/>
+	<result property="plTitle" column="pl_title"/>
+	<result property="plMsize" column="pl_msize"/>
+	<result property="plPrivate" column="pl_private"/>
+	<result property="plTheme" column="pl_theme"/>
+	<result property="plThumburl" column="pl_thumburl"/>
+	<collection property="detailList" resultMap="detailMap"/>
+	</resultMap>
+
+	<select id="getAllDpsBuyPlan" parameterType="long" resultMap="planerMap">
+		SELECT
+		    P.*, SP.*, TR.*
+		FROM
+		    PLANER P
+		LEFT OUTER JOIN
+		    S_PLANER SP ON P.PL_NO = SP.PL_NO
+		LEFT OUTER JOIN
+		    TOURITEMS TR ON SP.CONTENT_ID = TR.CONTENT_ID
+		WHERE
+		    P.PL_NO = #{plNo}
+		ORDER BY
+		    SP.SP_DAY ASC, SP.SP_ORDER ASC
+	</select>
+	
+	<select id="getDayDpsBuyPlan" parameterType="detatilPlannerVO" resultMap="detailMap">
+		SELECT
+		    P.*, SP.*, TR.*
+		FROM
+		    PLANER P
+		LEFT OUTER JOIN
+		    S_PLANER SP ON P.PL_NO = SP.PL_NO
+		LEFT OUTER JOIN
+		    TOURITEMS TR ON SP.CONTENT_ID = TR.CONTENT_ID
+		WHERE
+		    P.PL_NO = #{plNo} AND SP.SP_DAY = #{spDay}
+		ORDER BY
+		    SP.SP_DAY ASC, SP.SP_ORDER ASC
+	</select>
+	
+	<select id="getCurNum" parameterType="long" resultType="int">
+		SELECT
+			mategroup_currentnum
+		FROM
+			mategroup
+		WHERE
+			pl_no = #{plNo}
+	</select>
+
+</mapper>

@@ -92,8 +92,83 @@ $.findChkFn = function(findOutObj, {url, msgEl, msg}){
                     var id = res.memId;
                     $(msgEl).html("회원님의 "+msg+"는 [<span class='searchTxt'>"+id+"</span>] 입니다.");
                 }else if(msg == "비밀번호"){
-                    var pw = res.memPw;
-                    $(msgEl).html("회원님의 "+msg+"는 [<span class='searchTxt'>"+pw+"</span>] 입니다.");
+                    //var pw = res.memPw;
+                    //$(msgEl).html("회원님의 "+msg+"는 [<span class='searchTxt'>"+pw+"</span>] 입니다.");
+                    $(msgEl).html("회원님의 "+msg+"를 재설정합니다.");
+                    
+                    // 비밀번호 재설정 팝업창
+                    var modalHtmlTxt = `
+                    <div class="modal fade" id="chgPwModal">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">비밀번호 재설정</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div>
+                                        <p>새로 등록할 비밀번호를 입력해 주세요.</p>
+                                        <div class="chgPwChkBadge">
+                                            <span class="badge bg-danger">비밀번호 불일치</span>
+                                        </div>
+                                    </div>
+                                    <form action="/login/changePw.do" method="post" id="chgPwForm" name="chgPwForm">
+                                        <input type="hidden" id="memId2" name="memId" />
+                                        <div>
+                                            <label for="memPw">비밀번호 입력</label>
+                                            <input style="margin-bottom: 0px;" class="form-control" type="password" id="memPw" name="memPw" placeholder="새로 변경할 비밀번호 입력" />
+                                        </div>
+                                        <div>
+                                            <label for="memPwChk">비밀번호 확인</label>
+                                            <input class="form-control" type="password" id="memPwChk" name="memPwChk" placeholder="새로 변경할 비밀번호 입력" />
+                                        </div>
+                                        <button class="btn btn-primary" type="button" id="chgPwBtn">비밀번호 재설정</button>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+
+					$("#chgPwModal").remove();
+
+                    $("body").append(modalHtmlTxt);
+
+                    var chgPwModal = new bootstrap.Modal(document.getElementById('chgPwModal'));
+                    chgPwModal.show();
+                    
+                    // 회원 아이디 보내기
+                    var memIdVal = $("#memId");
+                    var chgMemid = $("#memId2");
+                    chgMemid.val(memIdVal.val());
+                    
+                    // 비밀번호 재설정 > 비밀번호 확인 메서드
+                    var memPw = $("#memPw");
+                    var memPwChk = $("#memPwChk");
+                    
+	                var pwChkFlag = false;
+	             	var pwObj = {
+	             		el1: memPw,
+	             		el2: memPwChk,
+	             		msgEl: ".chgPwChkBadge",
+	             		msg: "비밀번호"
+	             	};
+
+	             	$.inputValMismatchChkFn(pwObj, function(result){
+	                	pwChkFlag = result;
+	             	});
+
+                    var chgPwForm = $("#chgPwForm");
+					var chgPwBtn = $("#chgPwBtn");
+					chgPwBtn.click(function(){
+	                    if(pwChkFlag) {
+	                        chgPwForm.submit();
+	                    }else {
+	                        alert("비밀번호가 일치하는지 확인해주세요.");
+	                    }
+					});
                 }
             }
         }
@@ -167,6 +242,95 @@ $.inputValMismatchChkFn = function({el1, el2, msgEl, msg}, callback){
 	        }
         }
     });
+};
+
+// 관리자, 테스트 계정 버튼 기능
+$.testAccountFn = function(){
+	var testBtnShow = $(".testBtnShow");
+	var testBtnGroup = $(".testBtnGroup");
+	var loginBox = $(".loginBox");
+	
+	var token = false; // 현재 테스트 박스가 눈에 보이지 않는 상태
+	testBtnShow.click(function(){
+		if(!token) { // 눈에 보이게 한다!
+			loginBox.css({
+				paddingBottom: "0px"
+			});
+			testBtnGroup.show();
+			token = true; // 눈에 보이는 상태임을 표시
+		}else {
+			loginBox.css({
+				paddingBottom: "30px"
+			});
+			testBtnGroup.hide();
+			token = false; // 눈에 보이지 않는 상태임을 표시
+		}
+	});
+	
+	var loginIdEl = $("#loginForm #memId");
+	var loginPwEl = $("#loginForm #memPw");
+	var loginBtn = $("#loginBtn")
+	
+	var adminAccount = $("#adminAccount");
+	var lgjAccount = $("#lgjAccount");
+	var iuAccount = $("#iuAccount");
+	var wonAccount = $("#wonAccount");
+	var haAccount = $("#haAccount");
+	var kiAccount = $("#kiAccount");
+	
+	// 관리자 계정 로그인 처리 함수
+	adminAccount.click(function(){
+		var adminId = "admin";
+		var adminPw = "admin1234";
+		loginIdEl.val(adminId);
+		loginPwEl.val(adminPw);
+		loginBtn.trigger("click");
+	});
+	
+	// 테스트 계정 로그인 처리 함수
+	lgjAccount.click(function(){
+		var testId = "chantest1";
+		var testPw = "1234";
+		loginIdEl.val(testId);
+		loginPwEl.val(testPw);
+		loginBtn.trigger("click");
+	});
+	
+	// 아이유 계정 로그인 처리 함수
+	iuAccount.click(function(){
+		var testId = "iuforever9802";
+		var testPw = "dkdldb9802";
+		loginIdEl.val(testId);
+		loginPwEl.val(testPw);
+		loginBtn.trigger("click");
+	});
+	
+	// 장원영 계정 로그인 처리 함수
+	wonAccount.click(function(){
+		var testId = "wonyoung0408";
+		var testPw = "dnjsdud0408";
+		loginIdEl.val(testId);
+		loginPwEl.val(testPw);
+		loginBtn.trigger("click");
+	});
+	
+	// 하루토 계정 로그인 처리 함수
+	haAccount.click(function(){
+		var testId = "haru0404";
+		var testPw = "gkfnxh0404";
+		loginIdEl.val(testId);
+		loginPwEl.val(testPw);
+		loginBtn.trigger("click");
+	});
+	
+	// 키이오 계정 로그인 처리 함수
+	kiAccount.click(function(){
+		var testId = "kio0411";
+		var testPw = "zldh0411";
+		loginIdEl.val(testId);
+		loginPwEl.val(testPw);
+		loginBtn.trigger("click");
+	});
 };
 
 // daum 주소 API(주소 찾기)

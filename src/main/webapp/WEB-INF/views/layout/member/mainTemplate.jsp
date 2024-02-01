@@ -12,20 +12,9 @@
         <meta name="copyright" content="대덕인재개발원" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>여기갈래 &gt; 랜딩 페이지</title>
-        <link href="${contextPath }/resources/images/favicon.ico" rel="shoutcut icon" />
-        <!-- 공통 css -->
-        <link href="${contextPath }/resources/css/userCommon.css" rel="stylesheet" />
-        <!-- 제이쿼리 -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <!-- 공통 js -->
-        <script defer src="${contextPath }/resources/js/util.js"></script>
-        <script defer src="${contextPath }/resources/js/userCommon.js"></script>
-        <!-- 부트스트랩 모듈 -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- 폰트어썸, 구글 아이콘 디자인 -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        
+        <!-- 사용자 페이지 > 헤더세팅 영역 -->
+        <tiles:insertAttribute name="headerSettings" />
     	
         <%-- <c:remove var="message" scope="page" />
         <c:remove var="message" scope="session" />
@@ -34,7 +23,33 @@
         
     	<c:if test="${not empty message }">
 		    <script type="text/javascript">
-		        alert("${message}");
+		        //alert("${message}");
+		        $(function(){
+		        	// 성공시
+		        	<c:if test="${msgflag eq 'su'}">
+		        		Swal.fire({
+		                    title: "성공",
+		                    text: "${message}",
+		                    icon: "success"
+		                });
+		        	</c:if>
+		        	// 실패시
+		        	<c:if test="${msgflag eq 'fa'}">
+			        	Swal.fire({
+		                    title: "실패",
+		                    text: "${message}",
+		                    icon: "error"
+		                });
+		        	</c:if>
+		        	// 정보성 메시지
+		        	<c:if test="${msgflag eq 'in'}">
+			        	Swal.fire({
+		                    title: "안내",
+		                    text: "${message}",
+		                    icon: "info"
+		                });
+		        	</c:if>
+		        });
 		        <c:remove var="message" scope="request" />
 			    <c:remove var="message" scope="session" />
 		    </script>

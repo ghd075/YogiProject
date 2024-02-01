@@ -37,7 +37,10 @@ public interface PlannerMapper {
 	public int updatePlan(PlannerVO plan);
 	public List<DetatilPlannerVO> getOneDetailPlan(long plNo);
 	public PlannerVO getOnePlan(long plNo);
-	public void insertMategroup(PlannerVO plan);
-	public void insertMategroupMem(PlannerVO plan);
+	public int insertMategroup(PlannerVO plan);
+	public int insertMategroupMem(PlannerVO plan);
+	public int updateSEdays(Map<String, Object> param2);
+	public int insertChatRoom(PlannerVO plan);
+	public int delPlan(long plNo);
 	
 }

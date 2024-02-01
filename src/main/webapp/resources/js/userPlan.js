@@ -3,7 +3,7 @@ const AJAX_TYPE_POST = "POST";
 const AJAX_TYPE_GET = "GET";
 
 /* 요소 */
-const daybtn = document.querySelector("#btn");              // 일정생성 버튼 Element            
+const dayCreationbtn = document.querySelector("#btn");              // 일정생성 버튼 Element            
 const testbtn = document.querySelector("#testbtn");              // 일정생성 버튼 Element            
 var dateElement = document.getElementById("startDate");     // 출발일 Element
 var daysElement = document.getElementById("days");          // 일수 Element
@@ -14,11 +14,13 @@ var edate;	                                              // 종료일 Element
 
 /* 플래그 */
 var daysCheckFlag = false;                                   // 일정생성 flag
+let isBtnSecondClick = false;
 
 /* 계산을 위한 전역 변수들(초기화 필요) */
 var sp_day = 0;                                           // 일자별 num Element
 let betDistance = 0;
 let totalDistance = 0;
+let dpArrForAddedCheck = [];
 
 /* 마커, 원, 선, 오버레이 등 객체와 배열 */
 var marker;                                                 // 마커 Element
@@ -33,7 +35,7 @@ let lineCrSet = [
     "color" : "#FF0000"
   },
   {
-    "color" : "#ecff24"
+    "color" : "#ff7300"
   },
   {
     "color" : "#89cf48"
@@ -58,7 +60,6 @@ var common =  {
 			data : (AJAX_TYPE_POST === type ? JSON.stringify ( data ) : data),
 			contentType: (AJAX_TYPE_POST === type ? "application/json; charset=utf-8" : undefined),
 			success : function(data) {
-				//console.log("체킁:",data);
 				callbackFunction(data);
 			}
 		});
@@ -68,7 +69,6 @@ var common =  {
 			type: method,
 			url: 	url,
 			success : function(data) {
-				//console.log("체킁:",data);
 				callbackFunction(data);
 			}
 		});
@@ -91,7 +91,6 @@ var parsing = {
 			html1 += `<tr><td colspan='4' align='center'>검색 결과가 없습니다.</td></tr>`;
 		}
 		if (Array.isArray(list)) {
-			// console.log("배열입니다.");
 			$.each(list, function (i, item) {
 				html += `
 						<div class="card mb-2">
@@ -115,19 +114,15 @@ var parsing = {
     var areaCode = $('#areaCode');
     var areaCd;
     var areaNm;
-    // console.log("값들 : ", data);
     if (Array.isArray(data)) {
-      // console.log("배열입니다.");
       $.each(data, function (i, item) {
         areaCd = item.areaCode;
         areaNm = item.areaName;
 
-        //console.log("지역코드 : ", areaCd);
-        //console.log("지역명 : ", areaNm);
         areaCode.append($('<option>', {
           value: areaCd,
           text: areaNm,
-          'data-latitude': item.latitude, // Add latitude as a data attribute
+          'data-latitude': item.latitude,
           'data-longitude': item.longitude,
           class: "item"
         }));
@@ -139,19 +134,14 @@ var parsing = {
     var sigunguCode = $('#sigunguCode');
     var sigunguCd;
     var sigunguNm;
-    //console.log("지역코드 : ", areaCode);
-    //console.log("값들 : ", data);
     if (Array.isArray(data)) {
-      //console.log("배열입니다.");
       $.each(data, function (i, item) {
         sigunguCd = item.sigunguCode;
         sigunguNm = item.sigunguName;
-        //console.log("시군구코드 : ", sigunguCd);
-        //console.log("시군구명 : ", sigunguNm);
         sigunguCode.append($('<option>', {
           value: sigunguCd,
           text: sigunguNm,
-          'data-latitude': item.latitude, // Add latitude as a data attribute
+          'data-latitude': item.latitude,
           'data-longitude': item.longitude,
           class: "item2"
         }));
@@ -177,25 +167,34 @@ var draw = {
 
 // =============== 유틸 함수 ===============
 
+function sweetFn(msg, text, type) {
+  Swal.fire({
+      title: msg,
+      text: text,
+      icon: type
+  });
+}
+
+
 // 유효성 검사
 function checkNull() {
-  console.log("초기 sp_day 값 : " + sp_day)
+  //console.log("초기 sp_day 값 : " + sp_day)
   var areaCode = $("#areaCode").val();
   var sigunguCode = $("#sigunguCode").val();
   if (!areaCode) {
-    alert("지역을 선택해주세요.");
+    sweetFn("", "지역을 선택해주세요.", "info");
     return false;
   } 
   if (!sigunguCode) {
-    alert("세부 지역을 선택해 주세요.");
+    sweetFn("", "세부 지역을 선택해 주세요.", "info");
     return false;
   } 
   if (!daysCheckFlag) {
-    alert("일정 생성 버튼을 클릭해 주세요.");
+    sweetFn("", "일정 생성 버튼을 클릭해 주세요.", "info");
     return false;
   } 
   if (sp_day === 0) {
-    alert("Day 버튼을 클릭하여 Day를 선택해주세요.");
+    sweetFn("", "Day 버튼을 클릭하여 Day를 선택해주세요.", "info");
     return false;
   }  
   return true;
@@ -217,16 +216,19 @@ $.eachPlanImgResizeFn = function(){
 
 // =============== 일정 관련 함수 ===============
 
+// 버튼 클릭 이벤트
+$("#keyword").on("keypress", function(e) {
+  if(e.keyCode == '13'){
+  	$('#searchBtn').click();
+  }
+});
+
 // 카테고리별 검색
 function search(value) {
 	var keyword = document.querySelector("#keyword").value;
   var searchOption = value;
   var areaindex = $("#areaCode option:selected").attr("value");
   var sigunguIndex = $("#sigunguCode option:selected").attr("value");
-  console.log("입력한 키워드 : " + keyword);
-  console.log("선택한 옵션 : " + searchOption);
-  console.log("선택한 지역 : " + areaindex);
-  console.log("선택한 시군구 : " + sigunguIndex);
 
 	var data = {
     searchOption: searchOption,
@@ -236,7 +238,6 @@ function search(value) {
   };
 
   if (checkNull()) {
-    // console.log("checkNull 값 : " + checkNull);
     draw.elements(data);
   }
 }
@@ -275,27 +276,73 @@ increaseButton.addEventListener("click", function () {
   }
 });
 
-const buttonClickHandler = () => {
-  // alert('Button clicked!');
-  const startDate = dateElement.value;
+// 일정 생성 버튼 핸들러
+const dcBtnClickHandler = () => {
+
+  // console.log("isBtnSecondClick Check", isBtnSecondClick);
+  // console.log("dpArrForAddedCheckBefore", dpArrForAddedCheck);
+
+  // 첫번째 클릭이 아니면...
+  if(isBtnSecondClick == false) {
+    dpArrForAddedCheck = [{"day":1, "tourArrForDay":[]}]
+    // console.log("첫번째 후 추가", dpArrForAddedCheck);
+  }
+
+  let startDate = dateElement.value;
   var days = parseInt(daysElement.value, 10);
 
-  console.log("daysCheckFlag 값 : " + daysCheckFlag);
-  
   daysCheckFlag = true;
   if (days == 0) {
     days += 1;
   }
-  console.log("daysCheckFlag 값 : " + daysCheckFlag);
 
   console.log("값을 찍어보자 : " + startDate, days);
 
-  generateSchedule(startDate, days);
+  if(isBtnSecondClick == true) {
+    console.log("두번째 선택시 부터 처리입니다");
+
+    //dpArrForAddedCheck.length = 기존 길이
+    //days = 변경될 길이
+
+    if(days >= dpArrForAddedCheck.length) {
+      // console.log("날짜가 기존과 같거나 많아서 상관없음. 그려줄때만 다르게 처리");
+      // 기존의 데이터들을 유지하되, days가 늘어난 만큼 배열을 추가함
+    } else {
+      // console.log("날짜가 기존보다 적어서 체크 필요함");
+      let isExistData = false;
+
+      let curDays = dpArrForAddedCheck.length;
+
+      for(let i = curDays-1; i >= days; i--) {
+
+        // 변경될 일수가 기존의 일수보다 적을때, 데이터가 존재하면 변경되지 않도록 해야한다.
+        if(dpArrForAddedCheck[i].tourArrForDay.length != 0) {
+          isExistData = true;  
+        }
+
+      }
+
+      if(isExistData == true) {
+        // console.log("날짜가 기존보다 적은데 줄어들 날짜에 데이터가 들어있습니다. 일수 변경을 중지합니다.");
+        sweetFn("", "기존보다 줄어들 일수에 등록된 세부 플랜 데이터가 존재합니다. 삭제 후 진행해주세요.", "error");
+        return;
+      }
+    }
+  }
+
+   generateSchedule(startDate, days);
+  //  console.log("dpArrForAddedCheckAfter", dpArrForAddedCheck);
+
+   isBtnSecondClick = true;
+
 };
 
+// 일수 선택 버튼
+dayCreationbtn.addEventListener("click", dcBtnClickHandler);
 
 // 시작일과 일수를 입력받아 일정을 생성하는 함수
 function generateSchedule(startDate, days) {
+
   const scheduleElement = document.querySelector("#myTable > tbody");
 
   //console.log("시작일: " + startDate);
@@ -334,11 +381,36 @@ function generateSchedule(startDate, days) {
 
     // 다음 날짜로 이동
     currentDate.setDate(currentDate.getDate() + 1);
+
+
+    if(isBtnSecondClick == true) {
+      // 변경될 일수가 더 많거나 같은경우
+      let curSeq = dpArrForAddedCheck[dpArrForAddedCheck.length - 1].day;
+      if(days == dpArrForAddedCheck.length) {
+        daydo(days);
+        console.log("같으면", sp_day);
+      }
+  
+      if(days > dpArrForAddedCheck.length) {
+        dpArrForAddedCheck.push({"day": curSeq+1, "tourArrForDay": []});
+        daydo(days);
+        console.log("크면", sp_day);
+      }
+    }
+
   }
+
+  // 변경될 일수가 적은 경우, 줄어든 만큼 전체 배열에서 뺀다.(데이터가 존재하는지는 dcBtnClickHandler에서 체크.)
+  if(days < dpArrForAddedCheck.length) {
+    let tempLength = dpArrForAddedCheck.length
+    for(let i = 0; i < tempLength - days; i++) {
+      dpArrForAddedCheck.pop();
+    }
+    daydo(days);
+    console.log("적으면", sp_day);
+  }
+    
 }
-
-daybtn.addEventListener("click", buttonClickHandler);
-
 
 // 요일 이름을 가져오는 함수
 function getDayName(dayIndex) {
@@ -346,7 +418,7 @@ function getDayName(dayIndex) {
   return days[dayIndex];
 }
 
-// DAY 초기화 버튼
+// DAY 초기화 버튼(현재 사용되지 않음)
 function dayReset() {
   var trCnt = $("#myTable tr").length;
   if (trCnt > 0) {
@@ -374,13 +446,13 @@ function dayReset() {
   }
 }
 
-// 일정 선택
+// 일(Day1, Day2 ... 버튼) 선택
 function daydo(value) {
   // alert("일정을 선택했습니다." + value);
   sp_day = value;
-  var plNo = $("#plNo").val();
-  console.log("sp_day 값 : " + sp_day);
-  console.log("플랜번호 : " + plNo);
+  // var plNo = $("#plNo").val();
+  //console.log("sp_day 값 : " + sp_day);
+  //console.log("플랜번호 : " + plNo);
   $("#plan-plansboxtitle").text("DAY" + sp_day);
 
   getDpForDay(sp_day);
@@ -402,6 +474,50 @@ function getEndDate(startDate, days) {
   currentDate.setDate(currentDate.getDate() + days - 1);
   const endDate = currentDate.toISOString().split('T')[0];
   return endDate;
+}
+
+
+// 상단의 시작일을 변경하면, 왼쪽 박스에 날짜들도 함께 변경되는데, 
+// 첫번째 클릭인 경우에는 이 이벤트를 발생시키지 않음
+$("#startDate").on("change", function() {
+  if(isBtnSecondClick == false) {
+    return;
+  } 
+
+  // 날짜변경이라면...
+  const startDate = dateElement.value;
+  var days = parseInt(daysElement.value, 10);
+
+  daysCheckFlag = true;
+  if (days == 0) {
+    days += 1;
+  }
+  
+  generateSchedule(startDate, days);
+
+});
+
+// 여행 시작일을 변경하려고 클릭할 때, 두번째 클릭이라면 클릭 이벤트를 막고, 
+// 바꾸려는 일수 days가 전체 일정의 갯수와 동일하지 않으면 변경을 막는다. 
+$("#startDate").on("click", function(event) {
+  if(isBtnSecondClick != false){
+    event.preventDefault();
+    clickResume();
+  }
+});
+
+function clickResume(){
+  var days = parseInt(daysElement.value, 10);
+
+  if(days != dpArrForAddedCheck.length) {
+    $(".flatpickr-calendar").hide();
+    sweetFn("", "여행 일수가 기존의 일정과 일치하지 않아 변경하실 수 없습니다. 일수 조정 후 다시 시도해주세요.", "error");
+    // alert("여행 일수가 기존의 일정과 일치하지 않아 변경하실 수 없습니다. 일수 조정 후 다시 시도해주세요.");
+    return;
+  } else {
+    $(".flatpickr-calendar").show();
+  }
+
 }
 
 
@@ -440,6 +556,10 @@ function commonRendering(resArr) {
 
 /* 하루 전체 세부 플랜 조회 */
 function getDpForDay(spDay) {
+  if(marker!=null) {
+    closeOverlay();
+  }
+  // 범위 리셋
   resetBounds();
   // 주요 변수 초기화
   resetVarAll();
@@ -463,11 +583,9 @@ function getDpForDay(spDay) {
     success : function(dataForDay) {
 
       if(!dataForDay) {
-        alert("데이터 조회 실패!");
+        sweetFn("", "데이터 조회 실패!", "error");
         return;
       }
-
-      console.log("dataForDay", dataForDay)
 
       commonRendering(dataForDay);
 
@@ -475,9 +593,18 @@ function getDpForDay(spDay) {
         drawAllSps(dataForDay);
       }
       
+
       for(let i = 0; i < dataForDay.length; i++) {
         tourArr.push(dataForDay[i]);
+        for(let i = 0; i < dpArrForAddedCheck.length-1; i++) {
+          if(dpArrForAddedCheck[i].day == spDay) {
+            dpArrForAddedCheck[i].tourArrForDay.push(dataForDay[i]);
+          }
+        }
       }
+
+      // console.log("dataForDay", dataForDay);
+      // console.log("dpArrForAddedCheck 데이 선택시", dpArrForAddedCheck);
       
     }
   });
@@ -485,6 +612,10 @@ function getDpForDay(spDay) {
 
 /* 세부 플랜 등록(장소 선택) */
 function addS_plan(contentid) {
+  if(marker != null) {
+    closeOverlay();
+  }
+
   let plNo = $("#plNo").val();
   let parent =  $("#card3");
   let num = parent.find(".list-tbody").length;
@@ -505,7 +636,7 @@ function addS_plan(contentid) {
     // 조회하고 마커 찍기
     getTour(insData, insDp);
   } else {
-    alert("일정은 최대 9개로 제한됩니다.");
+    sweetFn("", "일정은 최대 9개로 제한됩니다.", "info");
     return;
   }
 
@@ -520,12 +651,9 @@ function getTour(insData, insDpCallback) {
     success : function(tourData) {
 
       if(!tourData) {
-        alert("해당 장소는 플랜에 등록할 수 없습니다. 관리자에게 문의해주시기 바랍니다.");
+        sweetFn("", "해당 장소는 플랜에 등록할 수 없습니다. 관리자에게 문의해주시기 바랍니다.", "error");
         return;
       }
-
-      // 결과 출력(디버깅)
-      // fnForDebug();
 
       // 조회 후, 인서트 작업
       insDpCallback(insData, tourData);
@@ -544,7 +672,8 @@ let insDp = function insDp(insData, tourData) {
     success : function(res) {
 
       if(res == null || res.length == 0) {
-        alert("세부플랜 등록에 실패하였습니다.");
+        
+        sweetFn("", "세부플랜 등록에 실패하였습니다.", "error");
         clearAll();
         getDpForDay(sp_day);
         return;
@@ -552,10 +681,17 @@ let insDp = function insDp(insData, tourData) {
 
       // 등록한 장소 배열에 추가
       tourArr.push(res);
+      for(let i = 0; i < dpArrForAddedCheck.length; i++) {
+        if(dpArrForAddedCheck[i].day == sp_day) {
+          dpArrForAddedCheck[i].tourArrForDay.push(res);
+        }
+      }
 
-      console.log("돼냐 : ", tourArr);
+      console.log("등록 장소 체크", dpArrForAddedCheck);
+
       // 세부플랜 리스트
       commonRendering(tourArr);
+      
       // 마커
       drawOneDp(res);
       
@@ -563,11 +699,29 @@ let insDp = function insDp(insData, tourData) {
   });
 }
 
+
+function clickDayDelAll() {
+
+  Swal.fire({
+    title: "전체삭제",
+    text: "해당일자의 일정들을 전체 삭제하시겠습니까?",
+    icon: "question",
+    showDenyButton: true,
+    confirmButtonText: "예",
+    denyButtonText: "아니오"
+  }).then((result) => {
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isConfirmed) {
+      dayDelAll();
+    } else if (result.isDenied) {
+      return;
+    }
+  });
+  
+}
+
 /* 일자내 세부플랜 전체 삭제 */
 function dayDelAll() {
-  if(!confirm("해당일자의 일정들을 전체 삭제하시겠습니까?")) {
-    return;
-  }
 
   var plNo = $("#plNo").val();
   var parent =  $("#card3");
@@ -578,7 +732,7 @@ function dayDelAll() {
   };
 
   if(num == 0) {
-    alert("등록된 장소가 하나도 없습니다.");
+    sweetFn("", "등록된 장소가 하나도 없습니다.", "error");
     return;
   }
 
@@ -591,8 +745,17 @@ function dayDelAll() {
 
       if(res === "OK") {
         getDpForDay(sp_day);
+
+        for(let i = 0; i < dpArrForAddedCheck.length; i++) {
+          if(dpArrForAddedCheck[i].day == sp_day) {
+            dpArrForAddedCheck[i].tourArrForDay.length = 0;
+          }
+        }
+        // console.log("전체삭제 완료1", dpArrForAddedCheck);
+        // console.log("전체삭제 완료2", tourArr);
+
       } else {
-        alert("세부플랜 전체 삭제에 실패하였습니다.");
+        sweetFn("", "세부플랜 전체 삭제에 실패하였습니다.", "error");
         return;
       }
     }
@@ -609,7 +772,7 @@ function delS_plan(spNo) {
     plNo: plNo
   };
 
-  console.log("JSON.stringify(delOnedata):", JSON.stringify(delOnedata));
+  //console.log("JSON.stringify(delOnedata):", JSON.stringify(delOnedata));
 
   $.ajax({
     type: 'post',
@@ -620,8 +783,15 @@ function delS_plan(spNo) {
 
       if(res === "OK") {
         getDpForDay(sp_day);
+
+        for(let i = 0; i < dpArrForAddedCheck.length; i++) {
+          if(dpArrForAddedCheck[i].day == sp_day) {
+            dpArrForAddedCheck[i].tourArrForDay.length = 0;
+          }
+        }
+
       } else {
-        alert("세부플랜 삭제에 실패하였습니다.");
+        sweetFn("", "세부플랜 삭제에 실패하였습니다.", "error");
         return;
       }
     }
@@ -631,7 +801,7 @@ function delS_plan(spNo) {
 function delAllAllDp(resetInputAllCallback, isGoListBtnClicked) {
 
   var plNo = $("#plNo").val();
-  console.log("plNo", plNo);
+  //console.log("plNo", plNo);
   var parent =  $("#card3");
   var num = parent.find(".list-tbody").length;
   var delData = {
@@ -665,22 +835,70 @@ function delAllAllDp(resetInputAllCallback, isGoListBtnClicked) {
 }
 
 $("#plannerResetBtn").on("click", function() {
-  if(!confirm("작성한 모든 정보가 초기화됩니다. 계속하시겠습니까?")) {
-    return;
-  }
 
-  delAllAllDp(resetInputAll, false);
+  Swal.fire({
+    title: "",
+    text: "작성한 모든 정보가 초기화됩니다. 계속하시겠습니까?",
+    icon: "question",
+    showDenyButton: true,
+    confirmButtonText: "예",
+    denyButtonText: "아니오"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      sweetFn("", "모든 내용이 초기화되었습니다.", "success");
+      delAllAllDp(resetInputAll, false);
+    } else if (result.isDenied) {
+      return;
+    }
+  });
 
 });
 
 $("#plannerListGoBtn").on("click", function() {
-  let isGoListBtnClicked = true;
-  delAllAllDp(resetInputAll, isGoListBtnClicked);
+  // let isGoListBtnClicked = true;
+  // delAllAllDp(resetInputAll, isGoListBtnClicked);
+  Swal.fire({
+    text: "현재 작성하고 있는 플랜의 데이터가 저장되지 않습니다. 계속하시겠습니까?",
+    icon: "question",
+    showDenyButton: true,
+    confirmButtonText: "예",
+    denyButtonText: "아니오"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      delPlan();
+    } else if (result.isDenied) {
+      return;
+    }
+  });
+  
 });
 
+function delPlan() {
+  var plNo = $("#plNo").val();
+
+  $.ajax({
+    type: 'get',
+    url: 	'/myplan/delPlan',
+    data : {"plNo" : plNo},
+    success : function(res) {
+
+      if(res === "OK") {
+        location.href="/myplan/planMain.do";
+      } else {
+        // sweetFn("", "삭제실패", "error")
+      }
+
+    }
+  });
+
+}
+
+
 let resetInputAll = function resetInputAll() {
+  isBtnSecondClick = false;
+
   $("#p_title").val('');
-  $("#startDate").val('');
+  // $("#startDate").val('');
   $("#areaCode option:eq(0)").prop("selected", true);
   $("#sigunguCode option:eq(0)").prop("selected", true);
   $("#days").val('1');
@@ -718,75 +936,71 @@ test2El.change(function(){
   }
 });
 
-	// 플랜 저장
-	function savePlanner(){
-	  var sp = document.getElementById('card3').innerText;
-	  var p_title = $("#p_title").val();
-    var plMsize = $("#test1 option:selected").val();
-    var plTheme = $("#test2 option:selected").val();
-    let plNo = $("#plNo").val();
-    let planSaveForm = $("#planSaveForm");
-	  console.log("sp : " + sp);
-	  console.log("제목 : " + p_title);
-	  console.log("시작일 : " + sdate);
-	  console.log("종료일 : " + edate);
-    console.log("plMsize : " + plMsize);
-    console.log("plTheme : " + plTheme);
-	  if(p_title == null || p_title==""){
-	    alert("여행 플래너의 제목을 입력해주세요.");
-	    $("#p_title").focus();
-	    return false;
-	  }
-    
-    if(sp==null || sp == "장소를 추가해주세요" || sp==""){
-	  	alert("여행 플래너에 장소를 추가해주세요.");
-	  	return false;
-	  } 
-    
-    if (plMsize == null || plMsize == "") {
-      alert("모집인원이 선택되지 않았습니다.");
-      return false;
-	  }
-    
-    if (plTheme == null || plTheme == "") {
-      alert("여행테마가 선택되지 않았습니다.");
-      return false;
-	  }
-    console.log("document.planSaveForm : ", document.planSaveForm);
+// 플랜 저장
+function savePlanner(){
 
-    $("#plMsize").val(plMsize);
-    $("#plTitle").val(p_title);
-    $("#plTheme").val(plTheme);
+  let noDataFlg = false;
+  // 시작일 계산
+  let tempDays = parseInt(daysElement.value);
+  let tempSdate = getFormatDate(dateElement.value);
+  // 종료일 계산
+  let tempEdate = getEndDate(tempSdate, tempDays);
 
-    document.planSaveForm.submit();
-    // var udtData = {
-    //   "plNo" : plNo,
-    //   "plTitle" : p_title,
-    //   "plMsize" : plMsize,
-    //   "plTheme" : plTheme
-    // }
-    // console.log("JSON.stringify", JSON.stringify(udtData));
+  let sp = document.getElementById('card3').innerText;
+  let p_title = $("#p_title").val();
+  let plMsize = $("#test1 option:selected").val();
+  let plTheme = $("#test2 option:selected").val();
 
-    // $.ajax({
-    //   type: 'post',
-    //   url: 	'/myplan/updatePlan',
-    //   contentType : "application/json; charset=utf-8",
-    //   data : JSON.stringify(udtData),
-    //   success : function(res) {
+  /* 검증 */
+  if(p_title == null || p_title==""){
+    sweetFn("", "여행 플래너의 제목을 입력해주세요.", "info");
+    $("#p_title").focus();
+    return false;
+  }
+
+  // if(!checkNull()) {
+  //   return false;
+  // }
   
-    //     if(res === "OK") {
-    //       alert("등록 성공!");
-    //       location.href="/myplan/planMain.do";
-    //     } else {
-    //       alert("등록에 실패하였습니다. 모든 정보를 입력했는지 확인해주세요");
-    //       return;
-    //     }
-    //   }
-    // });
+  if(sp==null || sp == "장소를 추가해주세요" || sp==""){
+    sweetFn("", "여행 플래너에 장소를 추가해주세요.", "info");
+    return false;
+  } 
+  
+  if (plTheme == null || plTheme == "") {
+    sweetFn("", "여행테마가 선택되지 않았습니다.", "info");
+    return false;
+  }
+  
+  if (plMsize == null || plMsize == "") {
+    sweetFn("", "모집인원이 선택되지 않았습니다.", "info");
+    return false;
+  }
+  
 
-    
 
-	}
+  /* 장소가 등록되지 않은 날짜 존재여부 확인 */
+ for(let i = 0; i < dpArrForAddedCheck.length; i++) {
+    if(dpArrForAddedCheck[i].tourArrForDay.length == 0) {
+      noDataFlg = true;
+    }
+  }
+  
+  if(noDataFlg == true) {
+    sweetFn("", "장소를 등록하지 않은 일자가 존재합니다.", "info");
+    return;
+  }
+
+  /* 폼 전송 위한 데이터 세팅 */
+  $("#plMsize").val(plMsize);
+  $("#plTitle").val(p_title);
+  $("#plTheme").val(plTheme);
+  $("#spSday").val(tempSdate);
+  $("#spEday").val(tempEdate);
+
+  document.planSaveForm.submit();
+
+}
 
 
 // =============== 지도 제어 관련 함수 ===============
@@ -882,7 +1096,7 @@ function drawOneDp(oneTour) {
   getTourBounds.extend(latlng);
   map.setBounds(getTourBounds);
 
-  console.log("지금까지 선택된 장소", tourArr);
+  //console.log("지금까지 선택된 장소", tourArr);
 
   // 장소가 2개 이상일때 부터 선 찍기 / 두 선사이의 거리 측정
   if(tourArr.length > 1) {
@@ -939,6 +1153,10 @@ function createMarkerAndCircle(latlng, spOrder) {
 // 마커 이미지 세팅
 let imageSrc = '/resources/images/planner/marker_red.png';
 //let imageSrc = '/resources/images/planner/marker_blue.png';
+console.log("sp_day",sp_day);
+if(sp_day > 0 && sp_day < 6) {
+  imageSrc = '/resources/images/planner/marker_number_d'+sp_day+'.png';
+}
 
 let imageSize = new kakao.maps.Size(36, 37);
 
@@ -980,8 +1198,8 @@ function createPolyLine(latLngs) {
 
   if(sp_day > 1 && sp_day < 6) {
     lineColor = lineCrSet[sp_day-1].color;
-    console.log("sp_day", sp_day);
-    console.log("lineCrSet[sp_day-1].color", lineCrSet[sp_day-1].color);
+    //console.log("sp_day", sp_day);
+    //console.log("lineCrSet[sp_day-1].color", lineCrSet[sp_day-1].color);
   }
 
   // 지도에 선을 표시
@@ -991,7 +1209,7 @@ function createPolyLine(latLngs) {
       strokeWeight : 6, 			// 선의 두께
       strokeColor : lineColor, 	// 선 색
       // strokeColor : '#434ff5', 	// 선 색
-      strokeOpacity : 1, 		// 선 투명도
+      strokeOpacity : 0.7, 		// 선 투명도
       strokeStyle : 'dotted' 		// 선 스타일
   });
 
@@ -1145,6 +1363,15 @@ function resetVarAll() {
   betDistance = 0;
   // console.log("두 장소 간 거리 초기화");
   betDistanceArr.length = 0;
+  // console.log(sp_day);
+  for(let i = 0; i < dpArrForAddedCheck.length-1; i++) {
+    // console.log(dpArrForAddedCheck[i].day);
+    if(dpArrForAddedCheck[i].day == sp_day) {
+      dpArrForAddedCheck[i].tourArrForDay = [];
+    }
+  }
+  // console.log("초기화 후...",  dpArrForAddedCheck);
+
 }
 
 /* 마커 삭제시 위치 재조정 */
@@ -1155,6 +1382,10 @@ function resetVarAll() {
 // 날짜, 지역 자동 선택 
 // 컨트롤러에서 로그인 체크 부분 하드코딩 주석 풀기
 const testButtonClickHandler = () => {
+  if(isBtnSecondClick == false) {
+    dpArrForAddedCheck = [{"day":1, "tourArrForDay":[]}]
+    //console.log("추가", dpArrForAddedCheck);
+  }
   generateSchedule(dateElement.value, 5);
   var areaCodeOpt = $("#areaCode").find(".item");
   for(var i = 0; i < areaCodeOpt.length; i++){
@@ -1202,9 +1433,16 @@ function fnForDebug() {
 // 사진 업로드 모달창
 $.PicUpModalFn = function () {
   // 모달창 닫기
+  var modalSave = $(".modalSave");
   var modalClose = $(".modalClose");
   var infoModalContents = $(".infoModalContents");
+  let profileImg = $("#profileImg");
+  modalSave.click(function () {
+      infoModalContents.hide();
+  });
   modalClose.click(function () {
+      $("#imgFile").val("");
+      profileImg.attr("src", "/resources/images/default_profile.png");
       infoModalContents.hide();
   });
   // 모달창 열기

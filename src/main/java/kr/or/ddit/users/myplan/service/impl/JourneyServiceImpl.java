@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.ddit.mapper.JourneyMapper;
@@ -18,6 +19,7 @@ import kr.or.ddit.users.myplan.vo.JourneyinfoVO;
 import kr.or.ddit.utils.ServiceResult;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class JourneyServiceImpl implements JourneyService {
 
 	@Inject

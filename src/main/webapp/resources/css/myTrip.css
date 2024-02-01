@@ -1,6 +1,4 @@
 /* 마이 트립 스타일링 */
-
-/* 만남의 광장 스타일링 */
 .myTripListContainer {
     position: relative;
 }
@@ -169,4 +167,545 @@
 
 .myTripListBtnGroup button {
     margin-left: 10px;
+}
+
+/* 만남의 광장 스타일링 */
+.myTripChatRoomContainer {
+    position: relative;
+}
+
+.myTripChatRoomContents {
+    position: relative;
+    overflow: auto;
+    padding: 60px 0px;
+}
+
+.myTripChatRoomContents>div {
+    float: left;
+    width: 50%;
+}
+
+.chatRoomTabbtnBox {
+    overflow: auto;
+}
+
+.chatRoomTabbtnBox .tabbtn {
+    background-color: #eee;
+    color: #333;
+    float: left;
+    padding: 10px 20px;
+    border-radius: 4px 4px 0px 0px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.chatRoomTabbtnBox .tabbtn:last-of-type {
+    margin-right: 0px;
+}
+
+.chatRoomTabbtnBox .tactive {
+    background-color: #333;
+    color: white;
+}
+
+.chatRoomTabcontBox {
+    position: relative;
+    height: 660px;
+    overflow: auto;
+}
+
+.tabcont {
+    display: none;
+}
+
+.tabcont:first-of-type {
+    display: block;
+}
+
+.tabcont ul {
+    list-style: none;
+    padding-left: 0px;
+    margin-bottom: 0px;
+}
+
+.tabcont li {
+    overflow: auto;
+    position: relative;
+    margin-bottom: 10px;
+    padding: 10px 10px;
+    border-bottom: 1px solid #eee;
+    transition: all 0.4s;
+}
+
+.tabcont li:last-of-type {
+    border-bottom: none;
+}
+
+.tabcont li:not(:first-of-type):hover {
+    background-color: #333;
+    color: white;
+}
+
+.tabcont li:first-of-type {
+    margin-bottom: 0px;
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.tabcont span {
+    display: block;
+    float: left;
+    height: 50px;
+    line-height: 50px;
+}
+
+.chatProfileImgBox {
+    position: relative;
+    overflow: hidden;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.chatProfileImgBox img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.currentMemList>li>span:first-of-type {
+    width: calc(100% - 280px);
+}
+
+.currentMemList>li>span:nth-of-type(2) {
+    width: 60px;
+    text-align: center;
+}
+
+.currentMemList>li>span:nth-of-type(3) {
+    width: 60px;
+    text-align: center;
+}
+
+.currentMemList>li>span:nth-of-type(4) {
+    width: 80px;
+    text-align: center;
+}
+
+.currentMemList>li>span:last-of-type {
+    width: 80px;
+    text-align: center;
+}
+
+.tabcont .textDrop {
+    position: relative;
+}
+
+.tabcont .textDrop .fa-crown {
+    position: absolute;
+    left: 40px;
+    top: 0px;
+    z-index: 10;
+    color: gold;
+    transform: rotate(30deg);
+}
+
+.chatRoomInfoBox {
+    overflow: auto;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.chatRoomInfoBox label,
+.chatRoomInfoBox input {
+    display: block;
+    float: left;
+    margin-bottom: 20px;
+}
+
+.chatRoomInfoBox label:last-of-type,
+.chatRoomInfoBox input:last-of-type {
+    margin-bottom: 0px;
+}
+
+.chatRoomInfoBox label {
+    width: 120px;
+    height: 38px;
+    line-height: 38px;
+}
+
+.chatRoomInfoBox input {
+    width: calc(100% - 120px);
+}
+
+.tabcont .textDrop .fa-circle {
+    color: red;
+    font-size: 0.9rem;
+    margin-left: 5px;
+}
+
+.waitMemList>li>span:first-of-type {
+    width: calc(100% - 350px);
+}
+
+.waitMemList>li>span:nth-of-type(2) {
+    width: 60px;
+    text-align: center;
+}
+
+.waitMemList>li>span:nth-of-type(3) {
+    width: 60px;
+    text-align: center;
+}
+
+.waitMemList>li>span:nth-of-type(4) {
+    width: 80px;
+    text-align: center;
+}
+
+.waitMemList>li>span:last-of-type {
+    width: 150px;
+    text-align: center;
+}
+
+.waitMemList>li>span:last-of-type button {
+    margin-right: 5px;
+}
+
+.waitMemList>li>span:last-of-type button:last-of-type {
+    margin-right: 0px;
+}
+
+#meetName {
+    transition: all 0.4s;
+    cursor: pointer;
+}
+
+#meetName:hover {
+    background-color: #333;
+    color: white;
+}
+
+#groupPoint {
+    transition: all 0.4s;
+    cursor: pointer;
+}
+
+#groupPoint:hover {
+    background-color: #333;
+    color: white;
+}
+
+#meetStatus {
+    transition: all 0.4s;
+    cursor: pointer;
+}
+
+#meetStatus:hover {
+    background-color: #333;
+    color: white;
+}
+
+/* 여기어때 채팅방 스타일링 */
+.yogiChatRoomContBox {
+    background-color: #B6CCD9;
+    padding: 20px;
+    margin-left: 20px;
+    border-radius: 4px;
+}
+
+.chatRoomName {
+    text-align: center;
+    padding: 0px 0px 15px;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.chatRoomContents {
+    background-color: #88a6b8;
+    height: 600px;
+    overflow: auto;
+    border-radius: 4px;
+    padding: 20px 0px;
+}
+
+.chatRoomBtnGroup {
+    padding: 10px 0px;
+}
+
+.chatRoomBtnGroup button {
+    border: none;
+    margin-right: 5px;
+}
+
+.chatRoomInputArea {
+    overflow: auto;
+}
+
+.chatRoomInputArea>textarea,
+.chatRoomInputArea>div {
+    float: left;
+}
+
+.chatRoomInputArea>textarea {
+    width: calc(100% - 50px);
+    height: 150px;
+}
+
+.chatRoomInputArea>div {
+    width: 50px;
+    height: 150px;
+    position: relative;
+}
+
+.chatRoomInputArea button {
+    display: block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: yellow;
+    border: none;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transition: all 0.4s;
+}
+
+.chatRoomInputArea button:hover {
+    background-color: #333;
+    color: yellow;
+}
+
+.chatRoomContents p {
+    margin-bottom: 0px;
+}
+
+.outerTalker {
+    position: relative;
+    padding: 0px 20px;
+}
+
+.talkerImgBox {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.talkerImgBox img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.outerstartDialogContBox {
+    overflow: auto;
+}
+
+.outerstartDialogContBox>div {
+    float: left;
+}
+
+.outerstartDialogContBox>div:last-of-type {
+    width: calc(100% - 60px);
+    margin-left: 10px;
+}
+
+.outerName {
+    color: #66869a;
+    margin-bottom: 5px;
+}
+
+/* 날짜 표기(외부자) 시작 */
+
+.outerStartDialog {
+    overflow: auto;
+}
+
+.outerStartDialog p {
+    max-width: 340px;
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    float: left;
+}
+
+.outerStartDialog .chatDateInfo {
+    width: 90px;
+    font-size: 0.7rem;
+    float: left;
+    padding: 0px 10px;
+    position: relative;
+}
+
+.outerStartDialog .chatDateInfo>div {
+	position: absolute;
+	bottom: 0px;
+}
+
+.outerLongtakeDialog>div {
+    overflow: auto;
+}
+
+.outerLongtakeDialog>div>p {
+    max-width: 340px;
+    float: left;
+}
+
+.outerLongtakeDialog .chatDateInfo {
+    width: 90px;
+    font-size: 0.7rem;
+    float: left;
+    padding: 0px 10px;
+    position: relative;
+}
+
+.outerLongtakeDialog .chatDateInfo>div {
+	position: absolute;
+	bottom: 0px;
+}
+
+/* 날짜 표기(외부자) 끝 */
+
+.outerLongtakeDialog {
+    padding-left: 60px;
+}
+
+.outerLongtakeDialog p {
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    text-align: left;
+    float: left;
+}
+
+.innerTalker {
+    position: relative;
+    padding: 0px 20px;
+}
+
+.innerstartDialogContBox {
+    overflow: auto;
+}
+
+.innerstartDialogContBox>div {
+    float: right;
+}
+
+.innerstartDialogContBox>div:last-of-type {
+    width: calc(100% - 60px);
+    margin-right: 10px;
+    text-align: right;
+}
+
+.innerName {
+    color: #66869a;
+    margin-bottom: 5px;
+}
+
+/* 날짜 표기(내부자) 시작 */
+
+.innerStartDialog  {
+    overflow: auto;
+}
+
+.innerStartDialog p {
+    max-width: 340px;
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    float: right;
+}
+
+.innerStartDialog .chatDateInfo {
+    width: 90px;
+    font-size: 0.7rem;
+    float: right;
+    padding: 0px 10px;
+    position: relative;
+}
+
+.innerStartDialog .chatDateInfo>div {
+	position: absolute;
+	bottom: 0px;
+	right: 10px;
+}
+
+.innerLongtakeDialog>div {
+    overflow: auto;
+}
+
+.innerLongtakeDialog>div>p {
+    max-width: 340px;
+    float: right;
+}
+
+.innerLongtakeDialog .chatDateInfo {
+    width: 90px;
+    font-size: 0.7rem;
+    float: right;
+    padding: 0px 10px;
+    text-align: right;
+    position: relative;
+}
+
+.innerLongtakeDialog .chatDateInfo>div {
+	position: absolute;
+	bottom: 0px;
+	right: 10px;
+}
+
+/* 날짜 표기(내부자) 끝 */
+
+.innerLongtakeDialog {
+    padding-right: 60px;
+}
+
+.innerLongtakeDialog p {
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    text-align: right;
+    float: right;
+}
+
+.memberInLog,
+.memberOutLog {
+    text-align: center;
+}
+
+.memberInLog p,
+.memberOutLog p {
+    color: #ddd;
+    background-color: #66869a;
+    padding: 4px 20px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.moveBackBtnBox {
+	padding-top: 20px;
+	text-align: right;
+}
+
+/* 구매계획 페이지 스타일링 */
+.buyPlanBox {
+	overflow: auto;
+	padding: 60px 0px;
+}
+
+.groupPlanContents,
+.buyPlanContents {
+	float: left;
+	width: 50%;
+	border: 1px solid #eee;
+	padding: 20px;
 }

@@ -18,8 +18,5 @@ public interface PlannerMainMapper {
 	public int addLike(Map<String, Object> param);
 	public List<PlannerLikeVO> alreadyActivatedLikeList(String memId);
 	public int delLike(Map<String, Object> param);
-	public PlannerVO getPlanDetail(long plNo);
-	public List<DetatilPlannerVO> getPlanDetailDay(DetatilPlannerVO dpParam);
-	
 
 }

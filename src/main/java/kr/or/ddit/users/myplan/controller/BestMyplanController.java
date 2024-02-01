@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import kr.or.ddit.users.myplan.service.PlannerMainService;
 import kr.or.ddit.users.myplan.vo.DetatilPlannerVO;
 import kr.or.ddit.users.myplan.vo.PlannerLikeVO;
@@ -130,42 +133,6 @@ public class BestMyplanController {
 		
 		
 		return plList;
-	}
-	
-	// ajax로 가져오는경우
-//	@ResponseBody
-//	@GetMapping("/planDetail.do")
-//	public PlannerVO planDetail(@RequestParam long plNo, Model model) {
-//		String goPage = "";
-//		log.debug("plNo : {}", plNo);
-//
-//		PlannerVO dplist = plannerService.getPlanDetail(plNo);
-//		
-////		model.addAttribute("dplist", dplist);
-//		return dplist;
-//	}
-	
-	@GetMapping("/planDetail.do")
-	public String planDetail(@RequestParam long plNo, Model model) {
-		log.debug("plNo : {}", plNo);
-
-//		PlannerVO pvo = plannerService.getPlanDetail(plNo);
-		
-		Map<String, Object> param = plannerService.getPlanDetail(plNo);
-		
-		PlannerVO pvo = (PlannerVO)param.get("pvo");
-		int dayCnt = (int)param.get("dayCnt");
-
-		model.addAttribute("pvo", pvo);
-		model.addAttribute("dayCnt", dayCnt);
-		
-		for(int i = 0; i < dayCnt; i++) {
-			String tempStr = "day" + (i+1);
-			List<DetatilPlannerVO> dpvo = (List<DetatilPlannerVO>)param.get("day" + (i+1));
-			model.addAttribute(tempStr, dpvo);
-		}
-		
-		return "myplan/planDetail";
 	}
 	
 }

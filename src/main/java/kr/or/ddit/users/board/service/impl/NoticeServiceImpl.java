@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import kr.or.ddit.mapper.NoticeBoardMapper;
@@ -24,6 +25,7 @@ import kr.or.ddit.utils.ServiceResult;
 import kr.or.ddit.vo.PaginationInfoVO;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class NoticeServiceImpl implements NoticeService {
 
 	@Inject

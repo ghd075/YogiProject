@@ -12,6 +12,9 @@
 	.distanceInfo {position:relative;top:10px;left:100px;list-style:none;margin:0;}
 	.distanceInfo .label {display:inline-block;width:50px;}
 	.distanceInfo:after {content:none;}
+	body{
+		padding-right:0!important;
+	}
 </style>
 
 <!-- 마이플랜 css -->
@@ -51,11 +54,13 @@
 			<!-- <button id="btn" class="btn btn-primary btn-sm">일정 생성</button> -->
 		</div>
 		<div class="form-group mt-10">
-			<form method="post" name="planSaveForm" action="/myplan/updatePlan" enctype="multipart/form-data">
+			<form method="post" name="planSaveForm" action="/myplan/updatePlan.do" enctype="multipart/form-data">
 				<input type="hidden" name="plNo" value="${plNo}" id="plNo" />
 				<input type="hidden" name="plTitle" value="" id="plTitle"/>
 				<input type="hidden" name="plMsize" value="" id="plMsize"/>
 				<input type="hidden" name="plTheme" value="" id="plTheme"/>
+				<input type="hidden" name="spSday" value="" id="spSday">
+				<input type="hidden" name="spEday" value="" id="spEday">
 				<!-- <input type="hidden" name="memId" value="chantest1" /> -->
 				<input class="form-control fileForm" type="file" id="fileReal" name="fileReal" style="display:none;"/>
 			</form>
@@ -111,7 +116,7 @@
 				</div>
 			</div>
 			<div class="single-listing" style="text-align:center; margin-top: 20px;">
-				<button onclick="dayReset()" class="btn btn-primary btn-sm" style="font-size: small; text-align:center;">DAY 초기화</button>
+				<!-- <button onclick="dayReset()" class="btn btn-primary btn-sm" style="font-size: small; text-align:center;">DAY 초기화</button> -->
 			</div>
 		</div>			
 	</article>
@@ -129,7 +134,7 @@
 				</div>
 			</div>
 			<div class="single-listing" style="text-align: center; margin-bottom:19px;">
-				<a onclick="dayDelAll()" class="btn btn-primary btn-sm" style="font-size: small;">전체 삭제</a>
+				<a onclick="clickDayDelAll()" class="btn btn-primary btn-sm" style="font-size: small;">전체 삭제</a>
 			</div>
 		</div>
     </article>
@@ -198,13 +203,16 @@
 
 		<article class="infoModalCenter">
 			<div>
-				<div class="profileContents">
-					<div>
-						<img id="profileImg" src="${contextPath }/resources/images/default_profile.png" alt="프로필 이미지 미리보기" />
+				<div class="profileContents profileImgBox">
+					<img id="profileImg" src="${contextPath }/resources/images/default_profile.png" style="width: auto; height: 100%" alt="프로필 이미지 미리보기" />
+				</div>
+				<div class="row modalBtnsWrap">
+					<div class="col-md-12 mt-5">
+						<input class="form-control" type="file" id="imgFile" name="imgFile" />
+						<button class="btn btn-primary btn-sm modalBtn modalSave">저장</button>
+						<button class="btn btn-primary btn-sm modalBtn modalClose">닫기</button>
 					</div>
 				</div>
-				<input class="form-control" type="file" id="imgFile" name="imgFile" />
-				<button class="btn btn-primary btn-sm modalClose">확인</button>
 			</div>
 		</article>
     </div>
@@ -242,7 +250,12 @@
 				reader.readAsDataURL(file);
 				setFile();
 			}else { // 이미지 파일이 아닐 때
-				alert("이미지 파일을 선택해주세요!");
+				// alert("이미지 파일을 선택해주세요!");
+
+				Swal.fire({
+					text: "이미지 파일을 선택해주세요!",
+					icon: "info"
+				});
 				imgEl.val("");
 			}
 			console.log(imgEl.val());
@@ -390,9 +403,44 @@
 	// 플래너 작성 각각의 이미지 종횡비 변경 함수
 	// $.eachPlanImgResizeFn();
 	imgFileJq.change(function(){
-		var profileBox = $(".profileContents>div");
+		var profileBox = $(".profileContents.profileImgBox");
 		var profileImg = $(".profileContents img")
-		$.ratioBoxH(profileBox, profileImg);
+		console.log("log", profileBox.width() + " " + profileBox.height())
+		console.log("log2", profileImg.width() + " " + profileImg.height())
+		ratioBoxH2(profileBox, profileImg);
+		
+		
 	});
+	
+	// 이미지 종횡비 계산 기능
+	function ratioBoxH2(boxEl, imgEl) {
+		
+	    let boxSel = boxEl;
+	    let boxW = boxSel.width();
+	    let boxH = boxSel.height();
+	    let boxRatio = boxH / boxW;
+
+	    let imgSel = $(imgEl);
+	    
+	    let setImgDimensions2 = function() {
+	    	let imgW = imgSel.width();
+	    	let imgH = imgSel.height();
+	    	let imgRatio = imgH / imgW;
+
+	        if (boxRatio < imgRatio) {
+	            //console.log("boxW :", boxW);
+	            imgSel.width("auto").height(boxH);
+	        } else {
+	            //console.log("boxH :", boxH);
+	            imgSel.height("auto").width(boxW);
+	        }
+	    };
+
+	    // 이미지의 로드 이벤트 핸들러 등록
+	    imgSel.on("load", setImgDimensions2);
+
+	    // 초기 설정
+	    setImgDimensions2();
+	};
 
 </script>

@@ -9,11 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,7 +63,6 @@ public class InformationMyplanController {
 	}
 	
 	// 여행 정보 등록 메소드
-	@Transactional
 	@RequestMapping(value = "/inforeg.do", method = RequestMethod.POST)
 	public String inforReg(
 			HttpServletRequest req,
@@ -81,6 +78,7 @@ public class InformationMyplanController {
 		// 이미지 파일이 없는 경우 예외 처리
 		if(imgFile.isEmpty()) {
 			model.addAttribute("message", "이미지 파일을 업로드해 주세요.");
+			model.addAttribute("msgflag", "in");
 			return "myplan/infoReg";
 		}
 		
@@ -102,15 +100,18 @@ public class InformationMyplanController {
 		
 		if(errors.size() > 0) { // 에러 정보가 존재
 			model.addAttribute("errors", errors);
+			model.addAttribute("msgflag", "fa");
 			model.addAttribute("journey", journeyVO);
 			goPage = "myplan/infoReg"; // 여행 정보 등록 페이지로 이동
 		}else { // 정상적인 데이터
 			ServiceResult result = journeyService.inforReg(req, journeyVO);
 			if(result.equals(ServiceResult.OK)) { // 여행 정보 등록 성공
 				ra.addFlashAttribute("message", "여행 정보 등록이 성공적으로 완료되었습니다.");
+				ra.addFlashAttribute("msgflag", "su");
 				goPage = "redirect:/myplan/info.do"; // 여행 정보 페이지 로이동
 			}else { // 여행 정보 등록 실패
 				model.addAttribute("message", "서버에러, 다시 시도해 주세요.");
+				model.addAttribute("msgflag", "in");
 				model.addAttribute("journey", journeyVO);
 				goPage = "myplan/infoReg"; // 여행 정보 등록 페이지로 이동
 			}
@@ -131,7 +132,6 @@ public class InformationMyplanController {
 	}
 	
 	// 여행 정보 수정 메서드
-	@Transactional
 	@RequestMapping(value = "/modify.do", method = RequestMethod.POST)
 	public String inforModify(
 			HttpServletRequest req,
@@ -145,9 +145,11 @@ public class InformationMyplanController {
 		ServiceResult result = journeyService.inforModify(req, journeyVO);
 		if(result.equals(ServiceResult.OK)) {
 			ra.addFlashAttribute("message", "여행 정보가 성공적으로 수정되었습니다.");
+			ra.addFlashAttribute("msgflag", "su");
 			goPage = "redirect:/myplan/info.do";
 		}else {
 			model.addAttribute("message", "서버 에러, 다시 시도해 주세요.");
+			model.addAttribute("msgflag", "in");
 			model.addAttribute("journey", journeyVO);
 			model.addAttribute("status", "u");
 			goPage = "myplan/infoReg";
@@ -158,7 +160,6 @@ public class InformationMyplanController {
 	}
 	
 	// 여행 정보 삭제 메서드
-	@Transactional
 	@RequestMapping(value = "/delete.do", method = RequestMethod.GET)
 	public String inforDelete(
 			RedirectAttributes ra,
@@ -171,9 +172,11 @@ public class InformationMyplanController {
 		ServiceResult result = journeyService.inforDelete(infoNo);
 		if(result.equals(ServiceResult.OK)) {
 			ra.addFlashAttribute("message", "여행 정보 삭제가 완료되었습니다.");
+			ra.addFlashAttribute("msgflag", "su");
 			goPage = "redirect:/myplan/info.do";
 		}else {
 			ra.addFlashAttribute("message", "여행 정보 삭제에 실패했습니다.");
+			ra.addFlashAttribute("msgflag", "fa");
 			goPage = "redirect:/myplan/info.do";
 		}
 		

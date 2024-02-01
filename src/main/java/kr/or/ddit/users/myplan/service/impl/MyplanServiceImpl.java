@@ -2,7 +2,9 @@ package kr.or.ddit.users.myplan.service.impl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -20,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class MyplanServiceImpl implements MyplanService {
 
 	@Inject
@@ -95,16 +98,7 @@ public class MyplanServiceImpl implements MyplanService {
 	}
 
 	/**
-	 * 특정 날짜에 해당하는 세부플랜 전체 삭제
-	 */
-	@Override
-	public List<TouritemsVO> detailDeleteAll(DetatilPlannerVO s_planner) {
-		plannerMapper.detailDeleteAll(s_planner);
-		return plannerMapper.selectDayById(s_planner);
-	}
-	
-	/**
-	 * 날짜에 상관없이 모든 세부플랜 삭제
+	 * 날짜에 해당하는 세부플랜 전체삭제
 	 */
 	@Override
 	public ServiceResult deleteAllDetailPlan(DetatilPlannerVO s_planner) {
@@ -193,15 +187,45 @@ public class MyplanServiceImpl implements MyplanService {
 		
 		return res; 
 	}
+	
+	@Override
+	public ServiceResult delPlan(long plNo) {
+		ServiceResult res = null;
+		
+		// 세부플랜 부터 삭제
+		int cnt = plannerMapper.deleteAllAllDetailPlan(plNo);
+		int cnt2 = plannerMapper.delPlan(plNo);
+		if(cnt2 > 0) {
+			res = ServiceResult.OK;
+		} else {
+			res = ServiceResult.FAILED;
+		}
+	
+		return res;
+	}
 
 	/**
 	 * 세부플랜 저장
 	 */
 	@Transactional
 	@Override
-	public ServiceResult updatePlan(HttpServletRequest req, PlannerVO plan, MultipartFile imgFile) {
-		ServiceResult result = null;
+	public void updatePlan(Map<String, Object> param) {
+		/** 파라미터 조회 */
+		HttpServletRequest req = (HttpServletRequest) param.get("req");
+		PlannerVO plan = (PlannerVO) param.get("planVO");
+		MultipartFile imgFile = (MultipartFile) param.get("imgFile");
+		String spSday = (String) param.get("spSday");
+		String spEday = (String) param.get("spEday");
 		
+		
+		/** 파라미터 정의 */
+		ServiceResult result = null;
+		Map<String,Object> param2 = new HashMap<String, Object>();	// updateSEdays()를 위한 파라미터
+		param2.put("spSday", spSday);
+		param2.put("spEday", spEday);
+		param2.put("plNo", plan.getPlNo());
+		
+		/** 메인로직 처리 */
 		// 파일 업로드 할 서버 경로 지정
 		String uploadPath = req.getServletContext().getRealPath("/resources/images/planner/" + plan.getPlNo());
 		File file = new File(uploadPath);
@@ -229,17 +253,42 @@ public class MyplanServiceImpl implements MyplanService {
 			e.printStackTrace();
 		}
 		
+		// 서비스 실행
+		int successCnt = 0;
+		
 		int status = plannerMapper.updatePlan(plan);
 		
+		
 		if(status > 0) { // 등록 성공
-			plannerMapper.insertMategroup(plan);
-			plannerMapper.insertMategroupMem(plan);
-			result = ServiceResult.OK;
-		}else { // 등록 실패
-			result = ServiceResult.FAILED;
+			successCnt += 1;
+			int status2 = plannerMapper.updateSEdays(param2);
+			if(status2 > 0) {
+				successCnt += 1;
+				int status3 = plannerMapper.insertMategroup(plan);
+				if(status3 > 0) {
+					successCnt += 1;
+					int status4 = plannerMapper.insertMategroupMem(plan);
+					if(status4 > 0) {
+						successCnt += 1;
+						log.debug("mgno : {}", plan.getMgNo());
+						int status5 = plannerMapper.insertChatRoom(plan);
+						if(status5 > 0) {
+							successCnt += 1;
+						}
+					}
+				}
+			}
 		}
 		
-		return result;
+		if(successCnt == 5) {
+			result = ServiceResult.OK;
+		} else {
+			result =  ServiceResult.FAILED;
+		}
+		
+		/** 반환자료 저장 */
+		param.put("serviceResult", result);
+		
 	}
 
 }

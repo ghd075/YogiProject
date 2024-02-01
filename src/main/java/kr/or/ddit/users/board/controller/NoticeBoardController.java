@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -157,7 +156,6 @@ public class NoticeBoardController {
 		return "board/noticeBoardForm";
 	}
 	
-	@Transactional
 	@RequestMapping(value = "/admin/register.do", method = RequestMethod.POST)
 	public String noticeRegister(
 			HttpServletRequest req,
@@ -178,6 +176,7 @@ public class NoticeBoardController {
 		
 		if(errors.size() > 0) {
 			model.addAttribute("errors", errors);
+			model.addAttribute("msgflag", "fa");
 			model.addAttribute("noticeVO", noticeVO);
 			goPage = "board/noticeBoardForm";
 		}else {
@@ -188,9 +187,15 @@ public class NoticeBoardController {
 			
 			if(result.equals(ServiceResult.OK)) {
 				ra.addFlashAttribute("message", "공지사항 게시글이 성공적으로 등록되었습니다!");
+				ra.addFlashAttribute("msgflag", "su");
 				goPage = "redirect:/notice/list.do";
 			}else {
+				// 성공, 실패, 정보
+				// 성공 : su
+				// 실패 : fa
+				// 정보 : in
 				model.addAttribute("message", "서버 에러, 다시 시도해주세요!");
+				model.addAttribute("msgflag", "fa");
 				model.addAttribute("noticeVO", noticeVO);
 				goPage = "board/noticeBoardForm";
 			}
@@ -201,7 +206,6 @@ public class NoticeBoardController {
 	}
 	
 	// 공지사항 삭제
-	@Transactional
 	@RequestMapping(value = "/admin/delete.do", method = RequestMethod.POST)
 	public String noticeDelete(
 			RedirectAttributes ra,
@@ -214,9 +218,11 @@ public class NoticeBoardController {
 		ServiceResult result = noticeService.deleteNotice(boNo);
 		if(result.equals(ServiceResult.OK)) {
 			ra.addFlashAttribute("message", "공지사항 삭제가 완료되었습니다");
+			ra.addFlashAttribute("msgflag", "su");
 			goPage = "redirect:/notice/list.do";
 		}else {
 			ra.addFlashAttribute("message", "공지사항 삭제에 실패했습니다");
+			ra.addFlashAttribute("msgflag", "fa");
 			goPage = "redirect:/notice/user/detail.do?boNo=" + boNo;
 		}
 		
@@ -234,7 +240,6 @@ public class NoticeBoardController {
 		return "board/noticeBoardForm";
 	}
 	
-	@Transactional
 	@RequestMapping(value = "/admin/modify.do", method = RequestMethod.POST)
 	public String noticeModify(
 			HttpServletRequest req,
@@ -252,10 +257,12 @@ public class NoticeBoardController {
 		
 		if(result.equals(ServiceResult.OK)) {
 			ra.addFlashAttribute("message", "공지사항 수정이 완료되었습니다.");
+			ra.addFlashAttribute("msgflag", "su");
 			goPage = "redirect:/notice/user/detail.do?boNo=" + noticeVO.getBoNo();
 		}else {
 			model.addAttribute("notice", noticeVO);
 			model.addAttribute("message", "공지사항 수정이 실패했습니다!");
+			ra.addFlashAttribute("msgflag", "fa");
 			model.addAttribute("status", "u");
 			goPage = "board/noticeBoardForm";
 		}

@@ -182,6 +182,21 @@
     </div>
 </section>
 
+<!-- 플래너 이동 표출 영역 -->
+<section class="plannerMoveContainer">
+    <div class="plannerContents">
+        <h4>여행을 떠나요</h4>
+        <p>
+			대한민국은 다양한 자연 경관과 역사적 명소로 가득한 아름다운 나라입니다. 
+            <br />
+			전통 음식과 문화체험도 풍부하며, 한국의 아름다움과 다양성을 국내 여행으로 만나보세요.
+        </p>
+        <div>
+            <button type="button" class="btn btn-secondary plannerMoveBtn">플래너로 이동</button>
+        </div>
+    </div>
+</section>
+
 <!-- 사이트 그래프 표출 영역 -->
 <section class="siteGraphContainer cen">
     <h3>누가 어디로 여행을 떠날까요?</h3>
@@ -223,6 +238,9 @@
         $.startHeaderEmpty();
         $.ajaxIndexJourneyInfoSearchFn();
         $.makeplanClickEvent();
+        $(".plannerMoveBtn").click(function(){
+        	location.href = "/myplan/planMain.do";
+        });
         
         /* 종횡비 함수 */
         $.eachJourneyInfoImgResizeFn();

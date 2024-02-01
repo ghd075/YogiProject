@@ -1,6 +1,6 @@
 package kr.or.ddit.mapper;
 
-import kr.or.ddit.users.mypage.vo.MemberVO;
+import kr.or.ddit.users.login.vo.MemberVO;
 
 public interface MyPageMapper {
 

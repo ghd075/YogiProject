@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.AirReserveMapper">
+   
+  <!-- [kr.or.ddit.mapper.AirReserveMapper.selectRoundTripFlight]
+              한개의 항공편(가는편, 오는편) 조회                                                                   -->
+  <select id="selectRoundTripFlight" parameterType="string" resultType="searchVO">
+   SELECT 
+      flight_code, 
+      airline_code, 
+      airline_name, 
+      flight_depairport, 
+      flight_depportcode, 
+      flight_deptime,
+      flight_arrairport, 
+      flight_arrportcode, 
+      flight_arrtime, 
+      flight_duration,
+      flight_economyprice, 
+      flight_businessprice, 
+      flight_firstclassprice 
+   FROM flight
+   WHERE flight_code = #{flightCode}
+  </select>
+  
+  <!-- [kr.or.ddit.mapper.AirReserveMapper.selectAirplane]
+              한개의 항공편 좌석 조회(가는편, 오는편)                      -->
+  <select id="selectAirplane" parameterType="string" resultType="airplaneVO">
+     SELECT flight_code, 
+            airline_code, 
+            airplane_name, 
+            airplane_totalfirst, 
+            airplane_totalbusiness, 
+            airplane_totaleconomy, 
+            airplane_remainfirst, 
+            airplane_remainbusiness, 
+            airplane_remaineconomy 
+     FROM airplane 
+     WHERE flight_code = #{flightCode}
+  </select>
+  
+  <!-- [kr.or.ddit.mapper.AirReserveMapper.selectSeats] 
+              가는편, 오는편 한개의 항공기 좌석상세 조회                                 -->
+  <select id="selectSeats" parameterType="string" resultType="string">
+    SELECT ticket_seatnum 
+    FROM ticket 
+    WHERE flight_code = #{flightCode}
+  </select>
+  
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

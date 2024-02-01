@@ -2,6 +2,7 @@ package kr.or.ddit.users.myplan.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,10 +30,10 @@ public interface MyplanService {
 	public List<TouritemsVO> selectDayById(DetatilPlannerVO s_planner);
 	public TouritemsVO getTour(String contentId);
 	public TouritemsVO insertDetailPlan(DetatilPlannerVO s_planner);
-	public List<TouritemsVO> detailDeleteAll(DetatilPlannerVO s_planner);
 	public ServiceResult deleteAllDetailPlan(DetatilPlannerVO s_planner);
 	public ServiceResult deleteOneDetailPlan(DetatilPlannerVO s_planner);
 	public ServiceResult deleteAllAllDetailPlan(long plNo);
-	public ServiceResult updatePlan(HttpServletRequest req, PlannerVO plan, MultipartFile imgFile);
+	public void updatePlan(Map<String, Object> param);
+	public ServiceResult delPlan(long plNo);
 
 }

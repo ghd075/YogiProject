@@ -38,6 +38,7 @@ public class AirSubSearchController {
 	  Map<String, Object> map = new HashMap<String, Object>();
 	  FlightVO flightVO = (FlightVO) session.getAttribute("searchInfo");
 	  
+	  //서브 검색조건별로 세팅
 	  if(StringUtils.isNotBlank(depTime) && StringUtils.isBlank(arrTime)) {
 		  flightVO.setFlightDeptime2(depTime);
 		  flightVO.setFlightDuration(durTime);
@@ -51,6 +52,7 @@ public class AirSubSearchController {
 	  }else {
 		  flightVO.setFlightDuration(durTime);
 	  }
+	  
 	  roundTripList = new ArrayList<RoundTripVO>();
 	  roundTripList = searchService.selectAllRoundTripFlight(flightVO, session, "sub");
 	  if(roundTripList == null || roundTripList.size() == 0) {

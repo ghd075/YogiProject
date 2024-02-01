@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.QnaBoardMapper">
+	<select id="getTopMenus" resultType="kr.or.ddit.users.board.vo.QnaMenuVO">
+		SELECT MENU_ID
+		,   MENU_NAME
+		FROM QNAMENU 
+		WHERE 1 = 1
+		AND MENU_LOWER IS NULL
+	</select>
+</mapper>

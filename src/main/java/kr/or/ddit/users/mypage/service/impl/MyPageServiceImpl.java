@@ -7,14 +7,16 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.ddit.mapper.MyPageMapper;
+import kr.or.ddit.users.login.vo.MemberVO;
 import kr.or.ddit.users.mypage.service.MyPageService;
-import kr.or.ddit.users.mypage.vo.MemberVO;
 import kr.or.ddit.utils.ServiceResult;
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class MyPageServiceImpl implements MyPageService {
 
 	@Inject

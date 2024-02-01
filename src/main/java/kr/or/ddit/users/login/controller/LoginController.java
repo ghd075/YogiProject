@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,7 +44,12 @@ public class LoginController {
 	@RequestMapping(value = "/signin.do", method = RequestMethod.GET)
 	public String signin(String message, Model model) {
 		if(StringUtils.isNotBlank(message)) {
+			// 성공, 실패, 정보
+			// 성공 : su
+			// 실패 : fa
+			// 정보 : in
 			model.addAttribute("message", message);
+			model.addAttribute("msgflag", "in");
 		}
 		return "login/signin";
 	}
@@ -70,7 +76,6 @@ public class LoginController {
 	}
 	
 	// 회원 가입 메서드
-	@Transactional
 	@RequestMapping(value = "/signup.do", method = RequestMethod.POST)
 	public String signup(
 			HttpServletRequest req, 
@@ -86,6 +91,7 @@ public class LoginController {
 		// 이미지 파일이 없는 경우 예외 처리
 		if(imgFile.isEmpty()) {
 			model.addAttribute("message", "이미지 파일을 업로드해 주세요.");
+			model.addAttribute("msgflag", "in");
 			return "login/signup";
 		}
 		
@@ -104,15 +110,18 @@ public class LoginController {
 		
 		if(errors.size() > 0) { // 에러 정보가 존재
 			model.addAttribute("errors", errors);
+			model.addAttribute("msgflag", "in");
 			model.addAttribute("member", memberVO);
 			goPage = "login/signup"; // 회원 가입 페이지로 이동
 		}else { // 정상적인 데이터
 			ServiceResult result = loginService.signup(req, memberVO);
 			if(result.equals(ServiceResult.OK)) { // 가입 성공
 				ra.addFlashAttribute("message", "회원가입을 완료하였습니다!");
+				ra.addFlashAttribute("msgflag", "su");
 				goPage = "redirect:/login/signin.do"; // 로그인 페이지로 이동
 			}else { // 가입 실패
 				model.addAttribute("message", "서버에러, 다시 시도해 주세요!");
+				model.addAttribute("msgflag", "fa");
 				model.addAttribute("member", memberVO);
 				goPage = "login/signup"; // 회원 가입 페이지로 이동
 			}
@@ -150,6 +159,45 @@ public class LoginController {
 		
 	}
 	
+	// 비밀번호 변경 처리 메서드
+	@PostMapping("/changePw.do")
+	public String changePw(
+			MemberVO memberVO,
+			Model model,
+			RedirectAttributes ra
+			) {
+		
+		/** 자료 수집 및 정의 */
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("memId", memberVO.getMemId());
+		param.put("memPw", memberVO.getMemPw());
+		
+		/** 서비스 호출 */
+		loginService.changePw(param);
+		
+		/** 반환 자료 */
+		ServiceResult result = (ServiceResult) param.get("result");
+		String message = (String) param.get("message");
+		String goPage = (String) param.get("goPage");
+		
+		/** 자료 검증 */
+	    log.info("result : " + result);
+	    log.info("message : " + message);
+	    log.info("goPage : " + goPage);
+
+	    if(result.equals(ServiceResult.OK)) { // 업데이트 성공
+	        ra.addFlashAttribute("message", message);
+	        ra.addFlashAttribute("msgflag", "su");
+	    }else { // 업데이트 실패
+	        model.addAttribute("message", message);
+	        model.addAttribute("msgflag", "fa");
+	    }
+		
+		/** 자료 반환 */
+	    return goPage;
+		
+	}
+	
 	// 로그인 처리 메서드
 	@RequestMapping(value = "/loginCheck.do", method = RequestMethod.POST)
 	public String loginCheck(
@@ -171,6 +219,7 @@ public class LoginController {
 		
 		if(errors.size() > 0) { // 에러가 있음
 			model.addAttribute("errors", errors);
+			model.addAttribute("msgflag", "fa");
 			model.addAttribute("member", memberVO);
 			goPage = "login/signin";
 		}else {
@@ -178,16 +227,19 @@ public class LoginController {
 			if(member != null) {
 				if(member.getEnabled().equals("0")) { // 탈퇴한 회원
 					ra.addFlashAttribute("message", "탈퇴한 회원 계정입니다.");
+					ra.addFlashAttribute("msgflag", "in");
 					goPage = "redirect:/login/signin.do";
 				}else {
 					session.setAttribute("sessionInfo", member);
 					int intervalInSeconds = 60 * 60; // 1시간을 초로 계산합니다
 					session.setMaxInactiveInterval(intervalInSeconds);
 					ra.addFlashAttribute("message", member.getMemName() + "님, 환영합니다!");
+					ra.addFlashAttribute("msgflag", "su");
 					goPage = "redirect:/index.do";
 				}
 			}else {
 				model.addAttribute("message", "존재하지 않는 회원입니다.");
+				model.addAttribute("msgflag", "in");
 				model.addAttribute("member", memberVO);
 				goPage = "login/signin";
 			}
@@ -197,6 +249,7 @@ public class LoginController {
 		
 	}
 	
+	// 로그아웃 메서드
 	@RequestMapping(value = "/logout.do", method = RequestMethod.GET)
 	public String logout(
 			HttpSession session,
@@ -205,6 +258,7 @@ public class LoginController {
 		
 		session.invalidate();
 		ra.addFlashAttribute("message", "로그아웃 되었습니다.");
+		ra.addFlashAttribute("msgflag", "in");
 		return "redirect:/login/signin.do";
 		
 	}

@@ -23,20 +23,56 @@
         <!-- 부트스트랩 모듈 -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- 스위트 얼럿 모듈 -->
+    	<link href="${contextPath }/resources/css/sweetalert2.min.css" rel="stylesheet" />
+    	<script defer src="${contextPath }/resources/js/sweetalert2.all.min.js"></script>
 
         <c:if test="${not empty message }">
 		    <script>
-		        alert("${message}"); 
+	        	//alert("${message}");
+		        $(function(){
+		        	// 성공시
+		        	<c:if test="${msgflag eq 'su'}">
+		        		Swal.fire({
+		                    title: "성공",
+		                    text: "${message}",
+		                    icon: "success"
+		                });
+		        	</c:if>
+		        	// 실패시
+		        	<c:if test="${msgflag eq 'fa'}">
+			        	Swal.fire({
+		                    title: "실패",
+		                    text: "${message}",
+		                    icon: "error"
+		                });
+		        	</c:if>
+		        	// 정보성 메시지
+		        	<c:if test="${msgflag eq 'in'}">
+			        	Swal.fire({
+		                    title: "안내",
+		                    text: "${message}",
+		                    icon: "info"
+		                });
+		        	</c:if>
+		        });
 		        <c:remove var="message" scope="request" />
 		        <c:remove var="message" scope="session" />
 		    </script>
 		</c:if>
 		
-		<c:if test="${not empty errors }">
+		<c:if test="${not empty errors && msgflag eq 'in'}">
 		    <script>
-		        alert("${errors}"); 
-		        <c:remove var="errors" scope="request" />
-		        <c:remove var="errors" scope="session" />
+		        // alert("${errors}"); 
+			    $(function(){
+		        	Swal.fire({
+	                    title: "서버오류",
+	                    text: "${errors}",
+	                    icon: "error"
+	                });
+			    });
+		    	<c:remove var="errors" scope="request" />
+		    	<c:remove var="errors" scope="session" />
 		    </script>
 		</c:if>
 
@@ -50,7 +86,7 @@
                         <img src="${contextPath }/resources/images/logo.png" alt="메인 로고" />
                     </a>
                 </h1>
-                <div>
+                <div class="loginBox">
                     <h2>여기갈래</h2>
                     <p>Travel Integration Platform System</p>
                     <form action="/login/loginCheck.do" id="loginForm" name="loginForm" method="post">
@@ -62,11 +98,25 @@
                         </div>
                         <button class="btn btn-success" type="button" id="loginBtn">로그인</button>
                     </form>
-                    <p>
+                    <p class="testBtnShow">
                         Copyright &copy; 2023. Burumabool. All right reserved.
                         <br />
                         YOgIGaLE v.2.1
                     </p>
+                </div>
+                <div class="testBtnGroup">
+                 	<div>
+	                	<button class="btn btn-primary" type="button" id="adminAccount">관리자 계정</button>
+	                	<button class="btn btn-secondary" type="button" id="lgjAccount">테스트 계정</button>
+                 	</div>
+                 	<div>
+                 		<button class="btn btn-success" type="button" id="iuAccount">아이유 계정</button>
+                 		<button class="btn btn-info" type="button" id="wonAccount">장원영 계정</button>
+                 	</div>
+                 	<div>
+                 		<button class="btn btn-warning" type="button" id="haAccount">하루토 계정</button>
+                 		<button class="btn btn-danger" type="button" id="kiAccount">키이오 계정</button>
+                 	</div>
                 </div>
             </article>
             <div class="stylecomp_firstbar"></div>
@@ -87,6 +137,9 @@
                 $.loginMouseOverEvent();
                 $.loginMouseOutEvent();
                 $.enterKeyUpEvent();
+                
+                // 테스트 계정 함수
+                $.testAccountFn();
 
                 loginBtn.on("click", function(){
                     var idFlag = $.falsyCheckFn(memId, "아이디");
