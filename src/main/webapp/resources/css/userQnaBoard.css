@@ -105,7 +105,7 @@
 }
 
 .qnaListSet {
-    width: calc(100% - 250px);
+    width: 100%;
     float: left;
     background-color: #eee;
     padding: 20px;
@@ -148,6 +148,36 @@
 .qnaBtnGroup button:first-of-type {
     margin-left: 0px;
 }
+
+/***************제목****************/
+.head_aticle {
+	padding: 5px 0 10px;
+}
+
+.tit_a {
+	font-size: 32px;
+	font-weight: 700;
+	padding-bottom: 34px;
+	float: left;
+}
+
+.tit_sub {
+	padding-left: 11px;
+	font-size: 14px;
+	color: #999;
+	line-height: 20px;
+	letter-spacing: -.3px;
+	vertical-align: 3px;
+}
+
+#qna_select {
+	width: 150px;
+	height: 26px;
+	float: right;
+	border: 1px solid #bfbfbf;
+}
+
+/***************제목 end****************/
 
 /* 모달창 관련 */
 #myModal {

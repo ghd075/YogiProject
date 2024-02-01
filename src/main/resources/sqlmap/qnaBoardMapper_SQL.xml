@@ -3,11 +3,52 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.mapper.QnaBoardMapper">
-	<select id="getTopMenus" resultType="kr.or.ddit.users.board.vo.QnaMenuVO">
-		SELECT MENU_ID
-		,   MENU_NAME
-		FROM QNAMENU 
+
+	<!-- QNA 리스트 조회 -->
+	<select id="qnaList" resultType="kr.or.ddit.users.board.vo.QnaVO">
+		SELECT BO_NO
+		,   BO_TITLE
+		, BO_CONTENT
+		, BO_WRITER
+		, BO_DATE
+		, MENU_NAME
+		FROM QNABOARD
 		WHERE 1 = 1
-		AND MENU_LOWER IS NULL
+		ORDER BY BO_NO
 	</select>
+	
+	<!-- QNA 등록 -->
+	<insert id="insertQna" parameterType="hashMap">
+		INSERT INTO QNABOARD (BO_NO, BO_TITLE, BO_CONTENT, BO_WRITER, BO_DATE, MENU_NAME)
+        VALUES (SEQ_FAQ_BOARD.NEXTVAL, #{B}, #{C}, #{boWriter}, SYSDATE, #{A})
+	</insert>
+	
+	<!-- QNA 전체 -->
+	<delete id="deleteQna">
+		DELETE FROM QNABOARD
+	</delete>
+	
+	<!-- QNA 카테고리 조회 -->
+	<select id="getMenuList" resultType="String">
+		SELECT MENU_NAME
+		FROM QNABOARD
+		WHERE 1 = 1
+	</select>
+
+	<!-- 카테고리별 QNA 조회 -->
+	<select id="getQnaMenuList" resultType="kr.or.ddit.users.board.vo.QnaVO" parameterType="String">
+		SELECT BO_NO
+		,   BO_TITLE
+		, BO_CONTENT
+		, BO_WRITER
+		, BO_DATE
+		, MENU_NAME
+		FROM QNABOARD
+		WHERE 1 = 1
+		<if test="menuName != null and !menuName.equals('')">
+			AND MENU_NAME = #{menuName}
+		</if>
+		ORDER BY BO_NO
+	</select>
+
 </mapper>

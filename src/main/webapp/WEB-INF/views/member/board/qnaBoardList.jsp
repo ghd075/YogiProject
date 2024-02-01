@@ -17,111 +17,75 @@
         </div>
     </article>
     <article class="qnaListContents cen">
-        <div>
-            <h4>Q&amp;A</h4>
+        <div class="head_aticle">
+            <h2 class="tit_a">
+            	Q&amp;A
+ 				<span class="tit_sub"> 고객님들이 자주 찾으시는 질문을 모았습니다 </span>
+            </h2>
+			<select name="qna_select" id="qna_select">
+			    <c:choose>
+			        <c:when test="${empty menuList}">
+			            <option value="">선택</option>
+			        </c:when>
+			        <c:otherwise>
+			            <option value="">선택</option>
+			            <c:forEach var="menu" items="${menuList}">
+			                <option value="${menu}">${menu}</option>
+			            </c:forEach>
+			        </c:otherwise>
+			    </c:choose>
+			</select>
         </div>
         <div class="qnaBtnGroup">
-            <button type="button" class="btn btn-outline-primary" id="qnaMenuAddBtn">메뉴등록</button>
-            <button type="button" class="btn btn-outline-success" id="qnaAddBtn">F&A등록</button>
+            <button type="button" class="btn btn-outline-primary" id="qnaAddBtn">Q&A등록</button>
         </div>
         <c:if test="${sessionInfo.memCategory eq '03' }">
         </c:if>
         <div class="qnaListCont">
-            <nav class="qnaLnb">
-                <ul>
-                    <li class="qmain">
-                        <a href="javascript:void(0)">메뉴 1</a>
-                        <ul class="qsub">
-                            <li><a href="javascript:void(0)">서브 1</a></li>
-                            <li><a href="javascript:void(0)">서브 2</a></li>
-                            <li><a href="javascript:void(0)">서브 3</a></li>
-                        </ul>
-                    </li>
-                    <li class="qmain">
-                        <a href="javascript:void(0)">메뉴 2</a>
-                        <ul class="qsub">
-                            <li><a href="javascript:void(0)">서브 1</a></li>
-                            <li><a href="javascript:void(0)">서브 2</a></li>
-                            <li><a href="javascript:void(0)">서브 3</a></li>
-                        </ul>
-                    </li>
-                    <li class="qmain">
-                        <a href="javascript:void(0)">메뉴 3</a>
-                        <ul class="qsub">
-                            <li><a href="javascript:void(0)">서브 1</a></li>
-                            <li><a href="javascript:void(0)">서브 2</a></li>
-                            <li><a href="javascript:void(0)">서브 3</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </nav>
             <div class="qnaListSet">
-                <ul>
-                    <li class="accordBoardListCont">
-                        <div class="accordBoardList">제목 1</div>
-                        <div class="visibleDiv">내용 1</div>
-                    </li>
-                    <li class="accordBoardListCont">
-                        <div class="accordBoardList">제목 2</div>
-                        <div class="visibleDiv">내용 2</div>
-                    </li>
-                    <li class="accordBoardListCont">
-                        <div class="accordBoardList">제목 3</div>
-                        <div class="visibleDiv">내용 3</div>
-                    </li>
-                </ul>
             </div>
         </div>
     </article>        
 </section>
 
+<!-- QNA 등록 모달창 -->
 <section class="menuInfoModalContents" id="popup">
-    <div class="menuInfoModalBox cen">
-        <!-- 메뉴작성 팝업창 header 부분 -->
-        <div class="menu-popheadbox">
-            <span class="menu-popheadbox__span--big">메뉴 분류 관리</span>
-            <button class="menu-popheadbox__button--big" id="popdown">닫기</button>
-        </div>
-        <article class="infoModalCenter">
-            <div class="container">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="card">
-                    <div class="card-body">
-                      <h2>대분류</h2>
-						<div class="input-group mb-4">
-						  <input type="text" class="form-control" placeholder="대분류명" id="mainMenuNameInput">
-						  <input type="number" class="form-control" placeholder="메뉴 순서" id="mainMenuOrderInput">
-						  <select class="form-select" id="mainMenuYnInput">
-						    <option value="Y">사용</option>
-						    <option value="N">사용 안함</option>
-						  </select>
-						  <button class="btn btn-outline-secondary" type="button" onclick="addMainMenu()">대분류 등록</button>
-						</div>
-                      <ul id="mainMenu" class="list-group">
-                        <!-- 대분류 메뉴 아이템들 -->
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="card">
-                    <div class="card-body">
-                      <h2 id="subMenuTitle">[대분류명]의 하위분류</h2>
-                      <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="하위분류명" id="subMenuInput">
-                        <button class="btn btn-outline-secondary" type="button" onclick="addSubMenu()">하위분류 등록</button>
-                      </div>
-                      <ul id="subMenu" class="list-group">
-                        <!-- 하위분류 메뉴 아이템들 -->
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </article>
+  <div class="menuInfoModalBox cen">
+    <!-- 팝업창 header 부분 -->
+    <div class="menu-popheadbox">
+      <button class="menu-popheadbox__button--big" id="popdown">닫기</button>
     </div>
+    <article class="infoModalCenter">
+   		<div class="panel">
+   			<div class="panel-body">
+	    		<h5 class="mt-2" style="margin-top: 20px; margin-bottom: 20px;"><i class="fa fa-cube" aria-hidden="true" style="padding-right: 10px;"></i>Q&amp;A 등록</h5>
+                <div class="table-responsive">
+                	<p> 양식파일을 다운로드 하시고 파일내에 있는 모든 항목들을 채워서 업로드하셔야 정상적으로 등록됩니다.</p>
+                	<form id="form1" name="form1" method="post" enctype="multipart/form-data">
+	                	<table id="datatable-scroller" class="table table-bordered tbl_Form">
+	                        <colgroup>
+	                            <col width="250px" />
+	                            <col />
+	                        </colgroup>
+	                        <tbody>
+	                            <tr>
+	                                <th class="active" style="text-align:right"><label class="control-label" for="excelFile">파일 업로드</label></th>
+	                                <td>
+	                                    <input class="form-control" type="file" name="excelFile" id="excelFile" accept=".xlsx, .xls"/>
+	                                </td>
+	                            </tr>
+	                        </tbody>
+	                    </table>
+					</form>
+                </div>
+   			</div>
+   		</div>
+		<div class="float-end">
+		  <button class="btn btn-outline-primary mt-2" type="button" id="uploadExcelBtn" >엑셀 업로드</button>
+		  <a class="btn btn-outline-success mt-2" id="downloadExcelBtn" >엑셀 양식 다운로드</a>
+		</div>
+    </article>
+  </div>
 </section>
 
 
@@ -142,34 +106,11 @@
         // 모달창 관련 함수
         $.qnaMenuAddClickFn();
         $.popdownClickFn();
-        $.addMenuClickFn();
+        $.downloadExcelClickFn();
+        $.uploadExcelClickFn();
         
-        // 페이지 로드 시 상위 메뉴 목록 불러오기
-        $.ajax({
-            type: "GET",
-            url: "/qna/getTopMenus",
-            success: function(menus) {
-            	console.log("menus 값들 : ", menus);
-                var $parentMenu = $('#parentMenu');
-                $parentMenu.empty(); // select 박스 초기화
-                
-       			if (menus.length === 0) {
-                    $('#addMenuButton').removeClass('visually-hidden'); // 상위 메뉴가 있으면 버튼 표시
-                } 
-                
-                $.each(menus, function(index, menu) {
-                    $parentMenu.append($('<option>', {
-                        value: menu.menuId,
-                        text: menu.menuName
-                    }));
-                });
-                $parentMenu.prepend($('<option>', { // 기본 옵션 추가
-                    value: '',
-                    text: '상위 메뉴 선택'
-                }));
-                $parentMenu.val(''); // 기본 옵션 선택
-            }
-        });
+        // QNA 카테고리 함수
+        $.qnaMenuChageFn();
         
     });
 </script>
