@@ -65,11 +65,13 @@
 		
 	  <c:if test="${not empty message}">
           <script>
+          $(function(){
              Swal.fire({
                    title: "실패",
                    text: "${message}",
                    icon: "error"
              });
+          });
               <c:remove var="message" scope="request" />
               <c:remove var="message" scope="session" />
           </script>

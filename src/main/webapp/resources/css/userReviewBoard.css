@@ -1,0 +1,83 @@
+/* QNA 게시판 스타일 */
+@import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css);
+
+.cen {
+    width: 1200px;
+}
+
+.reviewContainer {
+    position: relative;
+}
+
+.communityHeadStyle {
+    height: 310px;
+    position: relative;
+    overflow: hidden;
+}
+
+.comImgBox {
+    position: relative;
+    height: inherit;
+}
+
+.comImgBox img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.17);
+}
+
+.communityHeadStyle>div:last-of-type {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+}
+
+.communityHeadStyle>div:last-of-type h3 {
+    font-weight: 700;
+    font-size: 2.3rem;
+    margin-bottom: 15px;
+}
+
+.communityHeadStyle>div:last-of-type span {
+    color: white;
+    opacity: 0.6;
+}
+
+.reviewContentsListContents {
+    padding: 40px 0px;
+}
+
+.main-content {
+	font-family: 'Spoqa Han Sans Neo';
+	margin: 30px 0px;
+}
+
+.main-content .topTitle {
+	font-size: 2em;
+	font-weight: 500;
+	font-family: 'Spoqa Han Sans Neo';
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+
+.searchItemForm {
+	outline: none;
+	border: 1px solid #ccc;
+	padding: 3px;
+}
+
+.searchingForm {
+	outline: none;
+	border: 1px solid #ccc;
+	padding: 5px 8px;
+	border-radius: 4px;
+}
+
+#searchbtn {
+	padding: 7px 12px 5px 12px;
+	margin-bottom: 1px;
+}

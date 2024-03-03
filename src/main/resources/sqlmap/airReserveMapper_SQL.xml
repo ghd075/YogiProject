@@ -47,6 +47,137 @@
     WHERE flight_code = #{flightCode}
   </select>
   
+  <!-- [kr.or.ddit.mapper.AirReserveMapper.selectPrivatePoint] 
+               개인포인트 조회                                      -->
+  <select id="selectPrivatePoint" parameterType="string" resultType="int">
+    SELECT mem_point 
+    FROM members 
+    WHERE mem_id = #{memId}
+  </select>
+  
+  <!-- [kr.or.ddit.mapper.AirReserveMapper.selectGroupPoint] 
+               그룹포인트 조회                                  -->
+  <select id="selectGroupPoint" parameterType="string" resultType="plannerVO">
+   SELECT pl.pl_no, pl.pl_title, mg.mategroup_point 
+   FROM planer pl INNER JOIN mategroup mg ON(pl.pl_no = mg.pl_no)
+   WHERE mem_id = #{memId} AND pl_private = 'Y'
+  </select>
+  
+  <!-- [kr.or.ddit.mapper.AirReserveMapper.insertAirReservation] 
+              예약정보 insert                                         -->
+  <insert id="insertAirReservation" parameterType="reservationVO">
+    INSERT INTO air_reservation(
+      air_reserveno,
+      mem_id,
+      air_reservetel,
+      air_reserveemail,
+      air_totalprice,
+      air_payday,
+      air_personnum,
+      pl_no
+    ) VALUES (
+      #{airReserveno},
+      #{memId},
+      #{airReservetel},
+      #{airReserveemail},
+      #{airTotalprice},
+      sysdate,
+      #{airPersonnum},
+      #{plNo}
+    )
+  </insert>
+  
+  <!-- [kr.or.ddit.mapper.AirReserveMapper.insertAirTicket] 
+               티켓정보 INSERT                           -->
+  <insert id="insertAirTicket" parameterType="ticketVO">
+    INSERT INTO ticket(
+		flight_code,
+		ticket_seatnum,
+		ticket_code,
+		ticket_type,
+		ticket_class,
+		ticket_totalprice,
+		ticket_aircharge,
+		ticket_fuelsurcharge,
+		ticket_tax,
+		ticket_commission,
+		ticket_status,
+		ticket_firstname,
+		ticket_name,
+		ticket_passenage,
+		ticket_passengender,
+		ticket_dayofbirth,
+		ticket_nationality,
+		air_reserveno
+    )VALUES (
+        #{flightCode},
+        #{ticketSeatnum},
+        #{ticketCode},
+        #{ticketType},
+        #{ticketClass},
+        #{ticketTotalprice},
+        #{ticketAircharge},
+        #{ticketFuelsurcharge},
+        #{ticketTax},
+        #{ticketCommission},
+        #{ticketStatus},
+        #{ticketFirstname},
+        #{ticketName},
+        #{ticketPassenage},
+        #{ticketPassengender},
+        #{ticketDayofbirth},
+        #{ticketNationality},
+        #{airReserveno}
+    )
+  </insert>
+  
+  <!-- [kr.or.ddit.mapper.AirReserveMapper.selectRemainSeat] 
+              항공기 남은좌석 조회     -->
+  <select id="selectRemainSeat" parameterType="ticketVO"  resultType="int">
+    <choose>
+      <when test="ticketClass == 'economy'">
+         SELECT airplane_remaineconomy
+         FROM airplane
+         WHERE flight_code = #{flightCode}
+      </when>
+      <when test="ticketClass == 'business'">
+         SELECT airplane_remainbusiness
+         FROM airplane
+         WHERE flight_code = #{flightCode}
+      </when>
+      <otherwise>
+         SELECT airplane_remainfirst
+         FROM airplane
+         WHERE flight_code = #{flightCode}
+      </otherwise>
+    </choose>
+  </select>
+  
+  <!-- [kr.or.ddit.mapper.AirReserveMapper.updateRemainSeat]
+               항공기 남은좌석 업데이트 -->
+  <update id="updateRemainSeat" parameterType="ticketVO">
+    UPDATE airplane 
+    <set>
+      <if test="ticketClass == 'economy'">
+        airplane_remaineconomy = airplane_remaineconomy - #{personNum}
+      </if>
+      <if test="ticketClass == 'business'">
+        airplane_remainbusiness = airplane_remainbusiness - #{personNum}
+      </if>
+      <if test="ticketClass == 'firstClass'">
+        airplane_remainfirst = airplane_remainfirst - #{personNum}
+      </if>
+    </set>
+    WHERE flight_code = #{flightCode}
+  </update>
+  
+  <!-- [kr.or.ddit.mapper.AirReserveMapper.updateRemainSeat]
+             그룹 포인트 차감                        -->
+  <update id="updateGroupPoint" parameterType="map">
+    UPDATE mategroup 
+    SET mategroup_point = #{finalRemain}
+    WHERE pl_no = #{planerNo}
+  </update>
 
 </mapper>
 

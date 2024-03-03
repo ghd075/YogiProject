@@ -4,6 +4,7 @@ import java.util.List;
 
 import kr.or.ddit.users.partner.vo.ChatroomVO;
 import kr.or.ddit.users.partner.vo.PlanerVO;
+import kr.or.ddit.utils.ServiceResult;
 
 public interface MyTripMapper {
  
@@ -32,5 +33,10 @@ public interface MyTripMapper {
 	public List<PlanerVO> chatContTxtDown(int plNo);
 	public void deleteChatAll(int plNo);
 	public int chatContDelete(int plNo);
+	public int waitMemCnt(int plNo);
+	public int soloTrip(int plNo);
+	public void deleteCartAir(int plNo);
+	public void deleteCart(int plNo);
+	public int travelTheEnd(int plNo);
 
 }

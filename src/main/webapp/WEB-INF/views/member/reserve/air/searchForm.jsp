@@ -285,59 +285,58 @@
     <article class="airInfoContents">
         <div class="airInfoCont">
             <div class="airImgBox">
-                <img src="${contextPath }/resources/images/air/search/airBg01.jpg" alt="항공 예약 썸네일 이미지" />
+                <img src="${contextPath }/resources/images/air/search/인천1.PNG" alt="항공 예약 썸네일 이미지" />
             </div>
             <div>국내 MD 추천</div>
             <div>
-                             김포
+                             인천
                 <i class="fas fa-arrow-right"></i>
                              제주
             </div>
-            <div>2월 6일 출발</div>
-            <div>20,900원~</div>
+            <div>3월 10일 출발</div>
+            <div>51,000원~</div>
         </div>
         <div class="airInfoCont">
             <div class="airImgBox">
-                <img src="${contextPath }/resources/images/air/search/airBg02.jpg" alt="항공 예약 썸네일 이미지" />
+                <img src="${contextPath }/resources/images/air/search/부산1.PNG" alt="항공 예약 썸네일 이미지" />
             </div>
             <div>국내 MD 추천</div>
             <div>
-                               김포
-                <i class="fas fa-arrow-right"></i>
                                부산
-            </div>
-            <div>2월 6일 출발</div>
-            <div>39,100원~</div>
-        </div>
-        <div class="airInfoCont">
-            <div class="airImgBox">
-                <img src="${contextPath }/resources/images/air/search/airBg03.jpg" alt="항공 예약 썸네일 이미지" />
-            </div>
-            <div>국내 MD 추천</div>
-            <div>
-                             김포
                 <i class="fas fa-arrow-right"></i>
-                              여수
+                               제주
             </div>
-            <div>2월 5일 출발</div>
-            <div>62,900원~</div>
+            <div>3월 13일 출발</div>
+            <div>29,800원~</div>
         </div>
         <div class="airInfoCont">
             <div class="airImgBox">
-                <img src="${contextPath }/resources/images/air/search/airBg04.jpg" alt="항공 예약 썸네일 이미지" />
+                <img src="${contextPath }/resources/images/air/search/제주1.PNG" alt="항공 예약 썸네일 이미지" />
             </div>
             <div>국내 MD 추천</div>
             <div>
-                                김포
+                             제주
+                <i class="fas fa-arrow-right"></i>
+                              인천
+            </div>
+            <div>3월 22일 출발</div>
+            <div>44,340원~</div>
+        </div>
+        <div class="airInfoCont">
+            <div class="airImgBox">
+                <img src="${contextPath }/resources/images/air/search/여수1.PNG" alt="항공 예약 썸네일 이미지" />
+            </div>
+            <div>국내 MD 추천</div>
+            <div>
+                                여수
                 <i class="fas fa-arrow-right"></i>
                                 제주
             </div>
-            <div>2월 5일 출발</div>
-            <div>35,800원~</div>
+            <div>4월 28일 출발</div>
+            <div>39,420원~</div>
         </div>
     </article>
 </section>
-        
       <!-- 항공 예약 js -->
       <script src="${contextPath }/resources/js/air/airplane.js"></script>
       <!-- slick slide -->
@@ -348,7 +347,6 @@
       <!-- flatpickr JS -->
       <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
       <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
-        
       <script>
           $(function(){
               /*기본기능함수*/
@@ -374,7 +372,6 @@
               // 종횡비 함수
               $.eachAirImgResizeFn();
               $.eachAirInfoImgResizeFn();
-
 
               /*업무영역*/
               var roundTripForm = $('#roundTripForm');
@@ -429,12 +426,11 @@
                    alert('귀국날짜를 입력해주세요!');
                    return false;
                 }
-
                 roundTripForm.submit();
               })
 
-
              /*편도 선택 후 검색*/
+             
           });
       </script>
 

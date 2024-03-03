@@ -66,6 +66,7 @@ public class PlanDetailController {
 		}
 		int mgCurNum = (int)param.get("mgCurNum");
 		String joinStatus = (String)param.get("joinStatus");
+		String mategroupStep = (String)param.get("mategroupStep");
 		
 		/** 자료 검증 */
 		log.debug("req : {}", req);
@@ -87,6 +88,7 @@ public class PlanDetailController {
 		model.addAttribute("pvoJson", jsonString);
 //		model.addAttribute("dpList", pvo.getDetailList());
 		model.addAttribute("mgCurNum", mgCurNum);
+		model.addAttribute("mategroupStep", mategroupStep);
 		
 		return "myplan/planDetail";
 	}

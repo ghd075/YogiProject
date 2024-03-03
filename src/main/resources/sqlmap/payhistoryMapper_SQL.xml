@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="kr.or.ddit.mapper.PayHistoryMapper">
+
+  <!-- kr.or.ddit.mapper.PayHistoryMapper.selectHistoryCount
+            결제내역 리스트 개수 조회 -->
+  <select id="selectHistoryCount" parameterType="memberVO" resultType="int">
+            SELECT count(*)
+             FROM (SELECT DISTINCT c.mg_no, c.mem_id, 
+                          c.pl_no, c.air_reserveno, 
+                          c.air_personnum, c.pl_title, 
+                          t.ticket_type, t.flight_code, 
+                          t.ticket_totalprice, c.air_payday
+                   FROM (SELECT b.mg_no, b.pl_no, 
+                                b.pl_title, re.air_reserveno, 
+                                re.mem_id, re.air_personnum,
+                                to_char(re.air_payday, 'yyyy-mm-dd HH24:MI') AS air_payday
+                         FROM(SELECT aa.mem_id, aa.mg_no, 
+                                     aa.mategroup_recruiter, 
+                                     aa.pl_no, p.pl_title
+                              FROM(SELECT a.mem_id, g.mg_no, 
+                                          g.mategroup_recruiter, 
+                                          g.pl_no 
+                                   FROM(SELECT m.mem_id, gm.mg_no 
+                                        FROM members m 
+                                            RIGHT OUTER JOIN mategroup_member gm ON(m.mem_id = gm.mategroup_id) 
+                                        WHERE mem_id = #{memId} AND gm.mategroup_apply = 'Y') a 
+                                        LEFT OUTER JOIN mategroup g ON(a.mg_no = g.mg_no)) aa 
+                                   LEFT OUTER JOIN planer p ON(aa.pl_no = p.pl_no)) b 
+                           INNER JOIN air_reservation re ON(b.pl_no = re.pl_no) 
+                       ORDER BY b.mg_no) c 
+                  INNER JOIN ticket t ON(c.air_reserveno = t.air_reserveno)
+            ORDER BY c.mg_no, c.air_reserveno) d 
+        LEFT OUTER JOIN flight f ON(d.flight_code = f.flight_code) 
+   </select>
+   
+   <!-- kr.or.ddit.mapper.PayHistoryMapper.selectPayHistoryList
+               결제내역 리스트 조회 -->
+   <select id="selectPayHistoryList" parameterType="memberVO" resultType="payHistoryVO">
+       SELECT bbb.*  
+	   FROM(SELECT aaa.*, row_number() over (order by aaa.air_payday desc) rnum
+	        FROM(SELECT DISTINCT d.mg_no, d.mem_id, 
+	                    d.pl_no, d.air_reserveno, 
+	                    d.ticket_type, d.flight_code, 
+	                    d.air_personnum, d.ticket_totalprice, 
+	                    f.airline_name, f.flight_depairport, 
+	                    f.flight_deptime, f.flight_arrairport, 
+	                    f.flight_arrtime, d.pl_title,
+	                    d.air_payday
+	             FROM (SELECT c.mg_no, c.mem_id, 
+	                          c.pl_no, c.air_reserveno, 
+	                          c.air_personnum, c.pl_title, 
+	                          t.ticket_type, t.flight_code, 
+	                          t.ticket_totalprice, c.air_payday
+	                   FROM (SELECT b.mg_no, b.pl_no, 
+	                                b.pl_title, re.air_reserveno, 
+	                                re.mem_id, re.air_personnum,
+	                                to_char(re.air_payday, 'yyyy-mm-dd HH24:MI') AS air_payday
+	                         FROM(SELECT aa.mem_id, aa.mg_no, 
+	                                     aa.mategroup_recruiter, 
+	                                     aa.pl_no, p.pl_title
+	                              FROM(SELECT a.mem_id, g.mg_no, 
+	                                          g.mategroup_recruiter, 
+	                                          g.pl_no 
+	                                   FROM(SELECT m.mem_id, gm.mg_no 
+	                                        FROM members m 
+	                                            RIGHT OUTER JOIN mategroup_member gm ON(m.mem_id = gm.mategroup_id) 
+	                                        WHERE mem_id = #{memId} AND gm.mategroup_apply = 'Y') a 
+	                                        LEFT OUTER JOIN mategroup g ON(a.mg_no = g.mg_no)) aa 
+	                                   LEFT OUTER JOIN planer p ON(aa.pl_no = p.pl_no)) b 
+	                           INNER JOIN air_reservation re ON(b.pl_no = re.pl_no) 
+	                       ORDER BY b.mg_no) c 
+	                  INNER JOIN ticket t ON(c.air_reserveno = t.air_reserveno)
+	            ORDER BY c.mg_no, c.air_reserveno) d 
+	        LEFT OUTER JOIN flight f ON(d.flight_code = f.flight_code)) aaa ) bbb
+	    WHERE <![CDATA[ bbb.rnum >= #{startRow} AND bbb.rnum <= #{endRow} ]]> 
+   </select>
+	
+   <!-- kr.or.ddit.mapper.PayHistoryMapper.selectAirReceipt
+               항공권 티켓 상세 조회 -->
+   <select id="selectAirReceipt" parameterType="map" resultType="airReceiptVO">
+	SELECT a.*, f.flight_depairport, f.flight_depportcode, 
+	       TO_CHAR(TO_DATE(f.flight_deptime, 'YYYYMMDDHH24MI'), 'YYYY-MM-DD HH24:MI') AS flight_deptime,
+	       f.flight_arrairport, 
+	       f.flight_arrportcode, 
+	       TO_CHAR(TO_DATE(f.flight_arrtime, 'YYYYMMDDHH24MI'), 'YYYY-MM-DD HH24:MI') AS flight_arrtime,
+	       f.airline_code, f.airline_name  
+	FROM (select re.air_reserveno, t.ticket_firstname, 
+	            t.ticket_name, t.ticket_code, 
+	            t.ticket_class, t.ticket_totalprice, 
+	            t.ticket_aircharge, t.ticket_fuelsurcharge, 
+	            t.ticket_tax, t.ticket_commission, 
+	            t.ticket_status, t.flight_code 
+	      FROM air_reservation re LEFT OUTER JOIN ticket t ON(re.air_reserveno = t.air_reserveno) 
+	      WHERE re.air_reserveno = #{airReserveno} AND t.ticket_type = #{ticketType}) a 
+	      LEFT OUTER JOIN flight f ON(a.flight_code = f.flight_code)
+   </select>
+	
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

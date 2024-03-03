@@ -50,7 +50,7 @@
 }
 
 .qnaListContents>div:first-of-type {
-    padding: 0px 0px 40px;
+    overflow: auto;
     text-align: center;
 }
 
@@ -107,7 +107,6 @@
 .qnaListSet {
     width: 100%;
     float: left;
-    background-color: #eee;
     padding: 20px;
     border-radius: 4px;
 }
@@ -119,10 +118,18 @@
 }
 
 .qnaListSet div:first-of-type {
-    background-color: #ddd;
     padding: 10px 20px;
     transition: all 0.4s;
     cursor: pointer;
+}
+
+.accordBoardListCont {
+	border-top: 1px solid #d7d7d7;;
+    transition: all 0.4s;
+}
+
+.accordBoardListCont:last-of-type {
+    border-bottom: 1px solid #d7d7d7;;
 }
 
 .qnaListSet div:first-of-type:hover {
@@ -131,7 +138,7 @@
 }
 
 .qnaListSet div:last-of-type {
-    background-color: white;
+    background-color: #eee;
     padding: 15px 30px;
     display: none;
 }
@@ -157,7 +164,6 @@
 .tit_a {
 	font-size: 32px;
 	font-weight: 700;
-	padding-bottom: 34px;
 	float: left;
 }
 
@@ -172,9 +178,9 @@
 
 #qna_select {
 	width: 150px;
-	height: 26px;
 	float: right;
 	border: 1px solid #bfbfbf;
+	cursor: pointer;
 }
 
 /***************제목 end****************/

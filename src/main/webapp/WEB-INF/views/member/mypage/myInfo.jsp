@@ -23,9 +23,6 @@
 				내 정보
             </div>
             <div class="tabbtn">
-				신고내역
-            </div>
-            <div class="tabbtn">
 				좋아요내역
             </div>
             <div class="tabbtn">
@@ -164,16 +161,140 @@
                 </div>
             </div>
             <div class="tabcont">
-                <!-- 신고내역 -->
-				신고내역
-            </div>
-            <div class="tabcont">
                 <!-- 좋아요내역 -->
-				좋아요내역
+                <table class="table table-striped table-hover likeTbl">
+                	<thead>
+                		<tr>
+                			<th>플랜 제목</th>
+                			<th>좋아요 날짜</th>
+                			<th>바로가기</th>
+                			<th>취소</th>
+                		</tr>
+                	</thead>
+                	<tbody>
+                		<c:choose>
+                			<c:when test="${not empty likeList }">
+                				<c:forEach items="${likeList }" var="likeItem">
+	                				<tr>
+			                			<td style="text-align:center;">
+			                				${likeItem.plTitle }
+			                			</td>
+			                			<td style="text-align:center;">
+			                				${likeItem.plLikeDate }
+			                			</td>
+			                			<td>
+	                						<a class="btn btn-primary btn-sm" href="/myplan/planDetail.do?plNo=${likeItem.plNo }">바로 가기</a>
+			                			</td>
+			                			<td>
+			                				<form class="plLikeCancelForm" action="/mypage/likeDelete.do" method="post">
+			                					<input class="plLikeNo" name="plLikeNo" type="hidden" value="${likeItem.plLikeNo }" />
+			                				</form>
+			                				<button class="btn btn-danger btn-sm plRemoveBtn" type="button">취소</button>
+			                			</td>
+			                		</tr>
+                				</c:forEach>
+                			</c:when>
+                			<c:otherwise>
+                				<tr>
+                					<td colspan="4">좋아요 내역이 존재하지 않습니다.</td>
+                				</tr>
+                			</c:otherwise>
+                		</c:choose>
+                		
+                	</tbody>
+                </table>
             </div>
-            <div class="tabcont">
+            <div class="tabcont container">
                 <!-- 알림내역 -->
-				알림내역
+                <style>
+                	.rtAlertTbl th {
+                		text-align: center;
+                	}
+                	.rtAlertTbl th:first-of-type {
+                		width: 190px;
+                	}
+                	.rtAlertTbl th:nth-of-type(3) {
+                		width: 100px;
+                	}
+                	.rtAlertTbl th:last-of-type {
+                		width: 90px;
+                	}
+                	.rtAlertTbl td:nth-of-type(3),
+                	.rtAlertTbl td:last-of-type {
+                		text-align: center;
+                	}
+                	.rtAlertTbl td:first-of-type {
+                		overflow: auto;
+                	}
+                	.rtAlertTbl td:first-of-type>div,
+                	.rtAlertTbl td:first-of-type>span {
+                		float: left;
+                	}
+               		.rtAlertProfileImgBox {
+               			position: relative;
+               			width: 50px;
+               			height: 50px;
+               			border-radius: 50%;
+               			overflow: hidden;
+               		}
+               		.rtAlertProfileImgBox img {
+               			position: absolute;
+               			top: 50%;
+               			left: 50%;
+               			transform: translate(-50%, -50%);
+               		}
+                </style>
+                <table class="table table-striped table-hover rtAlertTbl">
+                	<thead>
+                		<tr>
+                			<th>이름(아이디)</th>
+                			<th>알림 내용</th>
+                			<th>바로가기</th>
+                			<th>내역 삭제</th>
+                		</tr>
+                	</thead>
+                	<tbody>
+                		<c:choose>
+                			<c:when test="${not empty rtAlertList }">
+                				<c:forEach items="${rtAlertList }" var="rtAlert">
+	                				<tr>
+			                			<td>
+			                				<div class="rtAlertProfileImgBox">
+			                					<img src="${rtAlert.realsenPfimg }" alt="프로필 이미지" />
+			                				</div>
+			                				<span>${rtAlert.realsenName }(${rtAlert.realsenId })</span>
+			                			</td>
+			                			<td>
+			                				${rtAlert.realsenContent }
+			                			</td>
+			                			<td>
+			                				<c:choose>
+			                					<c:when test="${not empty rtAlert.realsenUrl }">
+			                						<a class="btn btn-primary btn-sm" href="${rtAlert.realsenUrl }">바로 가기</a>
+			                					</c:when>
+			                					<c:otherwise>
+			                						<a class="btn btn-secondary btn-sm" href="javascript:void(0);">바로 가기 없음</a>
+			                					</c:otherwise>
+			                				</c:choose>
+			                			</td>
+			                			<td>
+			                				<form class="rtAlertOneDeleteForm" action="/mypage/rtAlertOneDelete.do" method="post">
+			                					<input class="realrecNo" name="realrecNo" type="hidden" value="${rtAlert.realrecNo }" />
+			                				</form>
+			                				<button class="btn btn-danger btn-sm reAlertRemoveBtn" type="button">삭제</button>
+			                			</td>
+			                		</tr>
+                				</c:forEach>
+                			</c:when>
+                			<c:otherwise>
+                				<tr>
+                					<td colspan="4">실시간 알림 내역이 존재하지 않습니다.</td>
+                				</tr>
+                			</c:otherwise>
+                		</c:choose>
+                		
+                	</tbody>
+                </table>
             </div>
             <c:if test="${sessionInfo.memCategory ne '03' }">
 	            <div class="tabcont">
@@ -312,7 +433,12 @@ $(function(){
     	if(emailChkFlag) {
 	    	myinfoupdForm.submit();
     	}else {
-    		alert("이메일 중복 체크를 해주세요.");
+    		//alert("이메일 중복 체크를 해주세요.");
+    		Swal.fire({
+    			title: "중복 체크",
+    			text: "이메일 중복 체크를 해주세요.",
+    			icon: "info"
+    		});
     	}
     });
     
@@ -324,7 +450,12 @@ $(function(){
     	if(memExitChkVal) { // 회원 탈퇴 동의
     		location.href = "/mypage/memDelete.do?memId=${sessionInfo.memId }";
     	}else { // 회원 탈퇴 거부
-    		alert("회원 탈퇴에 동의해 주셔야 합니다.");
+    		//alert("회원 탈퇴에 동의해 주셔야 합니다.");
+    		Swal.fire({
+    			title: "회원 탈퇴 동의",
+    			text: "회원 탈퇴에 동의해 주셔야 합니다.",
+    			icon: "warning"
+    		});
     	}
     });
     
@@ -334,9 +465,80 @@ $(function(){
     	location.href = "/index.do";
     });
     
+    // 알림내역 클릭한 상태로 보여주기
+    var rtAlertIdxClk = location.href;
+    console.log("rtAlertIdxClk : ", rtAlertIdxClk);
+    if(rtAlertIdxClk.indexOf('?') > 0){	// 쿼리스트링 존재함
+    	var rtaIdxTxt = rtAlertIdxClk.split("=");
+        var rtaIdx = rtaIdxTxt[1];
+        console.log("rtaIdx : ", rtaIdx);
+    	$(".myPageTabbtnGroup .tabbtn").eq(rtaIdx).trigger("click");
+    }else{	// 쿼리스트링 존재하지 않음
+    	console.log("쿼리스트링이 존재하지 않음");
+    }
+    
+    // 실시간 알림 > 내역 삭제
+    var reAlertRemoveBtn = $(".reAlertRemoveBtn");
+    reAlertRemoveBtn.click(function(){
+    	var thisIs = $(this);
+    	var rtAlertOneDeleteForm = thisIs.prev();
+    	console.log("rtAlertOneDeleteForm : ", rtAlertOneDeleteForm);
+    	Swal.fire({
+    	  icon: "question",
+   		  title: "실시간 알림 내역 > 삭제",
+   		  text : "해당 실시간 알림 내역을 삭제하시겠습니까?",
+   		  showDenyButton: true,
+   		  confirmButtonText: "삭제",
+   		  denyButtonText: "취소"
+   		}).then((result) => {
+   		  if (result.isConfirmed) {
+   			rtAlertOneDeleteForm.submit();
+   		  } else if (result.isDenied) {
+   			Swal.fire({
+   			  icon: "error",
+   			  title: "삭제 취소",
+   			  text: "해당 실시간 알림 내역의 삭제가 취소되었습니다."
+   			});
+   		  }
+   		});
+    });
+
+    var plRemoveBtn = $(".plRemoveBtn");
+    plRemoveBtn.click(function(){
+    	var thisIs = $(this);
+    	var plRemoveForm = thisIs.prev();
+    	// console.log("rtAlertOneDeleteForm : ", rtAlertOneDeleteForm);
+    	Swal.fire({
+    	  icon: "question",
+   		  title: "좋아요 > 취소",
+   		  text : "좋아요를 취소하시겠습니까?",
+   		  showDenyButton: true,
+   		  confirmButtonText: "삭제",
+   		  denyButtonText: "취소"
+   		}).then((result) => {
+   		  if (result.isConfirmed) {
+			plRemoveForm.submit();
+   		  } else if (result.isDenied) {
+   			Swal.fire({
+   			  icon: "error",
+   			  title: "좋아요 취소",
+   			  text: "좋아요를 취소하지 않습니다."
+   			});
+   		  }
+   		});
+    });
+    
     // 종횡비 함수
     var myInfoImgBox = $(".myInfoImgBox");
     var myInfoImg = $(".myInfoImgBox img");
     $.ratioBoxH(myInfoImgBox, myInfoImg);
+    
+    var rtAlertTbl = $(".rtAlertTbl td:first-of-type");
+    rtAlertTbl.each(function(){
+    	var thisIs = $(this);
+    	var rtAlertProfileImgBox = thisIs.find(".rtAlertProfileImgBox");
+    	var rtAlertProfileImg = thisIs.find(".rtAlertProfileImgBox img");
+    	$.ratioBoxH(rtAlertProfileImgBox, rtAlertProfileImg);
+    });
 });
 </script>

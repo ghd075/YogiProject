@@ -347,7 +347,7 @@
    $(function(){
 	  var reserveForm = $('#reserveForm');
 	  var nextBtn = $('#nextBtn');
-	  var totalCnt = $('#totalCnt').val();
+	  var airPersonnum = $('#airPersonnum').val();
 	  
 	  /* 탑승객 정보 제출 시 */
 	  nextBtn.on('click', function(){
@@ -362,38 +362,71 @@
 			  alert('예약자 이메일을 입력해주세요!');
 			  return false;
 		  }
+		  console.log('airReservetel : '+airReservetel);
+		  console.log('airReserveemail : '+airReserveemail);
 		  var ticketFirstname = $('input[name="ticketList[0].ticketFirstname"]').val();
-		  console.log('ticketFirstname : ', ticketFirstname);
 		  
 		  //탑승객 정보 입력검증
-		  for(var i = 0; i < totalCnt; i++){
+		  for(var i = 0; i < airPersonnum; i++){
 			  var ticketFirstname = $('input[name="ticketList['+i+'].ticketFirstname"]').val();
 			  if(ticketFirstname == null || ticketFirstname == ''){
-				  alert('성(영문)을 입력해주세요!');
+				  Swal.fire({
+			             title: "안내",
+			             text: '성(영문)을 입력해주세요!',
+			             icon: "info"
+			         });
 				  return false;
 			  }
 			  var ticketName = $('input[name="ticketList['+i+'].ticketName"]').val();
 			  if(ticketName == null || ticketName == ''){
-				  alert('이름(영문)을 입력해주세요!');
+				  Swal.fire({
+			             title: "안내",
+			             text: '이름(영문)을 입력해주세요!',
+			             icon: "info"
+			         });
 				  return false;
 			  }
 			  var ticketDayofbirth = $('input[name="ticketList['+i+'].ticketDayofbirth"]').val();
 			  if(ticketDayofbirth == null || ticketDayofbirth == ''){
-				  alert('생년월일을 입력해주세요!');
+				  Swal.fire({
+			             title: "안내",
+			             text: '생년월일을 입력해주세요!',
+			             icon: "info"
+			         });
 				  return false;
 			  }
 			  var ticketPassengender = $('input[name="ticketList['+i+'].ticketPassengender"]:checked').val();
 			  if(ticketPassengender == null || ticketPassengender == ''){
-				  alert('성별을 선택해주세요!');
+				  Swal.fire({
+			             title: "안내",
+			             text: '성별을 선택해주세요!',
+			             icon: "info"
+			         });
 				  return false;
 			  }
 			  var ticketNationality = $('select[name="ticketList['+i+'].ticketNationality"]').val();
 			  if(ticketNationality == null || ticketNationality == ''){
-				  alert('국적을 선택해주세요!');
+				  Swal.fire({
+			             title: "안내",
+			             text: '국적을 선택해주세요!',
+			             icon: "info"
+			         });
 				  return false;
 			  }
 		  }
-		  reserveForm.submit(); 
+		  Swal.fire({
+			    title: '탑승객정보를 모두 입력하셨습니까?',
+			    showDenyButton: true,
+			    showCancelButton: false,
+			    confirmButtonText: "예",
+			    denyButtonText: "아니오"
+			  }).then((result) => {
+			    if (result.isConfirmed) {
+			       reserveForm.submit(); 
+			    } else if (result.isDenied) {
+			      return;
+			    }
+			  });
 	  });
 	   
    });

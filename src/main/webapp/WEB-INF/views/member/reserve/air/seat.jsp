@@ -123,7 +123,7 @@
          </div>
          
          <!-- 좌석선택영역(가는편) -->
-         <div class="row content-middle2">
+         <div class="row content-middle2 departure">
            <!-- 일등석  -->
            <div class="col-sm-2" id="first">
 	           &nbsp;<div class="seatAlp">A</div>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -295,7 +295,7 @@
          
          
          <!-- 좌석선택영역(오는편) -->
-         <div class="row content-middle2" style="display: none;">
+         <div class="row content-middle2 return" style="display: none;">
            <!-- 일등석  -->
            <div class="col-sm-2" id="first">
 	           &nbsp;<div class="seatAlp">A</div>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -530,30 +530,35 @@
 	</div>   <!-- main container끝 -->
     
    <!-- [전송form] -->
-   <form action="/reserve/air/reserve/payment.do" method="post" id="submitForm">
+   <form action="/reserve/air/reserve/paymentForm.do" method="post" id="submitForm">
     <div class="depForm" style="display: none;">
       <c:forEach items="${myReservation.ticketList}" var="ticket">
+        <c:set value="${0}" var="cnt"/>
         <c:if test="${ticket.ticketType  eq 'DAPARTURE'}">
+          <c:set value="${cnt+1}" var="cnt"/>
           <input type="hidden" class="${ticket.ageCnt}" name="ticketSeatnum">
           <input type="hidden" class="${ticket.ageCnt}" name="ticketFirstname" value="${ticket.ticketFirstname}">
           <input type="hidden" class="${ticket.ageCnt}" name="ticketName" value="${ticket.ticketName}">
           <input type="hidden" class="${ticket.ageCnt}" name="ticketClass" value="${ticket.ticketClass}">
           <input type="hidden" class="${ticket.ageCnt}" name="ticketType" value="${ticket.ticketType}">
-          <input type="hidden" class="${ticket.ageCnt}" name="ticketPassenage" value="${ticket.ticketPassenage}">
+          <input type="hidden" class="${ticket.ageCnt}" name="ageCnt" value="${ticket.ageCnt}">
         </c:if>
        </c:forEach>
     </div>
     <div class="returnForm" style="display: none;">
       <c:forEach items="${myReservation.ticketList}" var="ticket">
+        <c:set value="${0}" var="cnt"/>
         <c:if test="${ticket.ticketType  eq 'RETURN'}">
+          <c:set value="${cnt+1}" var="cnt"/>
           <input type="hidden" class="${ticket.ageCnt}" name="ticketSeatnum">
           <input type="hidden" class="${ticket.ageCnt}" name="ticketFirstname" value="${ticket.ticketFirstname}">
           <input type="hidden" class="${ticket.ageCnt}" name="ticketName" value="${ticket.ticketName}">
           <input type="hidden" class="${ticket.ageCnt}" name="ticketClass" value="${ticket.ticketClass}">
           <input type="hidden" class="${ticket.ageCnt}" name="ticketType" value="${ticket.ticketType}">
-          <input type="hidden" class="${ticket.ageCnt}" name="ticketPassenage" value="${ticket.ticketPassenage}">
+          <input type="hidden" class="${ticket.ageCnt}" name="ageCnt" value="${ticket.ageCnt}">
         </c:if>
        </c:forEach>
+       <c:remove var="cnt"/>
     </div>
    </form>
    
@@ -657,6 +662,7 @@ $(function(){
 	 
 	//2.이미 다른 탑승객이 선택한 좌석은 선택불가하도록 통제
 	var ticketSeatnum = $('.'+form+' input[name="ticketSeatnum"]');
+	var flag = false;
 	ticketSeatnum.each(function(i, elem){
 	  if(clickSeat.attr('id') == elem.value){
 		  Swal.fire({
@@ -664,9 +670,13 @@ $(function(){
 	             text: '이미 선택된 좌석입니다. 다른좌석을 선택해주세요!',
 	             icon: "info"
 	      });
+		  flag = true;
 	      return false;	
 	  }
 	});
+	if(flag){
+		return false;
+	}
 	 
 	 //3.탑승객별 좌석을 하나씩만 선택하도록 통제  ex) 성인1, 성인2, 유아1 당 1개의 좌석만 선택하도록 체크
 	 if(depInput[0].value != null && depInput[0].value != ''){
@@ -727,44 +737,53 @@ $(function(){
   
   /*삭제버튼 클릭 시 이벤트*/
   $(document).on('click', '#deleteSeat', function(){
+	  var tabBtn = $('.tabBtn');
 	  var eventElem = $(this);
-	  var val = eventElem.prev().text();  
-	  var seletedSeat = $('#'+val);
+	  var val = eventElem.prev().text();
+	  
+	  //1.가는편 or 오는편 확인 
+	  if(tabBtn.eq(0).attr('class') == 'col-sm-4 left-tab tabBtn tactive'){
+		  var seletedSeat = $('.departure #'+val);
+	  }
+	  if(tabBtn.eq(1).attr('class') == 'col-sm-8 right-tab tabBtn tactive'){
+		  var seletedSeat = $('.return #'+val);
+	  } 
+	  
+      //2.선택한 좌석 색 변경
 	  if(seletedSeat.parent().attr('id') === 'first'){
-		  seletedSeat.css('background-color', 'skyblue');  //선택한 좌석 색 변경
+		  seletedSeat.css('background-color', 'skyblue');  
 		  seletedSeat.css('color', 'white');
 	  }else if(seletedSeat.parent().attr('id') === 'business'){
-		  seletedSeat.css('background-color', '#5AD18F');  //선택한 좌석 색 변경
+		  seletedSeat.css('background-color', '#5AD18F');  
 		  seletedSeat.css('color', 'white');
 	  }else if(seletedSeat.parent().attr('id') === 'economy'){
-		  seletedSeat.css('background-color', '#41A541');  //선택한 좌석 색 변경
+		  seletedSeat.css('background-color', '#41A541');  
 		  seletedSeat.css('color', 'white');
 	  }
-	  eventElem.parent().remove();  //탑승객 현황 삭제
+	  //3.탑승객 현황 삭제
+	  eventElem.parent().remove();  
 	  
-	  //input요소의 데이터 삭제
+	  //4.input요소의 데이터 삭제
 	  var searchInput = eventElem.prev().prev().text();
-	  console.log('searchInput : '+searchInput);
 	  $('.'+searchInput).filter('[name="ticketSeatnum"]').val('');
   });
   
+  
+  /* 저장 버튼 클릭 시 제출 이벤트 */
   nextBtn.on('click', function(){
 	  Swal.fire({
 	    title: '선택한 좌석을 저장하시겠습니까?',
 	    showDenyButton: true,
-	    showCancelButton: true,
+	    showCancelButton: false,
 	    confirmButtonText: "예",
 	    denyButtonText: "아니오"
 	  }).then((result) => {
 	    if (result.isConfirmed) {
-	      Swal.fire("성공이요!", "", "success");
 	      submitForm.submit(); 
 	    } else if (result.isDenied) {
-	      Swal.fire("실패요", "", "info");
 	      return;
 	    }
 	  });
-	  
   });
   
 });

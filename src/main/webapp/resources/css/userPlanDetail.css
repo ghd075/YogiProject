@@ -444,3 +444,9 @@ ul.list-group li.list-group-item:first-child .bg-light {
   left: 50%;
   transform: translate(-50%, -50%);
 } 
+
+/* pdf */
+.planDetailBtnGroup {
+    text-align: right;
+    margin-right: 24px;
+}

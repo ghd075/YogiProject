@@ -17,17 +17,28 @@
 		<typeAlias type="kr.or.ddit.users.board.vo.NoticeFileVO" alias="noticefileVO"/>
 		<typeAlias type="kr.or.ddit.vo.PaginationInfoVO" alias="pagingVO"/>
 		
-		<!-- <typeAlias type="kr.or.ddit.users.mypage.vo.MemberVO" alias="mypageMemberVO"/> -->
 		<typeAlias type="kr.or.ddit.users.myplan.vo.JourneyinfoVO" alias="journeyinfoVO"/>
 		<typeAlias type="kr.or.ddit.indexsearch.vo.JourneyinfoVO" alias="indexsearchVO"/>
 		
 		<typeAlias type="kr.or.ddit.users.partner.vo.PlanerVO" alias="planerVO"/>
 		<typeAlias type="kr.or.ddit.users.partner.vo.ChatroomVO" alias="chatroomVO"/>
 		
+		<typeAlias type="kr.or.ddit.vo.RealTimeSenderVO" alias="rtsenderVO"/>
+		
+		
 		<!--  항공  -->
         <typeAlias type="kr.or.ddit.users.reserve.air.vo.FlightVO" alias="flightVO"/>
         <typeAlias type="kr.or.ddit.users.reserve.air.vo.SearchVO" alias="searchVO"/>
         <typeAlias type="kr.or.ddit.users.reserve.air.vo.AirplaneVO" alias="airplaneVO"/>
+        <typeAlias type="kr.or.ddit.users.reserve.air.vo.ReservationVO" alias="reservationVO"/>
+        <typeAlias type="kr.or.ddit.users.reserve.air.vo.TicketVO" alias="ticketVO"/>
+        <!-- 장바구니 -->
+        <typeAlias type="kr.or.ddit.users.reserve.cart.vo.CartVO" alias="cartVO"/>
+        <typeAlias type="kr.or.ddit.users.reserve.cart.vo.CartAirVO" alias="cartAirVO"/>
+        <!-- 결제내역 -->
+        <typeAlias type="kr.or.ddit.users.mypage.vo.PayHistoryVO" alias="payHistoryVO"/>
+        <typeAlias type="kr.or.ddit.users.reserve.air.vo.AirReceiptVO" alias="airReceiptVO"/>
+        
 		
 		<!-- Plan 관련 VO -->
 		<typeAlias type="kr.or.ddit.users.myplan.vo.AreaVO" alias="areaVO"/>

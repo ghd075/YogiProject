@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.HistoryPartnerMapper">
+
+	<select id="historyList" parameterType="planerVO" resultType="planerVO">
+		SELECT
+			*
+		FROM
+			mategroup a, mategroup_member b, planer c
+		WHERE
+            a.mg_no = b.mg_no AND a.pl_no = c.pl_no AND b.mategroup_id = #{memId} AND a.mategroup_status = '4단계'
+	</select>
+	
+	<select id="getRecruiterName" parameterType="String" resultType="String">
+		SELECT
+			mem_name
+		FROM 
+			members
+		WHERE 
+			mem_id = #{mategroupRecruiter}
+	</select>
+</mapper>
+

@@ -84,5 +84,201 @@
 		WHERE
 			pl_no = #{plNo}
 	</select>
+	
+	<select id="getGroupPoint" parameterType="long" resultType="planerVO">
+		SELECT 
+			mg_no
+			, pl_no
+			, mategroup_recruiter
+			, mategroup_currentnum
+			, mategroup_status
+			, mategroup_point
+		FROM 
+			mategroup 
+		WHERE 
+			pl_no = #{plNo}
+	</select>
+	
+	<select id="getDeductStep" parameterType="HashMap" resultType="int">
+		SELECT
+			mategroup_agree
+		FROM
+			mategroup_member
+		WHERE
+			mategroup_id = #{memId} AND mg_no = (SELECT mg_no FROM mategroup WHERE pl_no = #{plNo})
+	</select>
+	
+	<select id="getMemPoint" parameterType="String" resultType="int">
+		SELECT
+			mem_point
+		FROM
+			members	
+		WHERE
+			mem_id = #{memId}
+	</select>
+	
+	<update id="chargePoint" parameterType="HashMap">
+		UPDATE
+			members
+		SET
+			mem_point = #{chargePoint}
+		WHERE
+			mem_id = #{memId}
+	</update>
+	
+	<update id="updateGroupPoint" parameterType="HashMap">
+		UPDATE
+			mategroup
+		SET
+			mategroup_point = #{resultGroupPoint}
+		WHERE
+			pl_no = #{plNo}
+	</update>
+	
+	<update id="changeAgreeStatus" parameterType="HashMap">
+		UPDATE
+			mategroup_member
+		SET
+			mategroup_agree = 1
+		WHERE
+			mategroup_id = #{memId} AND mg_no = (SELECT mg_no FROM mategroup WHERE pl_no = #{plNo})
+	</update>
+	
+	<select id="getResultPoint" parameterType="long" resultType="int">
+		SELECT
+			mategroup_point
+		FROM 
+			mategroup
+		WHERE 
+			pl_no = #{plNo}
+	</select>
+	
+	<select id="isAllGmDeducted" parameterType="long" resultType="int">
+		SELECT
+			count(mategroup_id)
+		FROM
+			mategroup_member
+		WHERE
+			mg_no = (SELECT mg_no FROM mategroup WHERE pl_no = #{plNo})
+		AND
+			mategroup_agree = 1
+	</select>
+	
+	<update id="updateGroupMemberStatus" parameterType="long">
+		UPDATE
+			mategroup_member
+		SET
+			mategroup_agree = 2
+		WHERE
+			mg_no = (SELECT mg_no FROM mategroup WHERE pl_no = #{plNo})
+	</update>
+	
+	<update id="updateGroupStatus" parameterType="long">
+		UPDATE
+			mategroup
+		SET
+			mategroup_status = '3단계'
+		WHERE
+			pl_no = #{plNo}
+	</update>
+	
+	<select id="getMateGroupStatus" parameterType="long" resultType="String">
+		SELECT
+			mategroup_status
+		FROM
+			mategroup
+		WHERE
+			pl_no = #{plNo}
+	</select>
+	
+	<select id="getAllMembers" parameterType="long" resultType="planerVO">
+		SELECT
+			*
+		FROM
+			members a, mategroup_member b
+		WHERE
+			a.mem_id = b.mategroup_id AND b.mg_no = (SELECT mg_no FROM mategroup WHERE pl_no = #{plNo}) AND b.mategroup_apply = 'Y'
+	</select>
+	
+	<insert id="insertPointLog" parameterType="HashMap">
+	    INSERT INTO POINTPAYMENT
+	    (
+	        POINT_NO,
+	        POINT_ACCOUNT,
+	        POINT_DATE,
+	        POINT_TYPE,
+	        POINT_CONTENT,
+	        MEM_ID
+	    )
+	    VALUES
+	    (
+	        SEQ_POINTPAYMENT.NEXTVAL, 
+	        #{pointAccount},        
+	        SYSDATE,                
+	        '차감',          
+	        #{pointContent}, 
+	        #{memId}         
+	    )
+	</insert>
+	
+	<select id="getCurrentGroupPoint" parameterType="long" resultType="int">
+		SELECT
+			mategroup_point
+		FROM
+			mategroup
+		WHERE
+			pl_no = #{plNo}
+	</select>
+
+	<select id="isAllDeducted" parameterType="long" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			mategroup_member
+		WHERE
+			mg_no = (SELECT mg_no FROM mategroup WHERE pl_no = #{plNo}) AND mategroup_agree != 1
+	</select>
+	
+	<insert id="insertSender" parameterType="rtsenderVO">
+		<selectKey keyProperty="realsenNo" order="BEFORE" resultType="int">
+			SELECT  
+				seq_realtimesender.nextval
+			FROM 
+				dual
+		</selectKey>
+		INSERT INTO realtimesender (
+		    realsen_no,
+		    realsen_id,
+		    realsen_name,
+		    realsen_title,
+		    realsen_content,
+		    realsen_type,
+		    realsen_url,
+		    realsen_pfimg
+		) VALUES (
+		    #{realsenNo},
+		    #{realsenId},
+		    #{realsenName},
+		    #{realsenTitle},
+		    #{realsenContent},
+		    #{realsenType},
+		    #{realsenUrl},
+		    #{realsenPfimg}
+		)
+	</insert>
+	
+	<insert id="insertReceiver" parameterType="rtsenderVO">
+		INSERT INTO realtimereceiver (
+		    realrec_no,
+		    realrec_id,
+		    realsen_readyn,
+		    realsen_no
+		) VALUES (
+		    seq_realtimereceiver.nextval,
+		    #{realrecId},
+		    #{realsenReadyn},
+		    #{realsenNo}
+		)
+	</insert>
 
 </mapper>

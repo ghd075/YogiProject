@@ -8,4 +8,7 @@ public class PlannerLikeVO {
 	private String memId;
 	private String plLikeDate;
 	private int plNo;
+	
+	//join용
+	private String plTitle;
 }

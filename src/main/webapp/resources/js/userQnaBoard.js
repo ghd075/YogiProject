@@ -97,14 +97,30 @@ $.uploadExcelClickFn = function() {
 		var excelFile = $("#excelFile").val();
 		
 		if(!excelFile){
-			alert("선택된 파일이 없습니다.");
+			//alert("선택된 파일이 없습니다.");
+			
+			Swal.fire({
+				title: "파일 확인",
+				text: "선택된 파일이 없습니다.",
+				icon: "error"
+			});
+			
 			return false;
 		}
 		
         var file = document.getElementById("excelFile").files[0];
 		
 		if(!isExcelFile(file)){
-			alert(".xlsx 형식만 지원합니다");
+			//alert(".xlsx 형식만 지원합니다");
+			
+			Swal.fire({
+				title: "확장자 확인",
+				text: ".xlsx 형식만 지원합니다",
+				icon: "info"
+			}).then((result) => {
+				$("#excelFile").val("");
+			});
+			
 			return false;
 		}
 
@@ -123,13 +139,26 @@ $.uploadExcelClickFn = function() {
             success: function (data) {
                 console.log("data 전송 성공");
                 console.log("data 전송 성공", data);
-                alert("업로드 완료");
-
-                // 모달 창 닫기
-                $('#popup').hide();
+                //alert("업로드 완료");
+                
+                Swal.fire({
+					title: "업로드 완료",
+				    text: "QNA 게시판으로 이동합니다.",
+					icon: "info"
+				}).then((result) => {
+				    // 모달 창 닫기
+                	// $('#popup').hide();
+                	location.href = "/qna/list.do";
+				});
             },
             error: function (e) {
-                alert("업로드 중 오류 발생: " + e.responseText);
+                //alert("업로드 중 오류 발생: " + e.responseText);
+                
+                Swal.fire({
+					title: "업로드 중 오류 발생",
+					text: e.responseText,
+					icon: "error"
+				});
             }
         });
     })

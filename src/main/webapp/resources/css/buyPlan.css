@@ -2,7 +2,7 @@
 
 .cartImg {
   display: block;
-  width: 80%;
+  width: 60%;
   height: 80px;
   margin: auto;
 }
@@ -15,6 +15,11 @@
   border-radius: 5px;
   font-size: 13px;
   font-weight: 300;
+}
+
+.material-symbols-outlined{
+	cursor: pointer;
+	
 }
 
 .cart ul :first-child {
@@ -209,9 +214,9 @@ td {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.list-group-item .col-md-1 {
+/* .list-group-item .col-md-1 {
   line-height: 50px;
-}
+} */
 
 
 ul.list-group li.list-group-item:first-child span {
@@ -278,7 +283,7 @@ ul.list-group li.list-group-item:first-child .bg-light {
     height: 60px;
 }
 
-button#returnBtn {
+button#goToGroupPageBtn {
 	position : absolute;
 	right: 0px;
 	color: #414040;
@@ -289,4 +294,164 @@ button#returnBtn {
   font-size: 15px;
   cursor: pointer;	
   margin-bottom : 10px;
+}
+
+/* 모달  */
+.deductProcessingModalBox.cen {
+  width: 600px;
+  height: 600px;
+}
+
+.deductProcessingModalContents {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0.3);
+  z-index: 70;
+  display: none;
+}
+
+.deductProcessingModalBox {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 30px;
+  overflow: auto;
+  border-radius: 10px;
+}
+
+.modalBtnsWrap {
+    text-align: center;
+    /* padding-top : 110px; */
+}
+.modalBtn {
+    display: inline-block;
+}
+
+.modalContBox {
+  height:300px;
+}
+.modalContWrap {
+  text-align: center;
+}
+.modalContWrap h3 {
+  margin-top:50px
+}
+.modalContBox {
+  overflow: auto;
+  
+}
+.modalContBox::-webkit-scrollbar {
+  display: none;
+}
+.liHeader {
+  text-align: left;
+}
+
+.thumbImg{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.deductProcessingModalClose {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+  background-color: rgba(0,0,0,0.4);
+  border-radius: 4px;
+}
+
+.deductProcessingModalClose div {
+  width: 25px;
+  height: 1px;
+  background-color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.deductProcessingModalClose div:first-of-type {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.deductProcessingModalClose div:last-of-type {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.pointAlign {
+  text-align: right;
+}
+
+.modalContBox li{
+  text-align: right;
+}
+
+.modalContBox li#totalResult{
+  text-align: center;
+}
+
+.totalPointCost,
+.group-details {
+    font-weight: bold;
+    font-size: 16px;
+    color: #444;
+}
+
+.point-details,
+.group-details {
+    margin-bottom: 10px;
+}
+
+.point-label {
+    margin-right: 10px;
+    color: #666;
+}
+
+.point-unit {
+    margin-left: 5px;
+}
+
+.totalPointCost hr,
+.group-details hr {
+    border-top: 1px solid #ccc;
+    margin: 15px 0;
+}
+
+.group-details {
+    display: flex;
+    align-items: center;
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* .group-icon {
+    font-size: 24px;
+    margin-right: 10px;
+    color: #007bff;
+} */
+/* 
+.curNum {
+    color: #007bff;
+    font-size: 20px;
+} */
+
+.modalLabel {
+	color: #666;
+}
+
+.purchaseConfirmedBtn {
+	margin-left : 25%;
+}
+
+.forGmStyle {
+	margin-left : 25%;
 }

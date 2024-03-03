@@ -356,11 +356,70 @@
         	var infoTimediferFlag = $.falsyCheckFn(infoTimedifer, "한국 대비 시차 기록");
         	if(!infoTimediferFlag) return;
         	
-        	if($(this).text() == "여행 정보 수정"){
+        	var btnTxtVal = $(this).text();
+        	
+        	if(btnTxtVal == "여행 정보 수정"){
         		jourInfoRegForm.attr("action", "/myplan/modify.do");
             }
         	
-        	jourInfoRegForm.submit();
+        	Swal.fire({
+    			title: "플래너 > " + btnTxtVal,
+    		    text: "플래너 > "+btnTxtVal+" 을 진행하시겠습니까?",
+    			icon: "question",
+    		    showDenyButton: true,
+    		    confirmButtonText: "예",
+    		    denyButtonText: "아니오"
+    		}).then((result) => {
+    		    if (result.isConfirmed) {
+    		    	
+    		    	// 실시간 알림 기능 > 여행 정보 등록
+    		        /* var realrecIdArr; // 모든 유저를 대상으로 알림
+    		        $.ajaxMembersIdListGetFn(function(result){
+    		        	
+    		        	realrecIdArr = result;
+    		        	console.log("realrecIdArr : ", realrecIdArr);
+    			        
+    			        var realsenId = "${sessionInfo.memId}"; // 발신자 아이디
+    			        var realsenName = "${sessionInfo.memName}"; // 발신자 이름
+    			        var realsenTitle = "여행 정보 등록"; // 실시간 알림 제목
+    			        var realsenContent = realsenName+"("+realsenId+")님이 새로운 여행 정보("+infoName.val()+", "+infoEngname.val()+")를 등록하였습니다."; // 실시간 알림 내용
+    			        var realsenType = "journeyinfo"; // 여행정보 타입 알림
+    			        var realsenReadyn = "N"; // 안 읽음
+    			        var realsenUrl = "/myplan/info.do"; // 여행 정보 페이지로 이동
+    			        
+    			        var dbSaveFlag = true; // db에 저장
+    			        var userImgSrc = "${sessionInfo.memProfileimg }"; // 유저 프로파일 이미지 정보
+    			        var realrecNo = "empty";
+    			        
+    			        var rtAlert = {
+    			        	"realrecIdArr": realrecIdArr,
+    			        	"realsenId": realsenId,
+    			        	"realsenName": realsenName,
+    			        	"realsenTitle": realsenTitle,
+    			        	"realsenContent": realsenContent,
+    			        	"realsenType": realsenType,
+    			        	"realsenReadyn": realsenReadyn,
+    			        	"realsenUrl": realsenUrl,
+    			        	"realsenPfimg": userImgSrc
+    			        };
+    			        console.log("플래너 등록 알림 저장 > rtAlert : ", rtAlert);
+    			        
+    			        $.realTimeAlertWebSocketFn(rtAlert, dbSaveFlag, userImgSrc, realrecNo);
+    			        
+    		        }); */
+    		    	
+    		    	// 여행 정보 등록
+    		    	jourInfoRegForm.submit();
+    		    	
+    		    } else if (result.isDenied) {
+    		        Swal.fire({
+    					title: "플래너 > " + btnTxtVal,
+    					text: "플래너 > "+btnTxtVal+" 을 취소합니다.",
+    					icon: "error"
+    				});
+    		    }
+    		});
+        	
         });
         
         // 종횡비 함수

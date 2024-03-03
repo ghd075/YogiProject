@@ -7,7 +7,7 @@ public class TicketVO implements Cloneable{
 
 	private String flightCode;
 	private String ticketSeatnum;
-	private String ticketCode;
+	private String ticketCode;  //항공편앞 3자리-자리번호-랜덤숫자00000
 	private String ticketType;
 	private String ticketClass;
 	
@@ -28,6 +28,7 @@ public class TicketVO implements Cloneable{
 	private String airReserveno;
 	
 	private String ageCnt;
+	private int personNum;
 	
 	//TicketVO복사 재정의 
 	@Override

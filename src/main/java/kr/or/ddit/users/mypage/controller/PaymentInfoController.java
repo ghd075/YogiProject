@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.siot.IamportRestClient.IamportClient;
@@ -46,7 +47,7 @@ public class PaymentInfoController {
 	// 결제관리 이동
 	@CrossOrigin(origins = "http://localhost")
 	@RequestMapping(value = "/paymentinfo.do", method = RequestMethod.GET)
-	public String paymentinfo(HttpServletRequest req, Model model) {
+	public String paymentinfo(HttpServletRequest req, Model model, @RequestParam(required = false, defaultValue = "0") String plNo) {
 		
 		/** 자료수집 및 정의 */
 		HttpSession session = req.getSession();
@@ -54,6 +55,10 @@ public class PaymentInfoController {
 		String memId = memberVO.getMemId();
 		Map<String,Object> param = new HashMap<>();
 		param.put("memId", memId);
+		
+		if(!plNo.equals("0")) {
+			model.addAttribute("plNo", plNo);
+		}
 		
 		/** 서비스 호출 */
 		paymentInfoService.selectMemPoint(param);

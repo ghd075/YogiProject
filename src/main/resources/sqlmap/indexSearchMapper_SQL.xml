@@ -44,5 +44,147 @@
 			WHERE ROWNUM <= 8
 		]]>
 	</select>
+	
+	<select id="ajaxMembersId" resultType="memberVO">
+		select mem_id
+		  from members
+	</select>
+	
+	<insert id="insertSender" parameterType="rtsenderVO">
+		<selectKey keyProperty="realsenNo" order="BEFORE" resultType="int">
+			SELECT  
+				seq_realtimesender.nextval
+			FROM 
+				dual
+		</selectKey>
+		INSERT INTO realtimesender (
+		    realsen_no,
+		    realsen_id,
+		    realsen_name,
+		    realsen_title,
+		    realsen_content,
+		    realsen_type,
+		    realsen_url,
+		    realsen_pfimg
+		) VALUES (
+		    #{realsenNo},
+		    #{realsenId},
+		    #{realsenName},
+		    #{realsenTitle},
+		    #{realsenContent},
+		    #{realsenType},
+		    #{realsenUrl},
+		    #{realsenPfimg}
+		)
+	</insert>
+	
+	<insert id="insertReceiver" parameterType="rtsenderVO">
+		INSERT INTO realtimereceiver (
+		    realrec_no,
+		    realrec_id,
+		    realsen_readyn,
+		    realsen_no
+		) VALUES (
+		    seq_realtimereceiver.nextval,
+		    #{realrecId},
+		    #{realsenReadyn},
+		    #{realsenNo}
+		)
+	</insert>
+	
+	<select id="sender" parameterType="String" resultType="rtsenderVO">
+		select *
+		  from (
+		    select a.*
+		         , b.realrec_no
+		         , b.realrec_id
+		         , b.realsen_readyn
+		      from realtimesender a
+		         , realtimereceiver b
+		     where 1=1
+		       and a.realsen_no = b.realsen_no
+		       and b.realsen_readyn = 'N'
+		       and b.realrec_id = 'chantest1'
+		       order by a.realsen_no desc
+		  ) a
+		 where 1 = 1
+		   and ROWNUM = 1
+	</select>
+	
+	<select id="senderCnt" parameterType="String" resultType="int">
+		select count(*) as journeyCnt
+		  from realtimesender a
+		     , realtimereceiver b
+		 where 1=1
+		   and a.realsen_no = b.realsen_no
+		   and b.realsen_readyn = 'N'
+		   and b.realrec_id = #{realrecId}
+	</select>
+	
+	<update id="ajaxRtAlertRead" parameterType="int">
+		UPDATE realtimereceiver
+		SET
+		    realsen_readyn = 'Y'
+		WHERE
+		    realrec_no = #{realrecNo}
+	</update>
+	
+	<select id="planDetailCreateMemId" parameterType="int" resultType="memberVO">
+		select * 
+		  from planer 
+		 where 1=1
+		   and pl_no = #{intPlNo}
+	</select>
+	
+	<select id="loginMemInfoRtAlertSaveInfo" parameterType="memberVO" resultType="memberVO">
+		select *
+		  from members
+		 where 1=1 
+		   and mem_id = #{memId}
+		   and mem_pw = #{memPw}
+	</select>
+	
+	<select id="removeSelectRealSenNo" parameterType="String" resultType="rtsenderVO">
+		select *
+		  from (
+		      select realsen_no 
+		      from realtimesender
+		     where 1=1
+		       and realsen_id = #{memId}
+		       and realsen_type = 'logininfo'
+		     order by realsen_no desc
+		  ) a
+		 where 1=1
+		   and rownum = 1
+	</select>
+	
+	<delete id="removeRealtimesenderTbl" parameterType="int">
+		DELETE FROM realtimesender
+		WHERE realsen_no = #{realsenNo}
+	</delete>
+	
+	<delete id="removeRealtimereceiverTbl" parameterType="int">
+		DELETE FROM realtimereceiver
+		WHERE realsen_no = #{realsenNo}
+	</delete>
+	
+	<select id="removeRealSenNoCnt" resultType="int">
+		select count(*) as cnt
+		  from realtimesender
+		 where 1=1
+		   and realsen_type = 'logininfo'
+	</select>
+	
+	<update id="rtAlertClickInit" parameterType="String">
+		 UPDATE realtimereceiver b
+			SET b.realsen_readyn = 'Y'
+			WHERE EXISTS (
+			    SELECT 1
+			    FROM realtimesender a
+			    WHERE a.realsen_no = b.realsen_no
+			      AND b.realsen_readyn = 'N'
+			      AND b.realrec_id = #{memId}
+			)
+	</update>
 
 </mapper>

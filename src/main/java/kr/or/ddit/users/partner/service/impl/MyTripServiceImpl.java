@@ -1,29 +1,27 @@
 package kr.or.ddit.users.partner.service.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.ddit.mapper.MyTripMapper;
+import kr.or.ddit.mapper.PdfUploadMapper;
 import kr.or.ddit.users.partner.service.MyTripService;
 import kr.or.ddit.users.partner.vo.ChatroomVO;
 import kr.or.ddit.users.partner.vo.PlanerVO;
 import kr.or.ddit.utils.ServiceResult;
 import lombok.extern.slf4j.Slf4j;
+
+import java.nio.file.Files;
 
 @Slf4j
 @Service
@@ -32,6 +30,9 @@ public class MyTripServiceImpl implements MyTripService {
 
 	@Inject
 	private MyTripMapper myTripMapper;
+	
+	@Inject
+	private PdfUploadMapper pdfUploadMapper;
 	
 	@Override
 	public void myTripList(Map<String, Object> param) {
@@ -115,6 +116,10 @@ public class MyTripServiceImpl implements MyTripService {
 		String goPage = "";
 		
 		/** 메인로직 처리 */
+		// 항공편 삭제
+		myTripMapper.deleteCartAir(plNo);
+		myTripMapper.deleteCart(plNo);
+		
 		// 플래너 삭제하기
 		// 1. 세부플랜(s_planer) 삭제 - plNo 이용
 		myTripMapper.deleteSPlaner(plNo);
@@ -129,6 +134,7 @@ public class MyTripServiceImpl implements MyTripService {
 		myTripMapper.deleteChatAll(plNo);
 		myTripMapper.deleteChatRoom(plNo);
 		myTripMapper.deleteMategrp(plNo);
+		
 		
 		
 		// 4. 플랜(planer) 삭제 - plNo 이용
@@ -343,6 +349,8 @@ public class MyTripServiceImpl implements MyTripService {
 	    int plNo = (int) param.get("plNo");
 	    
 	    /** 파라미터 정의 */
+	    int cnt1 = 0;
+	    int cnt2 = 0;
 	    int status = 0;
 	    int status2 = 0;
 	    ServiceResult result = null;
@@ -350,26 +358,153 @@ public class MyTripServiceImpl implements MyTripService {
 	    String goPage = "";
 	    
 	    /** 메인로직 처리 */
-	    // 1. 현재 플래너에 대기 중인 멤버를 모집 마감 상태로 바꾸기
-	    status = myTripMapper.mategroupApplyCancel(plNo);
+	    // 0. 혼자가는 여행일 경우, mategroup_apply = 'Y'이게 나 혼자니까 무조건 cnt2 = 1;
+	    cnt1 = myTripMapper.soloTrip(plNo);
+	    log.debug("cnt1 : {}", cnt1);
 	    
-	    if(status > 0) { // 모집 마감 상태 변경 성공
-	    	// 2. 현재 플래너의 상태를 1단계에서 2단계로 바꾸기
-		    status2 = myTripMapper.mategroupStatusSecondStage(plNo);
-	    	if(status2 > 0) { // 2단계로 바꾸기 성공
-	    		result = ServiceResult.OK;
-		        message = "현재 플래너에 참여 모집을 마감하였습니다. 다음 단계를 진행해 주세요.";
-		        goPage = "redirect:/partner/meetsquare.do?plNo=" + plNo;
-	    	}else { // 2단계로 바꾸기 실패
-	    		result = ServiceResult.FAILED;
-		        message = "2단계로 바꾸기 실패했습니다.";
-		        goPage = "partner/meetsquareRoom";
+//	    if(cnt1 == 1) { // 신청 멤버는 모르겠고 나혼자 무조건 ㄱ
+//	    	// 1. 현재 플래너에 대기 중인 나 자신을 모집 마감 상태로 바꾸기
+//    		status = myTripMapper.mategroupApplyCancel(plNo);
+//    		if(status > 0) {
+//    			// 2. 현재 플래너의 상태를 1단계에서 2단계로 바꾸기
+//			    status2 = myTripMapper.mategroupStatusSecondStage(plNo);
+//		    	if(status2 > 0) { // 2단계로 바꾸기 성공
+//		    		result = ServiceResult.OK;
+//			        message = "현재 플래너에 참여 모집을 마감하였습니다. 다음 단계를 진행해 주세요.";
+//			        goPage = "redirect:/partner/meetsquare.do?plNo=" + plNo;
+//		    	}else { // 2단계로 바꾸기 실패
+//		    		result = ServiceResult.FAILED;
+//			        message = "2단계로 바꾸기 실패했습니다.";
+//			        goPage = "redirect:/partner/meetsquare.do?plNo=" + plNo;
+//		    	}
+//    		}
+//	    }else if(cnt1 > 0) { // 신청 멤버는 모르겠는데 일단 동행 모집할 거임
+//
+//	    }
+	    // 경우의수 
+	    // 1. 나 자신은 당연히 'Y'겠지
+	    // 나 혼자인 경우
+	    // 1. 아무도 안 받고 나만 있는 상태에서 모집마감
+	    // 2. 아무도 안 받고 신청한 사람('W')이 있는 상태에서 모집마감
+	    // 3. 아무도 안 받고 신청한 사람('W')이 있는 상태에서 모집마감
+	    // 동행 모집한경우
+	    // 1. 나 외에 한명 이상을 승인한 상황에서 대기자('W')가 존재하는 경우
+	    // 2. 나 외에 한명 이상을 승인한 상황에서 거절자나 취소자('C', 'N')가 존재하는 경우
+	    // 3. 나 외에 한명 이상을 승인한 상황에서 대기자나 거절자, 취소자가 존재하지 않는 경우
+	    
+	    cnt1 = myTripMapper.soloTrip(plNo);
+	    
+	    // cnt1 == 1이면 혼자가는거여
+	    if(cnt1 == 1) {
+	    	// 신청멤버를 센다
+	    	cnt2 = myTripMapper.waitMemCnt(plNo);
+	    	log.debug("cnt2 : {}", cnt2);
+	    	if(cnt2 == 0) {	// 신청멤버가 없어. 또는 취소자나 거절자만 있어
+	    		// 모집마감 가능
+	    		status2 = myTripMapper.mategroupStatusSecondStage(plNo);
+	    		if(status2 > 0) {
+	    			result = ServiceResult.OK;
+			        message = "현재 플래너에 참여 모집을 마감하였습니다. 다음 단계를 진행해 주세요.";
+			        goPage = "redirect:/partner/meetsquare.do?plNo=" + plNo;
+	    		} else {
+	    			result = ServiceResult.FAILED;
+			        message = "2단계로 바꾸기 실패했습니다.";
+			        goPage = "redirect:/partner/meetsquare.do?plNo=" + plNo;
+	    		}
+	    		
+	    	} else if(cnt2 >= 1) {	// 신청멤버가 한명 이상이여
+	    		// 일단 대기자들을 E(모집마감)상태로 바꾸고 모집마감해
+	    		status = myTripMapper.mategroupApplyCancel(plNo);
+	    		if(status > 0) {
+	    			status2 = myTripMapper.mategroupStatusSecondStage(plNo);
+	    			if(status2 > 0) {
+	    				result = ServiceResult.OK;
+				        message = "현재 플래너에 참여 모집을 마감하였습니다. 다음 단계를 진행해 주세요.";
+				        goPage = "redirect:/partner/meetsquare.do?plNo=" + plNo;
+	    			} else {
+	    				result = ServiceResult.FAILED;
+				        message = "2단계로 바꾸기 실패했습니다.";
+				        goPage = "redirect:/partner/meetsquare.do?plNo=" + plNo;
+	    			}
+	    		} else {
+	    			result = ServiceResult.FAILED;
+			        message = "모집 마감 상태 변경 실패했습니다.";
+			        goPage = "redirect:/partner/meetsquare.do?plNo=" + plNo;
+	    		}
+	    		
 	    	}
-	    }else { // 모집 마감 상태 변경 실패
-	    	result = ServiceResult.FAILED;
-	        message = "모집 마감 상태 변경 실패했습니다.";
-	        goPage = "partner/meetsquareRoom";
+	    	
+	    } else if(cnt1 > 1) {	// cnt1 2이상이면 같이가는 거겠지
+	    	// 신청멤버를 센다
+	    	cnt2 = myTripMapper.waitMemCnt(plNo);
+	    	log.debug("cnt2 : {}", cnt2);
+	    	if(cnt2 == 0) {	// 신청멤버가 없어. 또는 취소자나 거절자만 있어
+	    		// 모집마감 가능
+	    		status2 = myTripMapper.mategroupStatusSecondStage(plNo);
+	    		if(status2 > 0) {
+	    			result = ServiceResult.OK;
+			        message = "현재 플래너에 참여 모집을 마감하였습니다. 다음 단계를 진행해 주세요.";
+			        goPage = "redirect:/partner/meetsquare.do?plNo=" + plNo;
+	    		} else {
+	    			result = ServiceResult.FAILED;
+			        message = "2단계로 바꾸기 실패했습니다.";
+			        goPage = "redirect:/partner/meetsquare.do?plNo=" + plNo;
+	    		}
+	    		
+	    	} else if(cnt2 >= 1) {	// 신청멤버가 한명 이상이여
+	    		// 일단 대기자들을 E(모집마감)상태로 바꾸고 모집마감해
+	    		status = myTripMapper.mategroupApplyCancel(plNo);
+	    		if(status > 0) {
+	    			status2 = myTripMapper.mategroupStatusSecondStage(plNo);
+	    			if(status2 > 0) {
+	    				result = ServiceResult.OK;
+				        message = "현재 플래너에 참여 모집을 마감하였습니다. 다음 단계를 진행해 주세요.";
+				        goPage = "redirect:/partner/meetsquare.do?plNo=" + plNo;
+	    			} else {
+	    				result = ServiceResult.FAILED;
+				        message = "2단계로 바꾸기 실패했습니다.";
+				        goPage = "redirect:/partner/meetsquare.do?plNo=" + plNo;
+	    			}
+	    		} else {
+	    			result = ServiceResult.FAILED;
+			        message = "모집 마감 상태 변경 실패했습니다.";
+			        goPage = "redirect:/partner/meetsquare.do?plNo=" + plNo;
+	    		}
+	    		
+	    	}
+	    	
 	    }
+	    
+	    
+    	// 0. 신청멤버 카운트를 센다
+//    	cnt2 = myTripMapper.waitMemCnt(plNo);
+//    	log.debug("cnt2 : {}", cnt2);
+//    	if(cnt2 == 0) { // 신청 멤버가 없는 경우
+//    		result = ServiceResult.FAILED;
+//            message = "신청 멤버가 없습니다.";
+//            goPage = "redirect:/partner/meetsquare.do?plNo=" + plNo;
+//    	}else if(cnt2 >= 1) { // 동행 참가인 경우
+//    		// 1. 현재 플래너에 대기 중인 멤버를 모집 마감 상태로 바꾸기
+//		    status = myTripMapper.mategroupApplyCancel(plNo);
+//		    
+//		    if(status > 0) { // 모집 마감 상태 변경 성공
+//		    	// 2. 현재 플래너의 상태를 1단계에서 2단계로 바꾸기
+//			    status2 = myTripMapper.mategroupStatusSecondStage(plNo);
+//		    	if(status2 > 0) { // 2단계로 바꾸기 성공
+//		    		result = ServiceResult.OK;
+//			        message = "현재 플래너에 참여 모집을 마감하였습니다. 다음 단계를 진행해 주세요.";
+//			        goPage = "redirect:/partner/meetsquare.do?plNo=" + plNo;
+//		    	}else { // 2단계로 바꾸기 실패
+//		    		result = ServiceResult.FAILED;
+//			        message = "2단계로 바꾸기 실패했습니다.";
+//			        goPage = "redirect:/partner/meetsquare.do?plNo=" + plNo;
+//		    	}
+//		    }else { // 모집 마감 상태 변경 실패
+//		    	result = ServiceResult.FAILED;
+//		        message = "모집 마감 상태 변경 실패했습니다.";
+//		        goPage = "redirect:/partner/meetsquare.do?plNo=" + plNo;
+//		    }
+//    	}
 	    
 	    /** 반환자료 저장 */
 	    param.put("result", result);
@@ -428,6 +563,55 @@ public class MyTripServiceImpl implements MyTripService {
 		/** 반환자료 저장 */
 		param.put("delRes", delRes);
 		
+	}
+
+	// 일정공유
+	@Override
+	public Map<String, Object> planShare(HttpServletRequest request, Map<String, Object> param) throws IOException {
+	    // 파라미터 조회
+	    int plNo = (int)param.get("plNo");
+	    String pdfUrl = pdfUploadMapper.getPdfUrl(plNo);
+	    
+	    log.info("pdfUrl : " + pdfUrl);
+	    log.info("plNo : " + plNo);
+
+	    Map<String, Object> result = new HashMap<String, Object>();
+
+	    // pdfUrl이 null이 아닌 경우에만 처리합니다.
+	    if (pdfUrl != null) {
+	        // PDF 파일이 저장된 경로를 찾습니다.
+	        String realPath = request.getServletContext().getRealPath(pdfUrl);
+	        File pdfFile = new File(realPath);
+
+	        log.info("realPath : " + realPath);
+	        log.info("pdfFile : " + pdfFile.getName());
+	      
+
+	        // PDF 파일이 존재하는 경우, 파일의 바이트 배열과 파일 이름을 반환합니다.
+	        if(pdfFile.exists()) {
+	            byte[] fileBytes = Files.readAllBytes(pdfFile.toPath());
+	            String filename = pdfFile.getName();
+
+	            result.put("fileBytes", fileBytes);
+	            result.put("filename", filename);
+	        } 
+	    }
+
+	    return result;
+	}
+
+	@Override
+	public ServiceResult travelTheEnd(int plNo) {
+		ServiceResult sres = null;
+		int res = myTripMapper.travelTheEnd(plNo);
+		
+		if(res > 0) {
+			sres = ServiceResult.OK;
+		} else {
+			sres = ServiceResult.FAILED;
+		}
+		
+		return sres;
 	}
 
 }

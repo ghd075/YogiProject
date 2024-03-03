@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.CartMapper">
+
+  <!-- kr.or.ddit.mapper.CartMapper.checkCart
+             장바구니 존재여부 확인 -->
+  <select id="checkCart" parameterType="long" resultType="string">
+    SELECT cart_no
+    FROM cart
+    WHERE pl_no = #{plNo}
+  </select>
+ 
+ <!-- kr.or.ddit.mapper.CartMapper.insertCart 
+          장바구니 생성         -->
+  <insert id="insertCart" parameterType="cartVO">
+    INSERT INTO cart(
+       cart_no, 
+       cart_type, 
+       pl_no, 
+       mem_id, 
+       cart_regdate
+    )VALUES(
+       #{cartNo}, 
+       #{cartType},
+       #{plNo},
+       #{memId},
+       SYSDATE
+     )
+  </insert>
+  
+  <!-- kr.or.ddit.mapper.CartMapper.checkFlightInCart
+             장바구니에 항공상품이 담겨있는지 확인 -->
+  <select id="checkFlightInCart" parameterType="cartAirVO" resultType="cartAirVO">
+    SELECT * FROM cart_air 
+    WHERE cart_no = #{cartNo} 
+          AND dep_flight = #{depFlight} 
+          AND return_flight = #{returnFlight}
+  </select>
+  
+  <!-- kr.or.ddit.mapper.CartMapper.insertFlightInCart
+       항공권 장바구니에 담기 -->
+   <insert id="insertFlightInCart" parameterType="cartAirVO">
+     INSERT INTO cart_air(
+       DEP_FLIGHT,
+       RETURN_FLIGHT,
+       CARTAIR_TYPE,
+       CART_NO,
+       CARTAIR_TOTALPRICE,
+       CARTAIR_CNT,
+       CARTAIR_STATUS  
+     ) VALUES(
+       #{depFlight},
+       #{returnFlight},
+       #{cartairType},
+       #{cartNo},
+       #{cartairTotalprice},
+       #{cartairCnt},
+       'N'
+     )
+   </insert>
+   
+   <!-- kr.or.ddit.mapper.CartMapper.selectAllAirCart 
+                항공권 장바구니 리스트 조회   -->
+   <select id="selectAllAirCart" parameterType="long" resultType="cartAirVO">
+     SELECT 
+       dep_flight,
+       return_flight,
+       cartair_type,
+       cart_no,
+       cartair_cnt,
+       cartair_totalprice,
+       cartair_status 
+     FROM cart_air 
+     WHERE cart_no = (
+                 SELECT cart_no 
+                 FROM cart 
+                 WHERE pl_no = #{plNo})
+   </select>
+   
+   <!-- kr.or.ddit.mapper.CartMapper.deleteFlightInCart  찜한 항공권 장바구니에서 제거 -->
+   <delete id="deleteFlightInCart" parameterType="map">
+      DELETE FROM cart_air 
+      WHERE cart_no = #{cartNo} 
+          AND  dep_flight = #{depFlightCode} 
+          AND return_flight = #{retFlightCode} 
+   </delete>
+   
+   <!-- kr.or.ddit.mapper.CartMapper.updateCartAirStatus 장바구니에 담긴 항공권 결제상태 업데이트 -->
+   <update id="updateCartAirStatus" parameterType="map">
+     UPDATE cart_air
+     SET cartair_status = 'Y'
+     WHERE cart_no = #{cartNo} 
+          AND  dep_flight = #{depFlightCode} 
+          AND return_flight = #{retFlightCode}  
+   </update>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

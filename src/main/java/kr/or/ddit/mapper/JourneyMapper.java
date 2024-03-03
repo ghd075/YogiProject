@@ -3,6 +3,7 @@ package kr.or.ddit.mapper;
 import java.util.List;
 
 import kr.or.ddit.users.myplan.vo.JourneyinfoVO;
+import kr.or.ddit.vo.RealTimeSenderVO;
 
 public interface JourneyMapper {
 

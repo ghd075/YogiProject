@@ -149,7 +149,7 @@ $.ajaxPlannerListSearchFn = function(memId){
 				// 취소 처리 함수
 				$.myTripCancelFn();
 
-				// 대기 상태가 W, N, C인 녀석은 못들어오게 막아!
+				// 대기 상태가 W, N, C, E인 녀석은 못들어오게 막아!
 				$.excludeNonUserFn(memId);
 			}
 		});
@@ -187,7 +187,7 @@ function convertToYYYYMMDD(inputDateString) {
 	var outputDateString = `${yyyy}-${mm}-${dd}`;
   
 	return outputDateString;
-  }
+}
 
 // 플래너 정보 각각의 이미지 종횡비 변경 함수
 $.eachPlannerInfoImgResizeFn = function(){
@@ -236,13 +236,20 @@ $.eachChatingMemberImgResizeFn = function(){
 };
 
 // 공개/비공개 처리 함수
-$.myTripPrivatePublicChgFn = function(){
+$.myTripPrivatePublicChgFn = function({realsenId, realsenName, realsenPfimg}){
 	var myTripPrivatePublicBtn = $(".myTripPrivatePublicBtn");
 	myTripPrivatePublicBtn.click(function(){
 
 		var thisIs = $(this);
+		
 		var btnTxtVal = thisIs.text();
 		
+		var aHref = thisIs.parent().prev().find("a").attr("href");
+		console.log("aHref : ", aHref);
+		aHref = aHref.split("=");
+		var plNo = aHref[1];
+		console.log("plNo : ", plNo);
+
 		// var changeYN = confirm(`플래너를 ${btnTxtVal}하시겠습니까?`);
 		// if(changeYN) {
 		// 	thisIs.parent().find("#chgStatusPlan").submit();
@@ -257,7 +264,48 @@ $.myTripPrivatePublicChgFn = function(){
 		    denyButtonText: "아니오"
 		}).then((result) => {
 		    if (result.isConfirmed) {
+
+				// 실시간 알림 기능 > 플래너 공개/비공개 변경 알림
+				// if(btnTxtVal == "공개"){
+
+				// 	var realrecIdArr; // 모든 유저를 대상으로 알림
+				// 	$.ajaxMembersIdListGetFn(function(result){
+    		        	
+				// 		realrecIdArr = result;
+				// 		console.log("realrecIdArr : ", realrecIdArr);
+						
+				// 		var realsenTitle = "플래너 " + btnTxtVal; // 실시간 알림 제목
+				// 		var realsenContent = realsenName+"("+realsenId+")님이 새로운 플래너를 "+btnTxtVal+" 하였습니다."; // 실시간 알림 내용
+				// 		var realsenType = "mygroup"; // 여행정보 타입 알림
+				// 		var realsenReadyn = "N"; // 안 읽음
+				// 		var realsenUrl = "/myplan/planDetail.do?plNo=" + plNo; // 여행 정보 페이지로 이동
+						
+				// 		var dbSaveFlag = true; // db에 저장
+    			//         var userImgSrc = realsenPfimg; // 유저 프로파일 이미지 정보
+    			//         var realrecNo = "empty";
+						
+				// 		var rtAlert = {
+				// 			"realrecIdArr": realrecIdArr,
+				// 			"realsenId": realsenId,
+				// 			"realsenName": realsenName,
+				// 			"realsenTitle": realsenTitle,
+				// 			"realsenContent": realsenContent,
+				// 			"realsenType": realsenType,
+				// 			"realsenReadyn": realsenReadyn,
+				// 			"realsenUrl": realsenUrl,
+				// 			"realsenPfimg": realsenPfimg
+				// 		};
+				// 		console.log("플래너 등록 알림 저장 > rtAlert : ", rtAlert);
+						
+				// 		$.realTimeAlertWebSocketFn(rtAlert, dbSaveFlag, userImgSrc, realrecNo);
+						
+				// 	});
+
+				// }
+
+				// 플래너 공개/비공개 등록
 		    	thisIs.parent().find("#chgStatusPlan").submit();
+
 		    } else if (result.isDenied) {
 		        Swal.fire({
 					title: "플래너 공개/비공개",
@@ -390,7 +438,7 @@ $.shoppingPlanFn = function(plNo){
 				    // 모달이 닫힌 후에 실행될 코드
 				    if (result.isConfirmed) {
 				        // 확인 버튼이 클릭되었을 때
-				        location.href = "/partner/buyPlan.do?plNo=" + plNo;
+				        location.href = "/partner/buyPlan.do?plNo=" + plNo + "&stay=true";
 				    }
 				});
 		    } else if (result.isDenied) {
@@ -437,7 +485,13 @@ $.groupRecruitEndedFn = function(){
 						text: "해당 플랜은 결제가 완료되었습니다. 환불이 불가능합니다.",
 						icon: "info"
 					});
-		    	}else {
+		    	}else if(endedStat == "여행종료") {
+					Swal.fire({
+						title: "여행종료",
+						text: "해당 플랜은 여행이 종료되었습니다.",
+						icon: "info"
+					});
+				}else {
 					var groupRecruitEnded = $("#groupRecruitEnded");
 					groupRecruitEnded.submit();
 		    	}
@@ -489,7 +543,7 @@ $.ageCalculateFn = function(birth){
     return age;
 };
 
-// 대기 상태가 W, N, C인 녀석은 못들어오게 막아!
+// 대기 상태가 W, N, C, E인 녀석은 못들어오게 막아!
 $.excludeNonUserFn = function(userId){
 	var meetAreaListCont = $(".meetAreaLists a");
 	meetAreaListCont.click(function(event){
@@ -614,7 +668,7 @@ $.kickOutFn = function(plNo){
         var thisIs = $(this);
         var kickOutId = thisIs.find("span:nth-of-type(4)").text();
         console.log("kickOutId : " + kickOutId);
-        var kickOutName = thisIs.find("span:first-of-type").text().trim();
+        var kickOutName = thisIs.find(".kickOutNameTxt").text().trim();
         console.log("kickOutName : " + kickOutName);
         
         // var kickYN = confirm(kickOutName + "님을 강퇴하시겠습니까?");
@@ -637,7 +691,9 @@ $.kickOutFn = function(plNo){
         // }
         
         Swal.fire({
-		    title: kickOutName + "님을 강퇴하시겠습니까?",
+			title: "멤버 강퇴",
+			text: kickOutName + "님을 강퇴하시겠습니까?",
+			icon: "question",
 		    showDenyButton: true,
 		    confirmButtonText: "예",
 		    denyButtonText: "아니오"
@@ -915,8 +971,9 @@ $.myTripCancelFn = function(){
 };
 
 // 채팅 기능
-$.chatingFn = function(roomNo, {chatMemId, chatMemName, chatMemProfileimg}){
-	var webSocket; // 페이지가 바뀌지 않도록 주의!
+$.chatingFn = function(roomNo, {chatMemId, chatMemName, chatMemProfileimg, chatRoomNo}){
+	var chatingWebSocket; // 페이지가 바뀌지 않도록 주의!
+
 	var chatRoomContents = $(".chatRoomContents"); // 채팅방 > 채팅 표출 영역 EL
 	var chatInputMsg = $(".chatInputMsg"); // 채팅입력 EL
 	var sendChatMessage = $(".sendChatMessage"); // 전송버튼 EL
@@ -925,10 +982,10 @@ $.chatingFn = function(roomNo, {chatMemId, chatMemName, chatMemProfileimg}){
 	var endpoint = "/chat";
 	
 	// 공통 함수 선언
-	function connect(){
-		webSocket = new SockJS(endpoint); // 엔드 포인트
+	function chatingConnect(){
+		chatingWebSocket = new SockJS(endpoint); // 엔드 포인트
 		
-		webSocket.onopen = function(event) {
+		chatingWebSocket.onopen = function(event) {
 			console.log("WebSocket connection opened:", event);
 			var enterUser = `
 				<div class="memberInLog">
@@ -936,22 +993,23 @@ $.chatingFn = function(roomNo, {chatMemId, chatMemName, chatMemProfileimg}){
 						${chatMemName} 님이 입장하셨습니다.
 						</p>
 					<span class="inFlag" style="display: none;">in</span>
+					<span class="roomChkFlg" style="display: none;">${roomNo}</span>
 				</div>
 				,0
 			`;
-			webSocket.send(enterUser); // 기존 chatOpen 함수와 합침
+			chatingWebSocket.send(enterUser); // 기존 chatOpen 함수와 합침
 		};
 		
-		webSocket.onmessage = function(event) {
+		chatingWebSocket.onmessage = function(event) {
 			console.log("WebSocket message received:", event.data);
 			chatMessage(event, chatMemId); // event 매개변수를 chatMessage 함수에 전달
 		};
 		
-		webSocket.onclose = function(event) {
+		chatingWebSocket.onclose = function(event) {
 			console.log("WebSocket connection closed:", event);
 		};
 		
-		webSocket.onerror = function(event) {
+		chatingWebSocket.onerror = function(event) {
 			console.error("WebSocket error:", event);
 		};
 	}
@@ -960,7 +1018,25 @@ $.chatingFn = function(roomNo, {chatMemId, chatMemName, chatMemProfileimg}){
 	var parseHtmlConvert;
 	function chatMessage(event, id){ // event 매개변수 추가
 		var data = event.data;
+
+		// html 객체로 변환
+		parseHtmlConvert = $.parseHTML(data);
+		console.log("parseHtmlConvert : ", parseHtmlConvert);
+
+		// dataHtmlConvert는 배열이므로 첫 번째 요소에 대해 jQuery 객체로 변환
+		var dataHtmlConvert = $(parseHtmlConvert[0]);
+		console.log("dataHtmlConvert : ", dataHtmlConvert);
+
+		var roomChkFlg = dataHtmlConvert.find(".roomChkFlg").text();
+		console.log("roomNo : ", roomNo);
+		console.log("roomChkFlg : ", roomChkFlg);
+
 		var chatRoomContentsTxt = chatRoomContents.html();
+		if(roomChkFlg != roomNo) {
+			console.log("다른방 채팅입니다.");
+			return;
+		}
+		
 		chatRoomContents.html(chatRoomContentsTxt + "" + data);
 		
 		// 채팅방 채팅 내역, 날짜 박스 크기 같게 조절하기
@@ -980,13 +1056,6 @@ $.chatingFn = function(roomNo, {chatMemId, chatMemName, chatMemProfileimg}){
 			6. chatCnt (0)
 		*/
 
-		// html 객체로 변환
-		parseHtmlConvert = $.parseHTML(data);
-		console.log("parseHtmlConvert : ", parseHtmlConvert);
-
-		// dataHtmlConvert는 배열이므로 첫 번째 요소에 대해 jQuery 객체로 변환
-		var dataHtmlConvert = $(parseHtmlConvert[0]);
-		console.log("dataHtmlConvert : ", dataHtmlConvert);
 		var memberInLog = dataHtmlConvert.find(".inFlag").text();
 		console.log("memberInLog : ", memberInLog);
 		var memberOutLog = dataHtmlConvert.find(".outFlag").text();
@@ -1040,13 +1109,18 @@ $.chatingFn = function(roomNo, {chatMemId, chatMemName, chatMemProfileimg}){
 
 	// 채팅 입력시 실행되는 함수
 	var cnt = 0; // 현재 내가 채팅을 날린 '총 횟수'
-	function send({senderMemId, senderMemName, senderMemProfileimg}){
+	function chatingSend({senderMemId, senderMemName, senderMemProfileimg, senderRoomNo}){
 		cnt++;
 		var msg = chatInputMsg.val().trim();
 		console.log("msg : ", msg);
 		
 		if(msg == "") {
-			alert("채팅 메시지를 입력 후 전송해 주세요.");
+			//alert("채팅 메시지를 입력 후 전송해 주세요.");
+			Swal.fire({
+				title: "안내",
+				text: "채팅 메시지를 입력 후 전송해 주세요.",
+				icon: "info"
+			});
 			chatInputMsg.val("");
 			return false;
 		}
@@ -1054,6 +1128,7 @@ $.chatingFn = function(roomNo, {chatMemId, chatMemName, chatMemProfileimg}){
 		console.log("senderMemId : ", senderMemId);
 		console.log("senderMemName : ", senderMemName);
 		console.log("senderMemProfileimg : ", senderMemProfileimg);
+		console.log("senderRoomNo : ", senderRoomNo);
 
 		if(!senderMemId) {
 			senderMemId = "empty";
@@ -1065,8 +1140,8 @@ $.chatingFn = function(roomNo, {chatMemId, chatMemName, chatMemProfileimg}){
 			senderMemProfileimg = "empty";
 		}
 		
-		var innerTalkerMsgTxt = `${msg},${cnt},${senderMemId},${senderMemName},${senderMemProfileimg}`;
-		webSocket.send(innerTalkerMsgTxt);
+		var innerTalkerMsgTxt = `${msg},${cnt},${senderMemId},${senderMemName},${senderMemProfileimg},${senderRoomNo}`;
+		chatingWebSocket.send(innerTalkerMsgTxt);
 		chatInputMsg.val("");
 		
 		// 메시지 전송 후 채팅 영역 최하단으로 스크롤
@@ -1082,48 +1157,50 @@ $.chatingFn = function(roomNo, {chatMemId, chatMemName, chatMemProfileimg}){
 	}
 	
 	// 채팅방을 나갈 시 실행되는 함수
-	function disconnect(){
+	function chatingDisconnect(){
 		var leaveUser = `
 				<div class="memberOutLog">
 					<p style="display: inline-block;">
 						${chatMemName} 님이 퇴장하셨습니다.
 					</p>
 					<span class="outFlag" style="display: none;">out</span>
+					<span class="roomChkFlg" style="display: none;">${roomNo}</span>
 				</div>
 				,0
 			`;
-		webSocket.send(leaveUser);
-		webSocket.close();
+		chatingWebSocket.send(leaveUser);
+		chatingWebSocket.close();
 	}
 
 	// 연결
-	connect();
+	chatingConnect();
 
 	// 전역 변수 선언
 	var senderObj = {
 		senderMemId: chatMemId,
 		senderMemName: chatMemName,
-		senderMemProfileimg: chatMemProfileimg
+		senderMemProfileimg: chatMemProfileimg,
+		senderRoomNo: chatRoomNo
 	};
 
 	// 이벤트 핸들러 선언
 	sendChatMessage.click(function(){
-		send(senderObj);
+		chatingSend(senderObj);
 	});
 	
 	// 뒤로 돌아가기 버튼 클릭 시 채팅 웹 소켓 종료
 	moveBackList.click(function(){
-		disconnect();
+		chatingDisconnect();
 	});
 	
 	// 페이지를 떠날 때 웹 소켓 종료
 	$(window).on('unload', function() {
-	    disconnect();
+	    chatingDisconnect();
 	});
 	
 	// 다른 페이지로 이동할 때 웹 소켓 종료
 	$(window).on('beforeunload', function() {
-	    disconnect();
+	    chatingDisconnect();
 	});
 	
 	// 엔터키 입력시 채팅 전송
@@ -1190,8 +1267,40 @@ $.chatBoxEqualDateBoxFn = function(){
     eachCompareBoxHFn(innerLongtakeDialog);
 };
 
+// 찬섭 여행종료 추가
+$(".travelTheEndBtn").on("click", function() {
+	let plNoNo = $("#plNo").val();
+	Swal.fire({
+		title: "여행종료",
+		text: "정말로 여행을 종료하시겠습니까?",
+		icon: "question",
+		showDenyButton: true,
+		confirmButtonText: "예",
+		denyButtonText: "아니오",
+	}).then((result) => {
+		if(result.isConfirmed) {
+			$.travelTheEndFn(plNoNo);
+		} else if(result.isDenied) {
+			$.sweetAlertFn("여행종료", "취소되었습니다.", "success");
+		}
+	});
 
+});
 
+$.travelTheEndFn = function(plNo) {
+	$.ajax({
+		url:'/partner/travelTheEndAjax.do',
+		data:{"plNo" : plNo},
+		type:"get",
+		success : function(res) {
+			if(res === "OK") {
+				$.sweetAlertFn("여행종료", "여행을 종료하였습니다.", "success").then((result) => {
+					location.href="/partner/meetsquare.do?plNo=" + plNo;
+				});
+			}
+		}
+	});
+}
 
 // 찬섭 채팅 저장 추가
 
@@ -1285,18 +1394,19 @@ $.chatContDeleteFn = function(plNo) {
 	
 	chatContDeleteEl.on("click", function() {
 		$.sweetAlertConfirmFn("이전 채팅 삭제", "오늘 날짜보다 이전의 채팅을 삭제하시겠습니까?", "question")
-			.then((result) => {
+		.then((result) => {
 
 			// 위의 sweetAlertConfirmFn 결과가 '예'라면 채팅을 저장할지를 다시 묻는다. (아니오라면 아무일도 안 일어남)
 			if (result.isConfirmed) {
 				$.sweetAlertConfirmFn("채팅내역 저장", "지금까지의 채팅을 저장하시겠습니까?", "question")
-					.then((result) => {
+				.then((result) => {
 
 					// 위의 sweetAlertConfirmFn 결과가 '예'라면
 					if(result.isConfirmed) {
 
 						// 채팅을 저장하고,
-						$.chatContTxtDownAjax(plNo).then((result) => {
+						$.chatContTxtDownAjax(plNo)
+						.then((result) => {
 
 							// 채팅을 삭제한다
 							$.chatContDeleteAjax(plNo);
@@ -1307,7 +1417,36 @@ $.chatContDeleteFn = function(plNo) {
 						$.chatContDeleteAjax(plNo);
 					}
 				});
-			} 
+			}
+			 
 		});
 	});
 }
+
+// 일정공유 버튼을 클릭해서 pdf 다운로드
+$.planShareFn = function(plNo) {
+	let planShareEl = $(".planShare");
+	planShareEl.on("click", function() {
+		// alert("클릭됨" + plNo);
+		$.planShareAjax(plNo)
+	});
+};
+
+$.planShareAjax = function(plNo) {
+
+	Swal.fire({
+		title: "일정공유",
+		text: "해당 플랜에 대한 일정을 PDF형식으로 다운받으시겠습니까?",
+		icon: "info",
+		showDenyButton: true,
+		confirmButtonText: "예",
+		denyButtonText: "아니오",
+	}).then((result) => {
+		if(result.isConfirmed) {
+			location.href="/partner/planShare.do?plNo="+plNo;
+		} else if(result.isDenied) {
+			$.sweetAlertFn("일정공유", "일정공유를 취소합니다.", "info");
+		}
+	});
+	
+};

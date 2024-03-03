@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -58,68 +56,73 @@ public class ChatHandler extends TextWebSocketHandler {
 		Map<String, Object> chatMapSession = session.getAttributes();
 		MemberVO chatMember = (MemberVO) chatMapSession.get("sessionInfo");
 		
-		// 로그인한 아이디와 클라이언트로부터 서버로 보낸 메시지를 받음
-		log.info("아이디 "+chatMember.getMemId()+" 로 부터 이름이 "+chatMember.getMemName()+" 인 사람에게 메세지 '"+message.getPayload()+"' 받음");
-		
-		// 공통 변수 선언
-		String preChatTxt = message.getPayload();
-		String[] splitChatTxt = preChatTxt.split(",");
-		
-		String chatMessage = splitChatTxt[0].trim(); // 채팅 내용
-		
-		String chatCnt = splitChatTxt[1].trim(); // 채팅 횟수
-		int intChatCnt = Integer.parseInt(chatCnt);
-		String cntTxt = "<span class='myChatCnt' style='display:none;'>"+chatCnt+"</span>";
-		
-		log.info("채팅 내용 : {}", chatMessage);
-		log.info("채팅한 횟수 : {} 회", chatCnt);
-		
-		String chatMemid = "";
-		String chatMemName = "";
-		String chatMemProfileimg = "";
-		
-		if(intChatCnt == 0) { // 입장/퇴장할 때
-			for(WebSocketSession sess : chatSessionList) {
-				sess.sendMessage(new TextMessage(chatMessage + "" + cntTxt));
-			}
-		}
-		
-		if(intChatCnt >= 1) { // 처음 채팅할 때
-			chatMemid = splitChatTxt[2].trim(); // 채팅자 아이디
-			if(splitChatTxt[2].equals("empty")) {
-				chatMemid = "";
-			}
-			chatMemName = splitChatTxt[3].trim(); // 채팅자 이름
-			if(splitChatTxt[3].equals("empty")) {
-				chatMemName = "";
-			}
-			chatMemProfileimg = splitChatTxt[4].trim(); // 채팅자 프로필 사진 경로
-			if(splitChatTxt[4].equals("empty")) {
-				chatMemProfileimg = "";
+		if (chatMember != null) {
+			// 로그인한 아이디와 클라이언트로부터 서버로 보낸 메시지를 받음
+			log.info("아이디 "+chatMember.getMemId()+" 로 부터 이름이 "+chatMember.getMemName()+" 인 사람에게 메세지 '"+message.getPayload()+"' 받음");
+			
+			// 공통 변수 선언
+			String preChatTxt = message.getPayload();
+			String[] splitChatTxt = preChatTxt.split(",");
+			
+			String chatMessage = splitChatTxt[0].trim(); // 채팅 내용
+			
+			String chatCnt = splitChatTxt[1].trim(); // 채팅 횟수
+			int intChatCnt = Integer.parseInt(chatCnt);
+			String cntTxt = "<span class='myChatCnt' style='display:none;'>"+chatCnt+"</span>";
+			
+			log.info("채팅 내용 : {}", chatMessage);
+			log.info("채팅한 횟수 : {} 회", chatCnt);
+			
+			String chatMemid = "";
+			String chatMemName = "";
+			String chatMemProfileimg = "";
+			String chatRoomNo = "";
+			
+			if(intChatCnt == 0) { // 입장/퇴장할 때
+				for(WebSocketSession sess : chatSessionList) {
+					sess.sendMessage(new TextMessage(chatMessage + "" + cntTxt));
+				}
 			}
 			
-			ChatMembers chatmembers = new ChatMembers();
-			chatmembers.setChatMemid(chatMemid);
-			chatmembers.setChatMemName(chatMemName);
-			chatmembers.setChatMessage(chatMessage);
-			chatmembers.setChatMemProfileimg(chatMemProfileimg);
-			
-			// lock 획득
-	        lock.lock();
-	        try {
-	        	// 동시에 실행하면 안되는 코드
-	        	for(WebSocketSession sess : chatSessionList) {
-	        		StringBuffer result = messageSetting(sess, intChatCnt, chatmembers);
-	        		sess.sendMessage(new TextMessage(result));
-	        	}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				// lock 해제
-	            lock.unlock();
+			if(intChatCnt >= 1) { // 처음 채팅할 때
+				chatMemid = splitChatTxt[2].trim(); // 채팅자 아이디
+				if(splitChatTxt[2].equals("empty")) {
+					chatMemid = "";
+				}
+				chatMemName = splitChatTxt[3].trim(); // 채팅자 이름
+				if(splitChatTxt[3].equals("empty")) {
+					chatMemName = "";
+				}
+				chatMemProfileimg = splitChatTxt[4].trim(); // 채팅자 프로필 사진 경로
+				if(splitChatTxt[4].equals("empty")) {
+					chatMemProfileimg = "";
+				}
+				chatRoomNo = splitChatTxt[5].trim(); // 채팅방 번호
+				
+				ChatMembers chatmembers = new ChatMembers();
+				chatmembers.setChatMemid(chatMemid);
+				chatmembers.setChatMemName(chatMemName);
+				chatmembers.setChatMessage(chatMessage);
+				chatmembers.setChatMemProfileimg(chatMemProfileimg);
+				chatmembers.setChatRoomNo(chatRoomNo);
+				
+				// lock 획득
+				lock.lock();
+				try {
+					// 동시에 실행하면 안되는 코드
+					for(WebSocketSession sess : chatSessionList) {
+						StringBuffer result = messageSetting(sess, intChatCnt, chatmembers);
+						sess.sendMessage(new TextMessage(result));
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				} finally {
+					// lock 해제
+					lock.unlock();
+				}
+				
+				chatUser = chatmembers.getChatMemid();
 			}
-			
-			chatUser = chatmembers.getChatMemid();
 		}
 		
 	}
@@ -138,6 +141,8 @@ public class ChatHandler extends TextWebSocketHandler {
 		log.info("cntTxt : {}", cntTxt);
 		
 		String memIdTxt = "<span class='sendMemId' style='display: none;'>"+chatmembers.getChatMemid()+"</span>";
+		
+		String roomNoTxt = "<span class='roomChkFlg' style='display: none;'>"+chatmembers.getChatRoomNo()+"</span>";
 		
 		String type = "outer";
 		Map<String, Object> chatMembers = sess.getAttributes();
@@ -188,6 +193,7 @@ public class ChatHandler extends TextWebSocketHandler {
 		
 		sb.append(cntTxt);
 		sb.append(memIdTxt);
+		sb.append(roomNoTxt);
 		
 		sb.append("</div>");
 		

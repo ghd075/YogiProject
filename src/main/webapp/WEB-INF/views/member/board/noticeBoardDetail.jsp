@@ -29,7 +29,8 @@
                         <li>
                             <div class="textDropVerticalAlign">
                                 <span class="textDrop">
-                                    ${noticeDetail.boTitle }
+                                	<%-- <c:out value="${noticeDetail.boTitle }" /> --%>
+                                	${noticeDetail.boTitle }
                                 </span>
                                 <span>${noticeDetail.boWriter }</span>
                                 <fmt:parseDate var="detailParseData" value="${noticeDetail.boDate }" pattern="yyyy-MM-dd HH:mm:ss" />
@@ -43,6 +44,7 @@
                             </div>
                         </li>
                         <li>
+                            <%-- <div class="form-control" style="overflow: auto; position: relative; min-height: 380px;"><c:out value="${noticeDetail.boContent }" /></div> --%>
                             <div class="form-control" style="overflow: auto; position: relative; min-height: 380px;">${noticeDetail.boContent }</div>
                         </li>
                         

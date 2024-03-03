@@ -17,6 +17,7 @@ import kr.or.ddit.mapper.JourneyMapper;
 import kr.or.ddit.users.myplan.service.JourneyService;
 import kr.or.ddit.users.myplan.vo.JourneyinfoVO;
 import kr.or.ddit.utils.ServiceResult;
+import kr.or.ddit.vo.RealTimeSenderVO;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -71,6 +72,7 @@ public class JourneyServiceImpl implements JourneyService {
 	@Override
 	public void informationList(Map<String, Object> param) {
 		/** 파라미터 조회 */
+		
 		/** 파라미터 정의 */
 		List<JourneyinfoVO> journeyList = new ArrayList<JourneyinfoVO>();
 		

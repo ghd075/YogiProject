@@ -1,0 +1,173 @@
+@charset "UTF-8";
+ .emptySpace{
+     min-height: 1150px;
+     padding-top: 0px;
+     background-color: rgb(239, 241, 242);
+  }
+  #container-top{
+    float: left;
+    width: 1590px;
+    margin-left: 150px;
+    padding-top: 130px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+   .top{
+    height: 60px;
+    border-radius: 2px solid black;
+    padding-top: 16px;
+    font-size: 20px;
+  }
+   .material-symbols-outlined{
+    float : left;
+    padding-top: 3px;
+  } 
+  
+  #container-left{
+   width: 800px;
+   height: 600px;
+   display: inline-block;
+   margin-left: 250px;
+   margin-top: 50px;
+   margin-right: 50px;
+   /* background-color: lightgray; */
+  }
+  
+  
+  #container-left .table{
+    width: 730px;
+    padding-left: 40px;
+  }
+  
+  #container-left .table thead{
+    text-align: center;
+  }
+  #container-left .table tbody{
+    text-align: right;
+  }
+  
+  #container-right{
+   width: 500px;
+   height: 430px;
+   display: inline-block;
+   margin-top: 50px;
+   background-color: lightgray;
+   float: right;
+   margin-right: 300px;
+   border-radius: 15px;
+  }
+  #container-right .col-sm-12{
+    height: 50px;
+  }
+  
+  
+  .tableHead{
+    font-size: 18px;
+    font-weight: bolder;
+     border-bottom: 1px solid lightgray; 
+   border-left : 10px solid lightgray;
+    width: 260px;
+    height : 35px;
+    display: inline-block;
+    text-align: center;
+    background-color: white;
+  }
+  .total{
+    height : 90px;
+    width : 480px;
+    border-bottom: 1px solid gray;
+    margin-left: 10px;
+  }
+  .totalPrice{
+     width: 480px;
+  }
+  .totalPrice .total1{
+     margin-right: 180px;
+     margin-left: 10px;
+  }
+  .totalPrice .total2{
+  }
+  
+  .paymethod{
+     margin-top: 30px;
+     height: 50px;
+  }
+  
+  .paymethod input{
+    display: inline-block;
+  }
+  
+  #container-right .bottom{
+     margin-top : 30px;
+     padding-top : 20px;
+     height : 150px;
+     background: rgb(239, 241, 242);
+  }
+  
+  #container-right .bottom2{
+     height : 40px;
+     background: rgb(239, 241, 242);
+  }
+  
+  .bottom2 .col-sm-5{
+   padding-top: 10px;
+   margin-left: 13px;
+   text-align: center;
+   margin-top: 10px;
+   cursor: pointer;
+   display: inline-block;
+  }
+  
+  .rowtable .table table{
+    background: lightgray;
+  }
+
+  
+ 
+  
+
+   
+
+  
+ 
+  
+ 
+
+
+ 
+
+ 
+ 
+
+
+ 
+
+
+    
+    
+ 
+ 
+
+  
+ 
+  
+  
+
+  
+ 
+  
+ 
+
+    
+   
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

@@ -18,15 +18,10 @@
     display: inline-block;
     /* margin-right: 10px; */
   }
-/*   .form-check{
-    padding-left: 100px;
-  }
-  .form-check-input{
-    padding-left: 100px;
-  }
-  .form-check-label{
-    padding-left: 100px;
-  } */
+
+.popoverSpan{
+ cursor: pointer;	
+}
   
   #container-left{
    width: 290px;

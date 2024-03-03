@@ -1,0 +1,17 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;500&display=swap');
+
+#loading_Bar {
+	position: absolute;
+	height: 5px;
+	background-color: #fc3;
+}
+
+.width {
+	width: 1200px;
+	margin: 0 auto;
+}
+
+body {
+	font-family: 'Noto Sans KR';
+}

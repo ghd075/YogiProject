@@ -90,7 +90,10 @@ public class PlannerDetailServiceImpl implements PlannerDetailService{
 //		joinStatus = "Y";
 		
 		// 현재원 겟
-		int mgCurNum = plannerDetailMapper.getCurNum(plNo); 
+		int mgCurNum = plannerDetailMapper.getCurNum(plNo);
+		
+		//mategroup 2단계 판별
+		String mategroupStep = plannerDetailMapper.isRecruitEnd(plNo);
 		
 		/** 반환자료 저장 */
 		param.put("pvo", pvo);
@@ -99,6 +102,7 @@ public class PlannerDetailServiceImpl implements PlannerDetailService{
 		param.put("isJoined", isJoined);
 		param.put("joinStatus", joinStatus);
 		param.put("mgCurNum", mgCurNum);
+		param.put("mategroupStep", mategroupStep);
 		
 		return param;
 	}

@@ -23,6 +23,15 @@
 			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
+		
+		<!-- 404에러처리를 위해서 404에러떄는 예외오류를 발생시켜준다. -->
+		<init-param>
+			<param-name>throwExceptionIfNoHandlerFound</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		
+		<async-supported>true</async-supported>
+				
 	</servlet>
 		
 	<servlet-mapping>
@@ -58,5 +67,10 @@
 		<filter-name>MultipartFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+	<error-page>
+		<error-code>403</error-code>
+		<location>/error/error?code=403</location>
+	</error-page>
 
 </web-app>

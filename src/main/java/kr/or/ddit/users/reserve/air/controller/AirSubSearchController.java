@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.ddit.users.login.vo.MemberVO;
+import kr.or.ddit.users.myplan.vo.PlannerVO;
+import kr.or.ddit.users.reserve.air.service.AirReserveService;
 import kr.or.ddit.users.reserve.air.service.AirSearchService;
 import kr.or.ddit.users.reserve.air.utils.DurationSort;
 import kr.or.ddit.users.reserve.air.utils.PriceSort;
@@ -28,6 +32,10 @@ public class AirSubSearchController {
 	
 	@Inject
 	private AirSearchService searchService;
+	
+	@Inject
+	private AirReserveService reserveService;
+	
 	private List<RoundTripVO> roundTripList;
 
 	@ResponseBody
@@ -37,6 +45,7 @@ public class AirSubSearchController {
 	  System.out.println("timeSearch진입!");
 	  Map<String, Object> map = new HashMap<String, Object>();
 	  FlightVO flightVO = (FlightVO) session.getAttribute("searchInfo");
+	  MemberVO memberVO = (MemberVO) session.getAttribute("sessionInfo");
 	  
 	  //서브 검색조건별로 세팅
 	  if(StringUtils.isNotBlank(depTime) && StringUtils.isBlank(arrTime)) {
@@ -97,6 +106,22 @@ public class AirSubSearchController {
 			map.put("pageList", rt);
 			map.put("sortVO", sortVO);
 			map.put("searchInfo", flightVO);
+		}
+	  
+		//찜 기능 구현을 위한 html제작
+		Map<String, Object> groupMap = reserveService.selectPoint(memberVO.getMemId());
+		List<PlannerVO> groupList =  (List<PlannerVO>) groupMap.get("groupList");
+		if(groupMap.get("groupList") == null) {
+			map.put("popover", "<span class='popoverSpan'>개인장바구니</span>");	
+		}else {
+			String html = "<span class='popoverSpan'>개인장바구니</span><hr>";
+		    for(int i = 0; i < groupList.size(); i++) {
+		    	html += "<span class='popoverSpan' id='"+groupList.get(i).getPlNo()+"'>"+groupList.get(i).getPlTitle()+"</span>";
+		    	if(i != (groupList.size() - 1)) {
+		    		html += "<hr>";  
+				}
+		    }	
+		    map.put("popover", html);
 		}
 	  return map;
 	}

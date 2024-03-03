@@ -19,6 +19,9 @@ public class PaginationInfoVO<T> {
 	private List<T> dataList;	// 결과를 넣을 데이터 리스트
 	private String searchType;	// 검색 타입(제목, 작성자, 제목+작성자 등등)
 	private String searchWord;	// 검색 단어(키워드)
+	private String memId;				// 회원 아이디
+	
+	
 	
 	public PaginationInfoVO() {}
 	public PaginationInfoVO(int screenSize, int blockSize) {
@@ -45,10 +48,12 @@ public class PaginationInfoVO<T> {
 		
 		html.append("<ul class='pagination pagination-sm m-0'>");
 		
+		//이전페이지(한 블록단위 이동)
 		if(startPage > 1) {
 			html.append("<li class='page-item'><a href='javascript:void(0);' class='page-link' data-page='"+(startPage - blockSize)+"'>Prev</a></li>");
 		}
 		
+		//blockSize만큼 페이지 출력
 		for(int i = startPage; i<= (endPage < totalPage ? endPage : totalPage); i++) {
 			if(i == currentPage) {
 				html.append("<li class='page-item active'><span class='page-link'>"+i+"</span></li>");
@@ -57,6 +62,7 @@ public class PaginationInfoVO<T> {
 			}
 		}
 		
+		//다음 페이지(한페이지 이동)
 		if(endPage < totalPage) {
 			html.append("<li class='page-item'><a href='javascript:void(0);' class='page-link' data-page='"+(endPage+1)+"'>Next</a></li>");
 		}

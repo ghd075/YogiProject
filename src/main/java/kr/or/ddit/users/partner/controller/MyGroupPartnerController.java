@@ -1,18 +1,18 @@
 package kr.or.ddit.users.partner.controller;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
+import org.apache.commons.io.FileUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -52,9 +52,12 @@ public class MyGroupPartnerController {
 			) {
 		/** 자료 수집 및 정의 */
 		Map<String, Object> param = new HashMap<String, Object>();
+		
 		MemberVO memberVO = (MemberVO) session.getAttribute("sessionInfo");
-		String memId = memberVO.getMemId(); // 작성자
-		param.put("memId", memId);
+		if(memberVO != null) {
+			String memId = memberVO.getMemId(); // 작성자
+			param.put("memId", memId);
+		}
 		
 		/** 서비스 호출 */
 		myTripService.myTripList(param);
@@ -63,7 +66,6 @@ public class MyGroupPartnerController {
 		List<PlanerVO> planerList = (List<PlanerVO>) param.get("planerList");
 		
 		/** 자료 검증 */
-		log.info("memId : " + memId);
 		log.info("planerList : " + planerList.toString());
 		
 		/** 자료 반환 */ 
@@ -357,8 +359,8 @@ public class MyGroupPartnerController {
 	        ra.addFlashAttribute("message", message);
 	        ra.addFlashAttribute("msgflag", "su");
 	    }else { // 업데이트 실패
-	        model.addAttribute("message", message);
-	        model.addAttribute("msgflag", "fa");
+	        ra.addFlashAttribute("message", message);
+	        ra.addFlashAttribute("msgflag", "fa");
 	    }
 
 	    /** 자료 반환 */
@@ -366,13 +368,38 @@ public class MyGroupPartnerController {
 		
 	}
 	
+	@RequestMapping(value = "/planShare.do", method = RequestMethod.GET)
+	public ResponseEntity<Void> planShare(
+			HttpServletResponse response,
+			HttpServletRequest request, @RequestParam("plNo") int plNo) throws IOException {
+		ResponseEntity<byte[]> entity = null;
+	    Map<String, Object> param = new HashMap<>();
+	    param.put("plNo", plNo);
+	    Map<String, Object> result = myTripService.planShare(request, param);
+	    
+	    String filename = (String) result.get("filename");
+	    File saveFile = new File(request.getServletContext().getRealPath("/resources/pdf/"+plNo + "/"+filename));
+	    
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+
+		// try with resource
+		// () 안에 명시한 객체는 finally로 최종 열린 객체에 대한 close를 처리하지 않아도 자동 close()가 이루어진다.
+		try(
+				OutputStream os = response.getOutputStream();
+		) {
+			FileUtils.copyFile(saveFile, os);
+		} 
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
+
 	// 채팅내역 다운로드 메소드
 	@GetMapping("/chatContTxtDown.do")
 	public ResponseEntity<byte[]> chatContTxtDown(@RequestParam int plNo) {
 		log.debug("chatContTxtDown() 실행...!");
 		
 		try {
-		
+			
 			/** 자료 수집 및 정의 */
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("plNo", plNo);
@@ -388,19 +415,19 @@ public class MyGroupPartnerController {
 			
 			
 			HttpHeaders headers = new HttpHeaders();
-	        headers.setContentType(MediaType.parseMediaType("text/plain"));
+			headers.setContentType(MediaType.parseMediaType("text/plain"));
 			/** 자료 반환 */	
-	        if(contentBytes == null) {
-	        	return ResponseEntity.ok().body(null);
+			if(contentBytes == null) {
+				return ResponseEntity.ok().body(null);
 			} else {
 				return ResponseEntity.ok()
 						.headers(headers)
 						.body(contentBytes);
 			}
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-	    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
 		
 	}
 	
@@ -426,6 +453,13 @@ public class MyGroupPartnerController {
 		
 		/** 자료 반환 */	
 		return ResponseEntity.ok(param);
+	}
+	
+	@GetMapping("/travelTheEndAjax.do")
+	@ResponseBody
+	public ServiceResult travelTheEndAjax(@RequestParam int plNo) {
+		ServiceResult result = myTripService.travelTheEnd(plNo);
+		return result;
 	}
 	
 }

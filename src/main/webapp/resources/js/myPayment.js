@@ -10,7 +10,12 @@ $.myPaymentPointChgFn = function(index){
 		var selectedPayValue = $("input[name='pay']:checked").val(); // 라디오에 있는 value 값을 들고옴
 		var memPoint = $("#memPointSpan").text(); // 현재 보유하고 있는 값의 정보
 		if(!selectedPayValue) { // 라디오 버튼을 선택하지 않아서 value값이 비어 있는 falsy한 값.
-			alert("금액을 선택해 주세요.");
+			//alert("금액을 선택해 주세요.");
+			Swal.fire({
+				title: "안내",
+				text: "금액을 선택해 주세요.",
+				icon: "info"
+			});
 			return false;
 		}
 		
@@ -177,8 +182,6 @@ function payment(index) {
 
 					console.log("넘기려고 하는 데이터 값 : ", data);
 					processPayment(data, index);
-					location.reload();
-
 				}
 			});
 			var msg = '결제가 완료되었습니다.';
@@ -186,7 +189,39 @@ function payment(index) {
 			var msg = '결제에 실패하였습니다.';
 			msg += '에러내용 : ' + rsp.error_msg;
 		}
-		alert(radioVal + "원 " + msg);
+		//alert(radioVal + "원 " + msg);
+		// Swal.fire({
+		// 	title: "결제",
+		// 	showDenyButton: true,
+		// 	text: radioVal + "원 " + msg,
+		// 	icon: "info"
+		// }).then((result) => {
+		// 	if (result.isConfirmed) {
+		// 		location.reload();
+		// 	}
+		// });
+		let timerInterval;
+		Swal.fire({
+			title: "결제",
+			html: "로딩 중입니다.",
+			timer: 1000,
+			timerProgressBar: true,
+			didOpen: () => {
+				Swal.showLoading();
+				const timer = Swal.getPopup().querySelector("b");
+				timerInterval = setInterval(() => {
+					timer.textContent = `${Swal.getTimerLeft()}`;
+				}, 100);
+			},
+			willClose: () => {
+				clearInterval(timerInterval);
+			}
+		}).then((result) => {
+			if (result.dismiss === Swal.DismissReason.timer) {
+				console.log("타이머에 의해 닫혔습니다.");
+				location.reload();
+			}
+		});
 	});
 };
 
@@ -230,11 +265,20 @@ function processPayment(data, index) {
       var res = data.res;
 
       if (res > 0) {
-        alert('포인트 결제 내역 저장 성공');
-
-      } else {
-        console.log(res);
-        alert('포인트 결제 내역 저장 실패');
+        //alert('포인트 결제 내역 저장 성공');
+				// Swal.fire({
+				// 	title: "안내",
+				// 	text: '포인트 결제 내역 저장 성공',
+				// 	icon: "info"
+				// });
+			} else {
+				console.log(res);
+				//alert('포인트 결제 내역 저장 실패');
+				// Swal.fire({
+				// title: "안내",
+				// text: '포인트 결제 내역 저장 실패',
+				// icon: "info"
+				// });
       }
     }
   });

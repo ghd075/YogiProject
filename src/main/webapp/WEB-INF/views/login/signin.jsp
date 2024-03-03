@@ -26,6 +26,8 @@
         <!-- 스위트 얼럿 모듈 -->
     	<link href="${contextPath }/resources/css/sweetalert2.min.css" rel="stylesheet" />
     	<script defer src="${contextPath }/resources/js/sweetalert2.all.min.js"></script>
+    	<!-- sockjs -->
+		<script src="${contextPath }/resources/js/sockjs.min.js"></script>
 
         <c:if test="${not empty message }">
 		    <script>
@@ -146,7 +148,69 @@
                     if(!idFlag) return;
                     var pwFlag = $.falsyCheckFn(memPw, "비밀번호");
                     if(!pwFlag) return;
-                    loginForm.submit();
+                    
+                 	// 실시간 알림 - 로그인 내용 저장 시작
+           	        var realrecIdArr; // 모든 유저를 대상으로 알림
+           	        $.ajaxMembersIdListGetFn(function(result){
+           	        	
+           	        	var loginMemVO = {
+           	        		memId : memId.val(),
+           	        		memPw : memPw.val()
+           	        	};
+           	        	console.log("loginMemVO : ", loginMemVO);
+           	        	
+           	        	$.ajax({
+           	        		 type : "get",
+	           	             url : "/loginMemInfoRtAlertSaveInfo.do",
+	           	             data : loginMemVO,
+	           	             dataType : "json",
+	           	             success : function(res){
+	           	                console.log("res : ", res);
+	           	                
+		           	        	realrecIdArr = result;
+		           		        console.log("realrecIdArr : ", realrecIdArr);
+		           		        
+		           		        var realsenId = res.memId; // 발신자 아이디
+		           		        var realsenName = res.memName; // 발신자 이름
+		           		        var realsenTitle = "로그인"; // 실시간 알림 제목
+		           		        var realsenContent = realsenName+"("+realsenId+")님이 로그인하였습니다."; // 실시간 알림 내용
+		           		        var realsenType = "logininfo"; // 정보
+		           		        var realsenReadyn = "N"; // 안 읽음
+		           		        var realsenUrl = "empty"; // 갈데 없음
+		           		        
+		           		  		// db에 저장하고 1번만 읽고 바로 realsenReadyn = N을 realsenReadyn = Y로 처리한다.
+		           		        // 로그아웃 시 해당 정보를 삭제해야 한다.
+		           		        
+		           		        var dbSaveFlag = true; // db에 저장
+		    			        var userImgSrc = res.memProfileimg; // 유저 프로파일 이미지 정보
+		    			        var realrecNo = "empty";
+		           		        
+		    			        var rtAlert = {
+		       			        	"realrecIdArr": realrecIdArr,
+		       			        	"realsenId": realsenId,
+		       			        	"realsenName": realsenName,
+		       			        	"realsenTitle": realsenTitle,
+		       			        	"realsenContent": realsenContent,
+		       			        	"realsenType": realsenType,
+		       			        	"realsenReadyn": realsenReadyn,
+		       			        	"realsenUrl": realsenUrl,
+		       			        	"realsenPfimg": userImgSrc
+		       			        };
+		           		        console.log("login > rtAlert : ", rtAlert);
+		           		        
+		           		        $.realTimeAlertWebSocketFn(rtAlert, dbSaveFlag, userImgSrc, realrecNo);
+		           		        
+	           	             }
+           	        	});
+           	        	
+           		        
+           	        });
+           	  		// 실시간 알림 - 로그인 내용 저장 끝
+           	  		
+           	  		// 로그인 처리
+           	  		setTimeout(()=>{
+                        loginForm.submit();           	  			
+           	  		}, 2000);
                 });
 
             });

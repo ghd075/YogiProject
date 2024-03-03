@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -13,7 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import kr.or.ddit.users.login.vo.MemberVO;
+import kr.or.ddit.users.myplan.vo.PlannerVO;
+import kr.or.ddit.users.reserve.air.service.AirReserveService;
 import kr.or.ddit.users.reserve.air.service.AirSearchService;
 import kr.or.ddit.users.reserve.air.utils.DurationSort;
 import kr.or.ddit.users.reserve.air.utils.PriceSort;
@@ -30,6 +31,10 @@ public class AirSearchController {
 
 	@Inject
 	private AirSearchService searchService;
+	
+	@Inject
+	private AirReserveService reserveService;
+	
 	private List<RoundTripVO> roundTripList;
 	
 	@RequestMapping(value = "/form.do", method = RequestMethod.GET)
@@ -46,11 +51,12 @@ public class AirSearchController {
 	public String list(FlightVO flightVO, HttpSession session, Model model) {
 		log.debug("list() 진입!");
 		FlightVO searchVO = (FlightVO) session.getAttribute("searchInfo");
+		MemberVO memberVO = (MemberVO) session.getAttribute("sessionInfo");
 		if(searchVO != null) {
 		    session.removeAttribute("searchInfo");
 		}
 		
-		//최초 기본검색조건 설정
+		//1.최초 기본검색조건 설정
 		log.debug("flightVO : "+flightVO);
 		flightVO.setTotalCnt(flightVO.getAdultCnt()+flightVO.getYuaCnt()+flightVO.getSoaCnt());
 		
@@ -58,14 +64,14 @@ public class AirSearchController {
 		mapper.setDepAirportCode(flightVO, flightVO.getFlightDepairport());
 		mapper.setArrAirportCode(flightVO, flightVO.getFlightArrairport());
 		
-		//최초 기본검색조건 저장
+		//2.최초 기본검색조건 저장
 		session.setAttribute("searchInfo", flightVO);
 		
-		//왕복항공편 검색
+		//3.왕복항공편 검색
 		roundTripList = new ArrayList<RoundTripVO>(); 
 		roundTripList = searchService.selectAllRoundTripFlight(flightVO, session, "main");
 		if(roundTripList == null || roundTripList.size() == 0) {
-			model.addAttribute("msg", "NO");
+			model.addAttribute("message", "NO");
 		}else {
 			SortVO sortVO = searchService.getSortVO();
 			session.setAttribute("sortVO", sortVO);
@@ -77,8 +83,24 @@ public class AirSearchController {
 				r = roundTripList.get(i);
 				rt.add(r);
 			}
-			session.setAttribute("roundTripList", roundTripList);  //이미 검색된 값이 존재해도 덮어쓰기
+			//session.setAttribute("roundTripList", roundTripList);  //이미 검색된 값이 존재해도 덮어쓰기
 			model.addAttribute("pageList", rt);
+			
+			//4.찜 기능 구현을 위한 html제작
+			Map<String, Object> groupMap = reserveService.selectPoint(memberVO.getMemId());
+			List<PlannerVO> groupList =  (List<PlannerVO>) groupMap.get("groupList");
+			if(groupMap.get("groupList") == null) {
+				model.addAttribute("popover", "<span class='popoverSpan'>개인장바구니</span>");	
+			}else {
+				String html = "<span class='popoverSpan'>개인장바구니</span><hr>";
+			    for(int i = 0; i < groupList.size(); i++) {
+			    	html += "<span class='popoverSpan' id='"+groupList.get(i).getPlNo()+"'>"+groupList.get(i).getPlTitle()+"</span>";
+			    	if(i != (groupList.size() - 1)) {
+			    		html += "<hr>";  
+					}
+			    }	
+				model.addAttribute("popover", html);
+			}
 		}
 	   return "reserve/air/list";
 	}
@@ -90,6 +112,7 @@ public class AirSearchController {
 	public Map<String, Object> moreList(HttpSession session, String type) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		FlightVO searchVO = (FlightVO) session.getAttribute("searchInfo");
+		MemberVO memberVO = (MemberVO) session.getAttribute("sessionInfo");
 		if(searchVO == null) {   
 			log.info("세션에 검색정보가 없습니다!");
 			map.put("msg", "NO");
@@ -114,7 +137,7 @@ public class AirSearchController {
 		}else {
 			log.debug("정렬type : "+type);
 			log.debug("정렬값이 없거나 올바른 정렬값이 아닙니다.");
-			map.put("msg", "NO");
+			map.put("message", "NO");
 			return map;
 		}
 		//출력 레코드 수 증가
@@ -129,6 +152,22 @@ public class AirSearchController {
 		}
 		map.put("pageList", rt);
 		map.put("sortVO", sortVO);
+		
+		//찜 기능 구현을 위한 html제작
+		Map<String, Object> groupMap = reserveService.selectPoint(memberVO.getMemId());
+		List<PlannerVO> groupList =  (List<PlannerVO>) groupMap.get("groupList");
+		if(groupMap.get("groupList") == null) {
+			map.put("popover", "<span class='popoverSpan'>개인장바구니</span>");	
+		}else {
+			String html = "<span class='popoverSpan'>개인장바구니</span><hr>";
+		    for(int i = 0; i < groupList.size(); i++) {
+		    	html += "<span class='popoverSpan' id='"+groupList.get(i).getPlNo()+"'>"+groupList.get(i).getPlTitle()+"</span>";
+		    	if(i != (groupList.size() - 1)) {
+		    		html += "<hr>";  
+				}
+		    }	
+		    map.put("popover", html);
+		}
 		return map;
 	}
 	
@@ -139,6 +178,7 @@ public class AirSearchController {
 	public Map<String, Object> shortestDurationSort(HttpSession session, String type) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		FlightVO searchVO = (FlightVO) session.getAttribute("searchInfo");
+		MemberVO memberVO = (MemberVO) session.getAttribute("sessionInfo");
 		if(searchVO == null) {   
 			log.info("세션에 검색정보가 없습니다!");
 			map.put("msg", "NO");
@@ -176,6 +216,22 @@ public class AirSearchController {
 		}
 		map.put("pageList", rt);
 		map.put("sortVO", sortVO);
+		
+		//찜 기능 구현을 위한 html제작
+		Map<String, Object> groupMap = reserveService.selectPoint(memberVO.getMemId());
+		List<PlannerVO> groupList =  (List<PlannerVO>) groupMap.get("groupList");
+		if(groupMap.get("groupList") == null) {
+			map.put("popover", "<span class='popoverSpan'>개인장바구니</span>");	
+		}else {
+			String html = "<span class='popoverSpan'>개인장바구니</span><hr>";
+		    for(int i = 0; i < groupList.size(); i++) {
+		    	html += "<span class='popoverSpan' id='"+groupList.get(i).getPlNo()+"'>"+groupList.get(i).getPlTitle()+"</span>";
+		    	if(i != (groupList.size() - 1)) {
+		    		html += "<hr>";  
+				}
+		    }	
+		    map.put("popover", html);
+		}
 		return map;
 	}
 	

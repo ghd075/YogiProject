@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -19,9 +20,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import kr.or.ddit.users.login.vo.MemberVO;
 import kr.or.ddit.users.myplan.service.JourneyService;
 import kr.or.ddit.users.myplan.vo.JourneyinfoVO;
 import kr.or.ddit.utils.ServiceResult;
+import kr.or.ddit.vo.RealTimeSenderVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -35,7 +38,9 @@ public class InformationMyplanController {
 	// 마이 플랜 > 여행 정보 페이지 이동
 	@CrossOrigin(origins = "http://localhost")
 	@RequestMapping(value = "/info.do", method = RequestMethod.GET)
-	public String information(Model model) {
+	public String information(
+			Model model
+			) {
 		/** 자료 수집 및 정의 */
 		Map<String, Object> param = new HashMap<String, Object>();
 		
@@ -47,7 +52,7 @@ public class InformationMyplanController {
 		List<JourneyinfoVO> journeyList = (List<JourneyinfoVO>) param.get("journeyList");
 		
 		/** 자료 검증 */
-		log.info("journeyList : " + journeyList.toString());
+		log.info("journeyList : {}", journeyList);
 		
 		/** 자료 반환 */
 		model.addAttribute("journeyList", journeyList);

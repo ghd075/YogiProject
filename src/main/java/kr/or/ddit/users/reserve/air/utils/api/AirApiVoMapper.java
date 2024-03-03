@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import kr.or.ddit.users.mypage.vo.PayHistoryVO;
 import kr.or.ddit.users.reserve.air.vo.FlightVO;
 import kr.or.ddit.users.reserve.air.vo.SearchVO;
 
@@ -203,7 +205,7 @@ public class AirApiVoMapper {
 		}
 	}
 	
-	//항공사 로고 경로 설정을 위한 메서드
+	//항공사 로고 경로 설정을 위한 메서드1(overload)
 	public static void setAirlineLogoURL(String airlineName, SearchVO searchVO) {
 		 switch(airlineName) {
 		    case "아시아나항공" : searchVO.setAirlineLogo("/resources/images/air/list/아시아나항공.PNG"); break;
@@ -220,6 +222,24 @@ public class AirApiVoMapper {
 		    default : break;
 	     }
      }
+	
+	//항공사 로고 경로 설정을 위한 메서드2(overload)
+	public static void setAirlineLogoURL(String airlineName, PayHistoryVO payVO) {
+		switch(airlineName) {
+		case "아시아나항공" : payVO.setAirlineLogo("/resources/images/air/list/아시아나항공.PNG"); break;
+		case "에어부산" : payVO.setAirlineLogo("/resources/images/air/list/에어부산.PNG"); break;
+		case "에어서울" : payVO.setAirlineLogo("/resources/images/air/list/에어서울.PNG"); break;
+		case "이스타항공" : payVO.setAirlineLogo("/resources/images/air/list/이스타항공.PNG"); break;
+		case "플라이강원" : payVO.setAirlineLogo("/resources/images/air/list/플라이강원.PNG"); break;
+		case "하이에어" : payVO.setAirlineLogo("/resources/images/air/list/하이에어.PNG"); break;
+		case "제주항공" : payVO.setAirlineLogo("/resources/images/air/list/제주항공.PNG"); break;
+		case "진에어" : payVO.setAirlineLogo("/resources/images/air/list/진에어.PNG"); break;
+		case "대한항공" : payVO.setAirlineLogo("/resources/images/air/list/대한항공.PNG"); break;
+		case "티웨이항공" : payVO.setAirlineLogo("/resources/images/air/list/티웨이항공.PNG"); break;
+		case "에어로케이" : payVO.setAirlineLogo("/resources/images/air/list/에어로케이.PNG"); break;
+		default : break;
+		}
+	}
 
 
 }

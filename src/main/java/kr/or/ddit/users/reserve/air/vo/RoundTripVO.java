@@ -20,6 +20,11 @@ public class RoundTripVO {
 	private long aveDurationMill;    //평균 운항시간(비교기준)
 	private String totalDuration;    //총 운항시간
 	
+	//3.장바구니정보
+	private int totalCnt;   //총 탑승인원
+	private String cartairStatus;  //결제여부
+	
+	
 	public void setRoundTripPrice(int depPrice, int arrPrice) {
 		this.roundTripPrice = depPrice + arrPrice;
 	}

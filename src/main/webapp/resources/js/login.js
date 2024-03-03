@@ -166,7 +166,12 @@ $.findChkFn = function(findOutObj, {url, msgEl, msg}){
 	                    if(pwChkFlag) {
 	                        chgPwForm.submit();
 	                    }else {
-	                        alert("비밀번호가 일치하는지 확인해주세요.");
+	                        //alert("비밀번호가 일치하는지 확인해주세요.");
+	                        Swal.fire({
+					            title: "안내",
+					            text: "비밀번호가 일치하는지 확인해주세요.",
+					            icon: "info"
+					        });
 	                    }
 					});
                 }

@@ -1,7 +1,11 @@
 package kr.or.ddit.users.partner.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 
 import kr.or.ddit.users.partner.vo.PlanerVO;
 import kr.or.ddit.utils.ServiceResult;
@@ -21,5 +25,7 @@ public interface MyTripService {
 	public void groupRecruitEnded(Map<String, Object> param);
 	public void chatContTxtDown(Map<String, Object> param) ;
 	public void chatContDelete(Map<String, Object> param);
+	public Map<String, Object> planShare(HttpServletRequest request, Map<String, Object> param) throws IOException;
+	public ServiceResult travelTheEnd(int plNo);
 
 }

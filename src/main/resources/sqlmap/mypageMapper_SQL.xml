@@ -55,5 +55,55 @@
 		WHERE
 		    mem_id = #{memId}
 	</update>
+	
+	<select id="getRtAlertList" parameterType="String" resultType="rtsenderVO">
+		select a.*
+		     , b.realrec_no
+		     , b.realrec_id
+		     , b.realsen_readyn
+		  from realtimesender a
+		     , realtimereceiver b
+		 where 1=1
+		   and a.realsen_no = b.realsen_no
+		   and b.realsen_readyn = 'Y'
+		   and b.realrec_id = #{memId}
+		   order by a.realsen_no desc
+	</select>
+	
+	<delete id="rtAlertOneDelete" parameterType="int">
+		DELETE FROM realtimereceiver
+		WHERE
+		    realrec_no = #{realrecNo}
+	</delete>
+	
+	<select id="getQnaList" parameterType="String" resultType="kr.or.ddit.users.board.vo.QuestionVO" >
+		select
+		bo_no 
+		,	bo_title
+		,	cont
+		,	bo_date
+		,	bo_content
+		,	answer
+		,	bo_answerDay
+		from question
+		where 1 = 1
+		and bo_writer = #{memId}
+		order by bo_no
+	</select>
+	
+	<delete id="qnaOneDelete" parameterType="int">
+		DELETE FROM question
+		where bo_no = #{boNo}
+	</delete>
+	
+	<select id="getLikeList" parameterType="String" resultType="plannerLikeVO">
+		SELECT * FROM planer a, planer_like b WHERE a.pl_no = b.pl_no and b.mem_id = #{memId}
+	</select>
+	
+	<delete id="plLikeDelete" parameterType="int">
+		DELETE FROM planer_like
+		WHERE
+		    pl_like_no = #{plLikeNo}
+	</delete>
 
 </mapper>

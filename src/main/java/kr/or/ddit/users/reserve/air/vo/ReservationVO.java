@@ -7,13 +7,14 @@ import lombok.Data;
 @Data
 public class ReservationVO {
 	
-	private String airReserveno;
+	private String airReserveno;  //RE-0000-항공편4자리
 	private String memId;
 	private String airReservetel;
 	private String airReserveemail;
 	private int airTotalprice;
 	private String airPayday;
 	private int airPersonnum;
+	private int plNo;
 	
 	private List<TicketVO> ticketList;
 	

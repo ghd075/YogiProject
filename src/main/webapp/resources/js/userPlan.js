@@ -542,7 +542,8 @@ function commonRendering(resArr) {
         }
 
         if (item.address != null) {
-            html += "<tr style='width: 100%;'><td style='width:5%;' rowspan='3'><img class='dpUp' style='cursor:pointer; width:18px; height:9px;' src='/resources/images/planner/dpUp.png'/><img class='dpDown' style='cursor:pointer; width:18px; height:9px;' src='/resources/images/planner/dpDown.png'/></td><td class='td-list' style='font-size: x-small;'>" + item.address + "</td></tr>";
+            // html += "<tr style='width: 100%;'><td style='width:5%;' rowspan='3'><img class='dpUp' style='cursor:pointer; width:18px; height:9px;' src='/resources/images/planner/dpUp.png'/><img class='dpDown' style='cursor:pointer; width:18px; height:9px;' src='/resources/images/planner/dpDown.png'/></td><td class='td-list' style='font-size: x-small;'>" + item.address + "</td></tr>";
+            html += "<tr style='width: 100%;'><td style='width:5%;' rowspan='3'></td><td class='td-list' style='font-size: x-small;'>" + item.address + "</td></tr>";
         } else {
             html += "<tr style='width: 100%;'><tr><td class='td-list' style='font-size: x-small;'>주소가 없습니다.</td></tr>";
         }
@@ -925,7 +926,6 @@ test2El.change(function(){
     test1El.val('1').trigger('change');
   } else {
     tempStr += `<option value="" selected="selected">인원 선택</option>
-    <option value="1">1인</option>
     <option value="2">2인</option>
     <option value="3">3인</option>
     <option value="4">4인</option>
@@ -1091,28 +1091,29 @@ function drawOneDp(oneTour) {
   clearOverlays(distanceOverlays);
   const latlng = new kakao.maps.LatLng(oneTour.latitude, oneTour.longitude);
 
-  createMarkerAndCircle(latlng, tourArr.length);
+  //createMarkerAndCircle(latlng, tourArr.length);
 
-  getTourBounds.extend(latlng);
-  map.setBounds(getTourBounds);
+	createMarkerAndCircle(latlng, tourArr.length);
+    getTourBounds.extend(latlng);
+    //getTourBounds.extend(latlng);
+    map.setBounds(getTourBounds);
 
-  //console.log("지금까지 선택된 장소", tourArr);
+    //console.log("지금까지 선택된 장소", tourArr);
 
-  // 장소가 2개 이상일때 부터 선 찍기 / 두 선사이의 거리 측정
-  if(tourArr.length > 1) {
-
+	  // 장소가 2개 이상일때 부터 선 찍기 / 두 선사이의 거리 측정
+	  if(tourArr.length > 1) {
         let tour1 = tourArr[tourArr.length-2];
         let tour2 = tourArr[tourArr.length-1];
 
         const tourPosition1 = new kakao.maps.LatLng(tour1.latitude, tour1.longitude);
         const tourPosition2 = new kakao.maps.LatLng(tour2.latitude, tour2.longitude);
+    
+        const twolatLngArr = [];
+        twolatLngArr.push(tourPosition1);
+        twolatLngArr.push(tourPosition2);
+        createPolyLine(twolatLngArr);
+      }
 
-  const twolatLngArr = [];
-  twolatLngArr.push(tourPosition1);
-  twolatLngArr.push(tourPosition2);
-  createPolyLine(twolatLngArr);
-
-  }
 
 }
 
@@ -1438,12 +1439,24 @@ $.PicUpModalFn = function () {
   var infoModalContents = $(".infoModalContents");
   let profileImg = $("#profileImg");
   modalSave.click(function () {
-      infoModalContents.hide();
+	  Swal.fire({
+	    text: "썸네일이 저장되었습니다.",
+	    icon: "success"
+	  }).then((result) => {
+	  	infoModalContents.hide();
+	  });
   });
   modalClose.click(function () {
-      $("#imgFile").val("");
-      profileImg.attr("src", "/resources/images/default_profile.png");
-      infoModalContents.hide();
+  	  Swal.fire({
+	    text: "썸네일을 삭제했습니다.",
+	    icon: "success"
+	  }).then((result) => {
+	  	$("#imgFile").val("");
+	      profileImg.attr("src", "/resources/images/default_profile.png");
+	      profileImg.css("width", "350px");
+	      profileImg.css("height", "350px");
+	      infoModalContents.hide();
+	  });
   });
   // 모달창 열기
   var journeyInfoContents = $(".journeyInfoContents");

@@ -37,12 +37,12 @@
                         <c:choose>
                         	<c:when test="${not empty recruiter or not empty mateList }">
                         		<li>
-                        			<span class="textDrop">
+                        			<span class="textDrop appendStatus">
                         				<i class="fas fa-crown"></i>
 	                                	<span class="chatProfileImgBox">
 	                                    	<img src="${recruiter.memProfileimg }" alt="프로필 이미지" />
 	                                	</span>
-										${recruiter.memName }(플래너)
+										<span class="kickOutNameTxt">${recruiter.memName }(플래너)</span>
 										<i class="fas fa-circle"></i>
 		                            </span>
 		                            <span>
@@ -78,11 +78,11 @@
                         		<c:forEach items="${mateList }" var="mate" varStatus="stat">
                        				<c:if test="${mate.mategroupApply eq 'Y' }">
 								    	<li class="textDropVerticalAlign">
-				                            <span class="textDrop">
+				                            <span class="textDrop appendStatus">
 				                                <span class="chatProfileImgBox">
 				                                    <img src="${mate.memProfileimg }" alt="프로필 이미지" />
 				                                </span>
-												${mate.memName }
+												<span class="kickOutNameTxt">${mate.memName }</span>
 				                                <i class="fas fa-circle"></i>
 				                            </span>
 				                            <span>
@@ -141,10 +141,12 @@
 	                        <!-- 반복 구간 -->
 	                        <c:choose>
 	                        	<c:when test="${not empty mateList }">
+	                        		<c:set value="0" var="memCntFlag" />
 	                        		<c:forEach items="${mateList }" var="mate" varStatus="stat">
 	                       				<c:if test="${mate.mategroupApply eq 'W' or mate.mategroupApply eq 'E' }">
+	                       					<c:set value="${memCntFlag +1  }" var="memCntFlag" />
 									    	<li class="textDropVerticalAlign memChk">
-					                            <span class="textDrop">
+					                            <span class="textDrop appendStatus">
 					                                <span class="chatProfileImgBox">
 					                                    <img src="${mate.memProfileimg }" alt="프로필 이미지" />
 					                                </span>
@@ -162,8 +164,15 @@
 					                            <span id="lgj${stat.index}">00세</span>
 					                            <span class="textDrop findId detectMemId">${mate.memId }</span>
 					                            <span>
-						                            <button class="btn btn-success acceptMemBtn" type="button">승인</button>
-	                                				<button class="btn btn-danger rejectMemBtn" type="button">거절</button>
+													<c:choose>
+														<c:when test="${mate.mategroupApply eq 'E' }">
+															<button type="button" class="btn btn-secondary">모집 마감</button>
+														</c:when>
+														<c:otherwise>
+															<button class="btn btn-success acceptMemBtn" type="button">승인</button>
+															<button class="btn btn-danger rejectMemBtn" type="button">거절</button>
+														</c:otherwise>
+					                            	</c:choose>
 					                            </span>
 					                            <script>
 					                            	$(function(){
@@ -176,9 +185,16 @@
 					                        </li>
 	                       				</c:if>
 								    </c:forEach>
+                       				<c:if test="${memCntFlag eq 0 }">
+	                       				<li style="pointer-events: none;">
+				                        	<div style="text-align: center; width: 50%; margin: 0px auto; float: none; cursor: auto; background-color: #333; color: white; padding: 20px; border-radius: 4px;">
+							    				현재 멤버가 없습니다.
+							    			</div>
+				                        </li>
+                       				</c:if>
 	                        	</c:when>
 	                        	<c:otherwise>
-	                        		<li>
+	                        		<li style="pointer-events: none;">
 			                        	<div style="text-align: center; width: 50%; margin: 0px auto; float: none; cursor: auto; background-color: #333; color: white; padding: 20px; border-radius: 4px;">
 						    				현재 멤버가 없습니다.
 						    			</div>
@@ -196,7 +212,7 @@
                 <input class="form-control" type="text" id="groupPoint" name="groupPoint" readonly value="${recruiter.mategroupPoint } 포인트" />
                 <label for="meetStatus">3. 모집상태</label>
                 <form action="/partner/groupRecruitEnded.do" method="post" id="groupRecruitEnded" name="groupRecruitEnded">
-                	<input type="hidden" id="plNo" name="plNo" value="${recruiter.plNo }" />
+					<input type="hidden" id="plNo" name="plNo" value="${recruiter.plNo }" />
                 </form>
                 <c:choose>
                 	<c:when test="${recruiter.mategroupStatus eq '1단계' }">
@@ -205,10 +221,14 @@
                 	<c:when test="${recruiter.mategroupStatus eq '2단계' }">
                 		<input class="form-control" type="text" id="meetStatus" name="meetStatus" readonly value="모집마감" />
                 	</c:when>
+					<c:when test="${recruiter.mategroupStatus eq '4단계' }">
+						<input class="form-control" type="text" id="meetStatus" name="meetStatus" readonly value="여행종료" />
+                	</c:when>
                 	<c:otherwise>
                 		<input class="form-control" type="text" id="meetStatus" name="meetStatus" readonly value="결제완료" />
                 	</c:otherwise>
                 </c:choose>
+				<button class="btn btn-primary mt-3 travelTheEndBtn"<c:if test="${recruiter.mategroupStatus ne '3단계' }">style= "display:none;"</c:if>>여행종료</button>
             </div>
         </div>
         
@@ -335,8 +355,8 @@
                 	
                 </div>
                 <div class="chatRoomBtnGroup">
-                    <button class="badge bg-primary chatFileUpload" type="button">파일 업로드</button>
-                    <button class="badge bg-warning chatPointPush" type="button">차감 요청</button>
+                    <button class="badge bg-primary planShare" type="button">일정 공유</button>
+                    <!-- <button class="badge bg-warning chatPointPush" type="button">차감 요청</button> -->
                     <button class="badge bg-info chatContTxtDown" type="button">채팅 내역</button>
                     <button class="badge bg-danger chatContDelete" type="button">이전 채팅 삭제</button>
                 </div>
@@ -368,7 +388,8 @@
         $.meetNameClickEvent(plNo);
         $.shoppingPlanFn(plNo);
 		$.chatContTxtDownFn(plNo);
-		$.chatContDeleteFn(plNo);
+		$.chatContDeleteFn(plNo);	//df
+		$.planShareFn(plNo);		// 일정공유
         
         // 모집 마감은 관리자만 허용해야 함.
         <c:if test="${recruiter.mategroupRecruiter eq sessionInfo.memId }">
@@ -388,9 +409,14 @@
         var chatMemObj = {
         	chatMemId : chatMemId,
         	chatMemName : chatMemName,
-        	chatMemProfileimg : chatMemProfileimg
+        	chatMemProfileimg : chatMemProfileimg,
+        	chatRoomNo : roomNo
         };
         $.chatingFn(roomNo, chatMemObj);
+
+     	// 채팅방 접속/미접속 감지 웹소켓 기능
+        var memId = "${sessionInfo.memId}";
+        $.chatInOutDetectWebSocketFn(memId);
         
 		// get 기능
         var currentURL = window.location.href;

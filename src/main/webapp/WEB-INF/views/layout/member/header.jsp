@@ -43,8 +43,8 @@
 	                            <i class="fas fa-address-book"></i>
 	                        </a>
 	                        <a class="alarmIcon" href="javascript:void(0)">
-	                            <i class="fas fa-bell"></i>
-	                            <span>99</span>
+	                            <i class="fas fa-bell" style="transition: color 0.5s;"></i>
+	                            <span>0</span>
 	                        </a>
 	                        <a class="loginOutIcon" href="/login/logout.do">
 	                            <i class="fas fa-sign-out-alt"></i>
@@ -78,7 +78,6 @@
 	                    	3. 마이 플랜 이력 > 1) 여행 목록 리스트 > 2) 해당 여행에 대한 플랜이 제시 되고, 그 여행에 걸린 여행상품 구매 내역을 목록으로 출력
 	                    -->
                         <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/partner/mygroup.do">만남의 광장</a></li>
-                        <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/partner/calculate.do">여행 경비 계산</a></li>
                         <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/partner/history.do">마이 플랜 이력</a></li>
                     </ul>
                 </li>
@@ -137,7 +136,7 @@
 		                        </a>
 		                        <a class="alarmIcon" href="javascript:void(0)">
 		                            <i class="fas fa-bell"></i>
-		                            <span>99</span>
+		                            <span>0</span>
 		                        </a>
 		                        <a class="loginOutIcon" href="/login/logout.do">
 		                            <i class="fas fa-sign-out-alt"></i>
@@ -188,7 +187,6 @@
                     -->
                     <ul class="msub">
                         <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/partner/mygroup.do">만남의 광장</a></li>
-                        <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/partner/calculate.do">여행 경비 계산</a></li>
                         <li class="<c:if test="${empty sessionInfo }">noUserBlock</c:if>"><a href="/partner/history.do">마이 플랜 이력</a></li>
                     </ul>
                 </li>
@@ -211,4 +209,115 @@
             </ul>
         </div>
     </nav>
+    <div class="card rtAlertBox">
+    	<i class="far fa-window-close rtCloseBtn"></i>
+        <div class="rtImgBox">
+            <img src="${contextPath }/resources/images/default_profile.png" alt="실시간 알림 프로필 이미지" />
+        </div>
+        <div class="card-body">
+            <h4 class="card-title">알림</h4>
+            <p class="card-text">
+				블라블라블라
+            </p>
+        </div>
+    </div>
 </header>
+<script>
+
+var ws;
+var sessionMemIdChan = "${sessionInfo.memId}"
+$.rtAlertChansFn = function(sessionMemIdChan) {
+    if(sessionMemIdChan != null) {
+        console.log("일단 연결해")
+        connectWs();
+    }
+    
+    function connectWs(){
+        console.log("tttttt")
+        ws = new SockJS("/alertForChan");
+    
+           ws.onopen = function() {
+            console.log('open');
+            //testAjax();
+            };
+    
+           ws.onmessage = function(event) {
+            console.log("onmessage"+event.data);
+            //    let $socketAlert = $('div#socketAlert');
+            //    $socketAlert.html(event.data)
+            //    $socketAlert.css('display', 'block');
+                
+            //    setTimeout(function(){
+            //        $socketAlert.css('display','none');
+                    
+            //    }, 5000);
+            realTimeAlertMessageChan(event);
+        };
+    
+           ws.onclose = function() {
+                console.log('close');
+         };
+       };
+}
+
+$.rtAlertChansFn(sessionMemIdChan);
+
+function realTimeAlertMessageChan(event){
+		var realTimeAlertData = event.data;
+		console.log("realTimeAlertData : ", realTimeAlertData);
+
+        // 웹 소켓에서 브로드캐스팅된 text를 정제
+        var rtArr = realTimeAlertData.split(",");
+        console.log("rtArr : ", rtArr);
+
+        var rtAlertBox = $(".rtAlertBox");
+
+        // 구분자가 없는 경우 배열의 길이가 1이상이어야 함
+        if(rtArr.length > 1) {
+            var realrecIdArr = rtArr[0].trim();
+            var realsenId = rtArr[1].trim();
+            var realsenName = rtArr[2].trim();
+            var realsenTitle = rtArr[3].trim();
+            var realsenContent = rtArr[4].trim();
+            var realsenType = rtArr[5].trim();
+            var realsenReadyn = rtArr[6].trim();
+            var realsenUrl = rtArr[7].trim();
+            var realsenPfImg = rtArr[8].trim();
+            // var realrecNo = rtArr[8].trim();
+            // console.log("realsenUrl",realsenUrl);
+
+            var rtAlertBox = $(".rtAlertBox");
+            rtAlertBox.find(".rtImgBox img").attr("src", realsenPfImg);
+            rtAlertBox.find(".card-title").html(realsenTitle);
+            rtAlertBox.find(".card-text").html(realsenContent);
+
+            // console.log("realsenUrl : ", realsenUrl);
+            // console.log("realsenUrl > empty ", realsenUrl !== "empty");
+
+            // console.log("realrecNo : ", realrecNo);
+            // console.log("realrecNo > empty : ", realrecNo !== "empty");
+
+            if(realsenUrl !== "empty") {
+                rtAlertBox.find(".rtAlertFadeBtn").remove();
+
+                // if(realrecNo !== "empty") {
+                //     rtAlertBox.find(".card-body").append(`
+                //         <div class="rtAlertFadeBtn" style="text-align: right;">
+                //             <a href="${realsenUrl}" class="btn btn-primary" data="${realrecNo}">바로가기</a>
+                //         </div>
+                //     `);
+                // }else {
+                    let tempHtml = '<div class="rtAlertFadeBtn" style="text-align: right;"><a href="'+realsenUrl+'" class="btn btn-primary">바로가기</a></div>';
+                    rtAlertBox.find(".card-body").append(tempHtml);
+                // }
+            }
+
+            rtAlertBox.fadeIn(1000, function() {
+                setTimeout(function() {
+                    rtAlertBox.fadeOut(1000);
+                }, 4000);
+            });
+        }
+        
+	}
+</script>

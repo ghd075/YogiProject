@@ -11,7 +11,7 @@
         <meta name="keywords" content="부루마불, 여기갈래, 여행, 통합, 플랫폼" />
         <meta name="copyright" content="대덕인재개발원" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>여기갈래 &gt; 아이디/비밀번호 찾기</title>
+        <title>여기갈래 &gt; 아이디/비밀번호 재설정</title>
         <link href="${contextPath }/resources/images/favicon.ico" rel="shoutcut icon" />
         <!-- 공통 css -->
         <link href="${contextPath }/resources/css/login.css" rel="stylesheet" />

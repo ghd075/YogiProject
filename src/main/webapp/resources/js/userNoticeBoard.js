@@ -49,7 +49,12 @@ $.noticeRegisterValidationChkFn = function(){
         
         if(!titleFlag) return;
         if(!boContent) {
-            alert("내용을 입력해 주세요.");
+            //alert("내용을 입력해 주세요.");
+            Swal.fire({
+				title: "안내",
+				text: "내용을 입력해 주세요.",
+				icon: "info"
+			});
             return false;
         }
         

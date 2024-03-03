@@ -9,4 +9,5 @@ public class ChatMembers {
 	private String chatMessage;
 	private String chatMemName;
 	private String chatMemProfileimg;
+	private String chatRoomNo;
 }

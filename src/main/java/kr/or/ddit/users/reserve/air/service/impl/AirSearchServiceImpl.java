@@ -91,7 +91,7 @@ public class AirSearchServiceImpl implements AirSearchService{
 	    	    case "economy" : roundVO.setRoundTripPrice(depVO.getFlightEconomyprice(), arrVO.getFlightEconomyprice()); break;
 	    	    case "business" : roundVO.setRoundTripPrice(depVO.getFlightBusinessprice(), arrVO.getFlightBusinessprice()); break; 
 	    	    case "firstClass" : roundVO.setRoundTripPrice(depVO.getFlightFirstclassprice(), arrVO.getFlightFirstclassprice()); break; 
-              default : break;	    	   
+                default : break;	    	   
 	    	  }
 	    	  //6.총가격 설정
 	    	  roundVO.setTotalPrice(searchVO.getTotalCnt() * roundVO.getRoundTripPrice());
@@ -127,8 +127,8 @@ public class AirSearchServiceImpl implements AirSearchService{
 	      
 	      //2)추천순 정렬
 	      Collections.shuffle(roundTripList);
-	      sortVO.setRecoDuration(roundTripList.get(0).getAveDuration());      //추천 여행시간(테스트중)
-	      sortVO.setRecoPrice(roundTripList.get(0).getRoundTripPrice());     //추천 가격(테스트중)
+	      sortVO.setRecoDuration(roundTripList.get(0).getAveDuration());      //추천 여행시간
+	      sortVO.setRecoPrice(roundTripList.get(0).getRoundTripPrice());     //추천 가격
 	      
 	      //3)최저가 정렬(최초 검색 시 디폴트 정렬)
 	      Collections.sort(roundTripList, new PriceSort());

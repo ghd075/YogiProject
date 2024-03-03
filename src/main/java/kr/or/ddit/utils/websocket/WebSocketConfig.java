@@ -19,10 +19,25 @@ public class WebSocketConfig implements WebSocketConfigurer {
 	@Qualifier("loginDetectHandler")
 	private LoginDetectHandler loginDetectHandler;
 	
+	@Autowired
+	@Qualifier("realTimeAlertHandler")
+	private RealTimeAlertHandler realTimeAlertHandler;
+	
+	@Autowired
+	@Qualifier("chatInOutHandler")
+	private ChatInOutHandler chatInOutHandler;
+	
+	@Autowired
+	@Qualifier("realTimeAlertHandlerChansVer")
+	private RealTimeAlertHandlerChansVer realTimeAlertHandlerChansVer;
+	
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		registry.addHandler(chatHandler, "/chat").setAllowedOrigins("*");
 		registry.addHandler(loginDetectHandler, "/logindetect").setAllowedOrigins("*");
+		registry.addHandler(chatInOutHandler, "/chatinoutdetect").setAllowedOrigins("*");
+		registry.addHandler(realTimeAlertHandler, "/alert").setAllowedOrigins("*");
+		registry.addHandler(realTimeAlertHandlerChansVer, "/alertForChan").setAllowedOrigins("*");
 	}
 	
 }

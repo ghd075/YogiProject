@@ -14,5 +14,6 @@ public interface PlannerDetailMapper {
 	public long getMg(long plNo);
 	public PlannerVO joinCheck(Map<String, Object> param);
 	public int getCurNum(long plNo);
+	public String isRecruitEnd(long plNo);
 
 }

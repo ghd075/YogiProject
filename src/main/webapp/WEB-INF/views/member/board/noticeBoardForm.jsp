@@ -36,10 +36,12 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="boTitle">제목을 입력해주세요</label>
+                        <%-- <input type="text" id="boTitle" name="boTitle" class="form-control" placeholder="제목 입력" value="<c:out value="${notice.boTitle }" escapeXml="true" />" /> --%>
                         <input type="text" id="boTitle" name="boTitle" class="form-control" placeholder="제목 입력" value="${notice.boTitle }" />
                     </div>
                     <div class="form-group">
                         <label for="boContent">내용을 입력해주세요</label>
+                        <%-- <textarea id="boContent" name="boContent" class="form-control" rows="14"><c:out value="${notice.boContent }" escapeXml="true" /></textarea> --%>
                         <textarea id="boContent" name="boContent" class="form-control" rows="14">${notice.boContent }</textarea>
                     </div>
                     <div class="form-group">

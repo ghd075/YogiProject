@@ -578,3 +578,105 @@ $.ratioBoxH = function(boxEl, imgEl) {
   // 초기 설정
   setImgDimensions();
 };
+
+// pdf다운로드
+var isFirst = true;
+var img;  // img를 전역 변수로 선언
+$('#downloadButton').click(function() {
+
+  // 두번째 클릭부터는 이미 만들어 놓은 download 버튼만 클릭
+  if(!isFirst){
+    var src = img.src;
+    img.src = '';
+    img.src = src;
+    console.log("src : " + src);
+    return true;  // 종료
+  }
+
+  // 아래는 버튼 처음 눌렀을 때만  download 버튼 만들고, 다운로드
+
+  $(".planDetailTabbtnGroup").hide();
+  $(".listBtn").hide();
+  $(".rtAlertPlanDetail").hide();
+  $(".groupAttendNoBtn").css("display", "none");  // 버튼들을 숨깁니다.
+
+  // 이미지 로드
+  var i = 0;
+  const imgNodes = Array.from($('.planDetailContainer')[0].querySelectorAll('img'));
+  const imgPromises = imgNodes.map(img => fetch('/html2canvas/proxy.json?url=' + encodeURIComponent(img.src))
+    .then(response => response.blob())
+    .then(blob => {
+	    if(blob.size > 0){
+	      img.src = URL.createObjectURL(blob);
+	    }
+    }));
+
+  console.log("imgPromises : ", imgPromises);  
+  // 모든 이미지가 로드된 후에 dom-to-image 사용
+  Promise.all(imgPromises).then(() => {
+    console.log("ppp",$('.planDetailTabcontBox')[0]);
+    domtoimage.toPng($('.planDetailContainer')[0])    // domtoimage 라이브러리에 문제가 있던가 이전 세팅값에 문제가 있음!
+    .then(function (dataUrl) {
+      img = new Image();
+      img.src = dataUrl;
+      console.log("dataUrl 값 : ", dataUrl);
+      console.log("img 값 : ", img);
+      img.onload = function(){
+        // A4 페이지 크기 설정
+        var pdf = new jsPDF('l', 'mm', 'a4');
+        pdf.addImage(dataUrl, 'PNG', 0, 0, 297, 210);
+        // pdf.save('map.pdf');
+
+        // PDF 파일을 Blob 객체로 변환
+        var blobPDF = pdf.output('blob');
+        console.log("체킁 : ", blobPDF);
+
+        let formData = new FormData();
+        formData.append('file', blobPDF, 'map.pdf');
+        formData.append('plNo', plNo);
+
+        console.log("formData 값 : ", formData);
+
+        for (let key of formData.keys()) {
+          console.log(key, ":", formData.get(key));
+        }
+        $.ajax({
+          type: "POST",
+          url: "/pdfUpload.do",
+          enctype: 'multipart/form-data',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (data) {
+            console.log(data);
+            if(data === 'success') {
+              console.log('PDF 파일이 서버로 성공적으로 전송되었습니다.');
+              //alert("업로드 완료");
+              Swal.fire({
+                icon: 'success',
+                title: '성공',
+                text: 'PDF 파일이 서버로 성공적으로 전송되었습니다.'
+              });
+            } else {
+              //alert("업로드 실패");
+              Swal.fire({
+                icon: 'error',
+                title: '실패',
+                text: 'PDF 파일 업로드에 실패하였습니다.'
+              });
+            }
+          }
+        });
+        $(".planDetailTabbtnGroup").show();
+        $(".listBtn").show();
+        $(".rtAlertPlanDetail").show();
+        $(".groupAttendNoBtn").css("display", "");  // 버튼들을 다시 보이게 합니다.
+      }
+      isFirst = false;
+    })
+    .catch(function (error) {
+      console.error('oops, something went wrong!', error.message);
+    });
+  });
+  
+});

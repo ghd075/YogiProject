@@ -1,0 +1,178 @@
+/* 마이 트립 스타일링 */
+.historyContainer {
+    position: relative;
+}
+
+.historyHeadStyle {
+    position: relative;
+    height: 310px;
+}
+
+.historyImgBox {
+    position: relative;
+    overflow: hidden;
+    height: inherit;
+}
+
+.historyImgBox img {
+    position: absolute;
+    left: 50%;
+    top: 90%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+}
+
+.historyHeadStyle div:last-of-type {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 20px 50px;
+	border-radius: 4px;
+	background-color: rgba(255, 255, 255, 0.6);
+	text-align: center;
+}
+
+.historyHeadStyle div:last-of-type h3 {
+	font-weight: 700;
+	font-size: 2.3rem;
+}
+
+.historyHeadStyle div:last-of-type span {
+	font-size: 1.3rem;
+}
+
+.historyListContents {
+    position: relative;
+    padding: 50px 0px;
+}
+
+.historyListContents h3 {
+    padding: 40px 0px 20px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0px;
+}
+
+/* .meetAreaSearchCont {
+    padding: 30px 0px;
+} */
+
+/* .meetAreaSearchCont>div {
+    overflow: auto;
+    position: relative;
+    width: 600px;
+    margin: 0px auto;
+} */
+
+/* .meetAreaSearchCont input {
+    width: 100%;
+} */
+
+/* .meetAreaSearchCont button {
+    display: block;
+    width: 20px;
+    height: 100%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+    border: none;
+    background-color: transparent;
+    color: #dee2e6;
+    transition: all 0.4s;
+} */
+
+/* .meetAreaSearchCont button:hover {
+    color: #333;
+} */
+
+.historyListCont {
+    position: relative;
+}
+
+.historyListCont ul {
+    list-style: none;
+    padding-left: 0px;
+    margin-bottom: 0px;
+}
+
+.historyListCont li {
+    overflow: auto;
+    padding: 10px 10px;
+    transition: all 0.4s;
+    border-radius: 4px;
+}
+
+.historyListCont li:hover {
+    background-color: #333;
+}
+
+.historyListCont li:hover a {
+    color: white;
+}
+
+.historyListCont li:hover .meetAreaLists>a>span>span {
+    background-color: white!important;
+    color: #333!important;
+}
+
+.historyListCont div {
+    float: left;
+}
+
+.historyThumbnailCont {
+    width: 200px;
+    height: 150px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 4px;
+}
+
+.historyThumbnailCont img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.historyLists {
+    width: calc(100% - 200px);
+    height: 150px;
+    padding: 0px 20px;
+}
+
+.historyLists a {
+    color: #333;
+}
+
+.historyLists>a>span {
+    display: block;
+}
+
+.historyLists>a>span>span {
+    margin-right: 10px;
+    width: 60px;
+    text-align: left;
+    margin-bottom: 7px;
+    transition: all 0.4s;
+}
+
+.historyListBtnGroup {
+    width: 100%;
+    padding-top: 10px;
+    text-align: right;
+}
+
+.historyListBtnGroup button {
+    margin-left: 10px;
+}
+
+.historyListContents h3 {
+	margin-bottom: 30px;
+}
+
+.historyListContents {
+	padding-bottom: 200px;	
+}

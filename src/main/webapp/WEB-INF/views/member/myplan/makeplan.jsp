@@ -94,7 +94,7 @@
 			<!-- <div class="profileIcon">
 				<i class="fas fa-camera"></i>
 			</div> -->
-			<button id="testbtn" class="btn btn-primary btn-sm">테스트</button>
+			<button id="testbtn" class="btn btn-primary btn-sm" style="display:none;">테스트</button>
 		</div>
 	</article>
 </section>
@@ -209,8 +209,8 @@
 				<div class="row modalBtnsWrap">
 					<div class="col-md-12 mt-5">
 						<input class="form-control" type="file" id="imgFile" name="imgFile" />
-						<button class="btn btn-primary btn-sm modalBtn modalSave">저장</button>
-						<button class="btn btn-primary btn-sm modalBtn modalClose">닫기</button>
+						<button class="btn btn-primary btn-md modalBtn modalSave">저장</button>
+						<button class="btn btn-primary btn-md modalBtn modalClose">삭제</button>
 					</div>
 				</div>
 			</div>
@@ -223,7 +223,7 @@
 <script src="${contextPath }/resources/js/util.js"></script>
 
 <!-- 카카오 지도 JS  -->
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5d692983b8638035f4f288e59aea36fe&libraries=services"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b32a29fe75c5dec3cc66391aed3fe468&libraries=services"></script>
 
 <script type="text/javascript">
 
@@ -253,6 +253,7 @@
 				// alert("이미지 파일을 선택해주세요!");
 
 				Swal.fire({
+					title: "파일",
 					text: "이미지 파일을 선택해주세요!",
 					icon: "info"
 				});

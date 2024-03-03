@@ -55,6 +55,19 @@
 		    </script>
 		</c:if>
 		
+		<!-- 
+    		내부 CSS 
+    		- 내부 CSS는 외부 CSS의 스타일링을 건드리지 않기 위해서
+    		개별적인 페이지에다 스타일을 적용할 때 종종 쓴다.
+    		- 보통 프로토타이핑 테스트용이나, FE Leader의 판단에 따라 여기에
+    		추가적인 스타일을 작성한다.
+    	-->
+    	<style>
+    		.msub a {
+    			color: #333;
+    		}
+    	</style>
+		
 	</head>
     <body class="scroll">
         

@@ -77,7 +77,14 @@
 	
 	<!-- 채팅 관련 핸들러 등록 -->
 	<beans:bean id="chatHandler" class="kr.or.ddit.utils.websocket.ChatHandler" />
+	
 	<beans:bean id="loginDetectHandler" class="kr.or.ddit.utils.websocket.LoginDetectHandler" />
+	
+	<beans:bean id="chatInOutHandler" class="kr.or.ddit.utils.websocket.ChatInOutHandler" />
+	
+	<beans:bean id="realTimeAlertHandler" class="kr.or.ddit.utils.websocket.RealTimeAlertHandler" />
+	
+	<beans:bean id="realTimeAlertHandlerChansVer" class="kr.or.ddit.utils.websocket.RealTimeAlertHandlerChansVer" />
 	
 	<!-- <websocket:handlers allowed-origins="*"> -->
 	<websocket:handlers>
@@ -87,8 +94,33 @@
 		</websocket:handshake-interceptors>
 		<websocket:sockjs />
 	</websocket:handlers>
+	
 	<websocket:handlers>
 		<websocket:mapping handler="loginDetectHandler" path="/logindetect" />
+		<websocket:handshake-interceptors>
+			<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" />
+		</websocket:handshake-interceptors>
+		<websocket:sockjs />
+	</websocket:handlers>
+	
+	<websocket:handlers>
+		<websocket:mapping handler="chatInOutHandler" path="/chatinoutdetect" />
+		<websocket:handshake-interceptors>
+			<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" />
+		</websocket:handshake-interceptors>
+		<websocket:sockjs />
+	</websocket:handlers>
+	
+	<websocket:handlers>
+		<websocket:mapping handler="realTimeAlertHandler" path="/alert" />
+		<websocket:handshake-interceptors>
+			<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" />
+		</websocket:handshake-interceptors>
+		<websocket:sockjs />
+	</websocket:handlers>
+	
+	<websocket:handlers>
+		<websocket:mapping handler="realTimeAlertHandlerChansVer" path="/alertForChan" />
 		<websocket:handshake-interceptors>
 			<beans:bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" />
 		</websocket:handshake-interceptors>

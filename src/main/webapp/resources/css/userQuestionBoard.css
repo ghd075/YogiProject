@@ -1,0 +1,435 @@
+@charset "UTF-8";
+
+.questionContainer {
+    position: relative;
+}
+
+.communityHeadStyle {
+    height: 310px;
+    position: relative;
+    overflow: hidden;
+}
+
+.comImgBox {
+    position: relative;
+    height: inherit;
+}
+
+.comImgBox img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.17);
+}
+
+.communityHeadStyle>div:last-of-type {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+}
+
+.communityHeadStyle>div:last-of-type h3 {
+    font-weight: 700;
+    font-size: 2.3rem;
+    margin-bottom: 15px;
+}
+
+.communityHeadStyle>div:last-of-type span {
+    color: white;
+    opacity: 0.6;
+}
+
+.questionListContents {
+    padding: 20px 0px;
+}
+
+/*************** head_aticle  START ****************/
+
+.head_aticle {
+	padding: 0px 0px 26px;
+}
+
+.tit_a {
+	font-size: 32px;
+	font-weight: 700;
+	float: left;
+}
+
+.tit_sub {
+	padding-left: 11px;
+	font-size: 14px;
+	color: #999;
+	line-height: 20px;
+	letter-spacing: -.3px;
+	vertical-align: 3px;
+}
+
+/*************** head_aticle  END ****************/
+
+/*************** searchBoardCont  START ****************/
+.searchBoardCont {
+    margin-bottom: 40px;
+}
+
+#searchForm {
+    overflow: auto;
+}
+
+#searchForm>div:first-of-type {
+    float: left;
+    line-height: 38px;
+}
+
+#searchForm>div:last-of-type {
+    float: right;
+    width: 400px;
+}
+
+#searchForm>div:last-of-type>div:first-of-type,
+#searchForm>div:last-of-type>div:last-of-type {
+    position: relative;
+    float: left;
+}
+
+
+#searchForm>div:last-of-type>div:first-of-type i {
+    position: absolute;
+    top: 12px;
+    right: 10px;
+}
+
+#searchForm>div:last-of-type>div:last-of-type {
+    float: right;
+}
+
+#searchType {
+    padding-right: 30px;
+}
+
+#searchBtn {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    border: none;
+    background-color: transparent;
+    display: block;
+    width: 25px;
+    outline: none;
+    border-radius: 4px;
+    border-radius: 4px;
+    color: #333;
+    transition: all 0.4s;
+}
+
+#searchBtn:hover {
+    background-color: #333;
+    color: white;
+}
+
+/*************** searchBoardCont END ****************/
+
+/*************** questionListCont  START ****************/
+.questionListCont {
+    margin: 40px 0;
+}
+
+.board-listheader {
+	width : 100%;
+	font-size: 13px;
+	line-height: 140%;
+}
+
+.board-listheader th {
+	padding: 20px; /* 제목 행의 위아래 간격 */
+	text-align: center; /* 텍스트 가운데 정렬 */
+	vertical-align: middle;
+	font-size: 12px;
+}
+
+.board-listheader thead {
+	border-top: 3px solid #425c5a;
+	border-bottom: 1px solid gray;
+}
+
+.board-listheader tbody tr {
+	text-align: center;
+	border-bottom: 1px solid #e8e8e8;
+}
+
+.board-listheader tbody td a {
+	color: #555;
+}
+
+.board-listheader tbody tr td {
+    padding: 20px; /* 위아래 간격 */
+	text-align: center; /* 텍스트 가운데 정렬 */
+}
+
+.questionBtnGroup {
+    text-align: right;
+}
+
+.questionBtnGroup {
+	margin-bottom: 20px;
+    text-align: right;
+}
+
+.questionBtnGroup button {
+    margin-left: 10px;
+}
+
+/*************** questionListCont  END ****************/
+
+/*************** userQuestionListCont  START ****************/
+
+.userQuestionListCont ul {
+    list-style: none;
+    margin-bottom: 0px;
+    padding-left: 0px;
+}
+
+.userQuestionListCont li {
+    padding: 2px 0px;
+}
+
+.userQuestionListCont span {
+    display: inline-block;
+    text-align: center;
+}
+
+.userQuestionListCont span:first-of-type {
+    width: 50px;
+}
+
+.userQuestionListCont span:nth-of-type(2) {
+    width: calc(100% - 335px);
+    padding-right: 30px;
+    position: relative;
+    text-align: left;
+}
+
+.userQuestionListCont span:nth-of-type(3){
+    width: 100px;
+}
+
+.userQuestionListCont span:last-of-type {
+    width: 100px;
+}
+
+.userQuestionListHead {
+    border-top: 2px solid #333;
+    padding: 15px 0px!important;
+    background-color: #eee;
+}
+
+.userQuestionList {
+    border-top: 2px solid #333;
+    transition: all 0.4s;
+}
+
+.userQuestionList:last-of-type {
+    border-bottom: 2px solid #333;
+}
+
+.textDropVerticalAlign {
+    cursor: pointer;
+}
+
+.userQuestionList>div:first-of-type {
+    padding: 20px 0px;
+    transition: all 0.4s;
+}
+
+.userQuestionList>div:first-of-type:hover {
+    background-color: #eee;
+}
+
+.userQuestionList>div:first-of-type span:first-of-type {
+    width: 50px;
+    color: #75819B;
+}
+
+.userQuestionList>div:first-of-type span:nth-of-type(2) {
+    width: calc(100% - 335px);
+}
+
+.userQuestionList>div:first-of-type span:nth-of-type(3) {
+    width: 100px;
+}
+
+.userQuestionList>div:first-of-type span:nth-of-type(4) {
+    width: 100px;
+}
+
+.userQuestionList>div:first-of-type span:last-of-type {
+    width: 50px;
+    text-align: right;
+    color: #75819B;
+}
+
+.visibleDiv {
+    display: none;
+}
+
+.visibleDiv span:first-of-type {
+    width: 50px;
+}
+
+.visibleDiv span:nth-of-type(2) {
+    width: calc(100% - 335px);
+    padding: 10px 0px;
+	overflow: auto;
+	position: relative;
+}
+
+.visibleDiv div.answerDiv {
+    display: table; /* 추가된 부분: table로 설정 */
+    width: 100%;
+}
+
+.visibleDiv div.answerDiv span {
+    display: table-cell;
+    vertical-align: middle; /* 추가된 부분: 세로 중앙 정렬 */
+}
+
+.visibleDiv div.answerDiv span:first-child {
+    width: 50px;
+}
+
+.visibleDiv div.answerDiv span:nth-child(2) {
+    width: calc(100% - 120px);
+}
+
+.visibleDiv div.answerDiv span:last-child {
+    width: 50px;
+    height: 50px;
+}
+
+/*************** userQuestionListCont  END ****************/
+
+/*************** question 모달창  START ****************/
+.questionModalContents {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.3);
+    z-index: 70;
+    display: none;
+}
+
+.questionModalBox {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 60px;
+    overflow: auto;
+    border-radius: 10px;
+}
+
+.questionModalClose {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    background-color: rgba(0,0,0,0.4);
+    border-radius: 4px;
+}
+
+.questionModalClose div {
+    width: 25px;
+    height: 1px;
+    background-color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.questionModalClose div:first-of-type {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.questionModalClose div:last-of-type {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.questionModalBox article {
+    padding: 24px;
+}
+
+.questionModalBox article > div {
+    height: 500px;
+    position: relative;
+}
+
+/*************** question 모달창  END ****************/
+
+/*************** question 답변 모달창  START ****************/
+.questionAnswerModalContents {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.3);
+    z-index: 70;
+    display: none;
+}
+
+.questionAnswerModalBox {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 60px;
+    overflow: auto;
+    border-radius: 10px;
+}
+
+.questionAnswerModalClose {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    background-color: rgba(0,0,0,0.4);
+    border-radius: 4px;
+}
+
+.questionAnswerModalClose div {
+    width: 25px;
+    height: 1px;
+    background-color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.questionAnswerModalClose div:first-of-type {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.questionAnswerModalClose div:last-of-type {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.questionAnswerModalBox article {
+    padding: 24px;
+}
+
+.questionAnswerModalBox article > div {
+    height: 500px;
+    position: relative;
+}
+
+/*************** question 모달창  END ****************/

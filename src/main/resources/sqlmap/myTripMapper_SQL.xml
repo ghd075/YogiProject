@@ -155,6 +155,16 @@
 		    UPDATE SET A.PL_PRIVATE = #{plPrivate}
 	</update>
 	
+	<delete id="deleteCartAir" parameterType="int">
+		DELETE FROM cart_air
+		WHERE cart_no = (SELECT cart_no FROM cart WHERE pl_no = #{plNo}) AND cartair_status = 'N'
+	</delete>
+	
+	<delete id="deleteCart" parameterType="int">
+		DELETE FROM cart
+		WHERE pl_no = #{plNo}
+	</delete>
+	
 	<delete id="deleteSPlaner" parameterType="int">
 		DELETE FROM s_planer
 		WHERE pl_no = #{plNo}
@@ -485,6 +495,24 @@
 		   AND m.mategroup_apply = 'W'
 	</update>
 	
+	<select id="waitMemCnt" parameterType="int" resultType="int">
+		SELECT
+			count(*) cnt
+		FROM
+			mategroup_member
+		WHERE
+			mg_no = (SELECT mg_no FROM mategroup WHERE pl_no = #{plNo}) AND mategroup_apply = 'W'
+	</select>
+	
+	<select id="soloTrip" parameterType="int" resultType="int">
+		SELECT
+			count(*) cnt
+		FROM
+			mategroup_member
+		WHERE
+			mg_no = (SELECT mg_no FROM mategroup WHERE pl_no = #{plNo})
+	</select>
+	
 	<update id="mategroupStatusSecondStage" parameterType="int">
 		UPDATE mategroup m
 		   SET m.mategroup_status = '2단계'
@@ -543,5 +571,14 @@
 		AND to_date(chat_ymd, 'YY/MM/DD') < TRUNC(sysdate)
 		]]>
 	</delete>
+	
+	<update id="travelTheEnd" parameterType="int">
+		UPDATE
+			mategroup
+		SET
+			mategroup_status = '4단계'
+		WHERE
+			pl_no = #{plNo}
+	</update>
 
 </mapper>

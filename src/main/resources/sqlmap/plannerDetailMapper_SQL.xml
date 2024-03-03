@@ -113,4 +113,13 @@
 		WHERE
 			pl_no = #{plNo}
 	</select>
+	
+	<select id="isRecruitEnd" parameterType="long" resultType="String">
+		SELECT
+			mategroup_status
+		FROM
+			mategroup
+		WHERE
+			pl_no = #{plNo}
+	</select>
 </mapper>

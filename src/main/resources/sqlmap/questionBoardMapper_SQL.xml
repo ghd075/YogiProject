@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.QuestionBoardMapper">
+	<insert id="questionInput" parameterType="kr.or.ddit.users.board.vo.QuestionVO">
+		INSERT INTO question (
+		    bo_no,
+		    bo_title,
+		    bo_content,
+		    bo_writer,
+		    cont,
+		    bo_date
+		) VALUES (
+		    seq_question.nextval,
+		    #{boTitle},
+		    #{boContent},
+		    #{boWriter},
+		    'off',
+		    sysdate
+		)
+	</insert>
+	
+	<select id="getQuestionList" parameterType="String" resultType="kr.or.ddit.users.board.vo.QuestionVO">
+		select bo_title
+		,	cont
+		,	bo_date
+		,	bo_content
+		,	answer
+		,	bo_answerDay
+		from question
+		where 1 = 1
+		and bo_writer = #{memId}
+	</select>
+	
+	<select id="getAllQuestionList" resultType="kr.or.ddit.users.board.vo.QuestionVO">
+		select bo_no
+		,	bo_title
+		,	bo_content
+		,	cont
+		,	answer
+		,	bo_writer
+		,	bo_date
+		,	bo_answerDay
+		from question
+		where 1 = 1
+		order by bo_no
+	</select>
+	
+	<select id="getquestionInfo" resultType="kr.or.ddit.users.board.vo.QuestionVO" parameterType="int">
+		select bo_title
+		    , bo_content
+		    , answer
+		from question
+		where 1 = 1
+		and bo_no = #{boNo} 
+	</select>
+	
+	<update id="questionAnswer" parameterType="kr.or.ddit.users.board.vo.QuestionVO">
+		update question
+		set cont = 'on'
+		,   answer = #{answer}
+		,   bo_answerday = sysdate
+		where bo_no = #{boNo}
+	</update>
+	
+</mapper>

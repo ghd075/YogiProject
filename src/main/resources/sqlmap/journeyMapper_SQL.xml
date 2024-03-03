@@ -122,5 +122,5 @@
 		   AND UPPER(info_engname) LIKE UPPER('%' || #{infoEngname} || '%')
 		ORDER BY info_no desc
 	</select>
-
+	
 </mapper>

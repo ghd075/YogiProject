@@ -22,7 +22,7 @@
             	Q&amp;A
  				<span class="tit_sub"> 고객님들이 자주 찾으시는 질문을 모았습니다 </span>
             </h2>
-			<select name="qna_select" id="qna_select">
+			<select name="qna_select" id="qna_select" class="form-control">
 			    <c:choose>
 			        <c:when test="${empty menuList}">
 			            <option value="">선택</option>
@@ -36,10 +36,10 @@
 			    </c:choose>
 			</select>
         </div>
-        <div class="qnaBtnGroup">
-            <button type="button" class="btn btn-outline-primary" id="qnaAddBtn">Q&A등록</button>
-        </div>
         <c:if test="${sessionInfo.memCategory eq '03' }">
+	        <div class="qnaBtnGroup">
+	            <button type="button" class="btn btn-outline-primary" id="qnaAddBtn">Q&A등록</button>
+	        </div>
         </c:if>
         <div class="qnaListCont">
             <div class="qnaListSet">

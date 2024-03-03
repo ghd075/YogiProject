@@ -18,6 +18,7 @@ import kr.or.ddit.users.reserve.air.vo.ReservationVO;
 import kr.or.ddit.users.reserve.air.vo.RoundTripVO;
 import kr.or.ddit.users.reserve.air.vo.SearchVO;
 import kr.or.ddit.users.reserve.air.vo.TicketVO;
+import kr.or.ddit.utils.ServiceResult;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -54,6 +55,7 @@ public class AirReserveController {
 		
 		return "reserve/air/reserve";
 	}
+	
 	
 	/* 예약 두번째 페이지(좌석선택) */
 	@RequestMapping(value = "/seat.do", method = RequestMethod.POST)
@@ -107,11 +109,57 @@ public class AirReserveController {
 	}
 	
 	
-	@RequestMapping(value = "/payment.do", method = RequestMethod.POST)
-	public String ticketPayment(ReservationVO reVO) {
-		
-		
+	/* 예약 세번째 페이지(결제내역form) */
+	@RequestMapping(value = "/paymentForm.do", method = RequestMethod.POST)
+	public String paymentForm(String ticketType, String ageCnt, String ticketSeatnum, 
+			                    HttpSession session, Model model,RedirectAttributes rd) {
+		FlightVO flightVO = (FlightVO) session.getAttribute("searchInfo");           //검색조건 정보
+		RoundTripVO roundTripVO = (RoundTripVO) session.getAttribute("myRoundTrip"); //항공편(왕복) 정보
+        ReservationVO reVO = (ReservationVO) session.getAttribute("myReservation");  //탑승객 정보
+        List<TicketVO> ticketList = reVO.getTicketList();
+        
+        //1.선택한 좌석정보를 세팅하는 작업
+        ServiceResult result = reserveService.setSeat(ticketList, ticketType, ageCnt, ticketSeatnum);
+        if(result.equals(ServiceResult.OK)) {
+        	//2.상세가격정보를 설정하는 작업
+            reserveService.setaAirFare(reVO, roundTripVO, flightVO.getSeatClass());
+        	session.setAttribute("myReservation", reVO);
+        	List<TicketVO> ticket = reVO.getTicketList();
+        }else {
+        	rd.addFlashAttribute("message", "서버에러");
+        	return "redirect:/reserve/air/search/form.do";
+        }
+        //3.포인트 정보 조회
+        Map<String, Object> pointMap = reserveService.selectPoint(reVO.getMemId());
+        model.addAttribute("pointMap", pointMap);
 		return "reserve/air/payment";
+	}
+	
+	
+	/* 결제처리 진행 */
+	@RequestMapping(value = "/payment.do", method = RequestMethod.GET)
+	public String payment(int totalPrice, int finalRemain, int planerNo,
+			              HttpSession session, Model model, RedirectAttributes ra) {
+		ReservationVO reVO = (ReservationVO) session.getAttribute("myReservation");  //탑승객 정보
+		
+		//1.항공권 결제 처리
+		ServiceResult result = reserveService.processPayment(reVO, totalPrice, finalRemain, planerNo);
+		if(result.equals(ServiceResult.OK)) {
+			log.debug("결제처리 성공!");
+		}else {
+			log.debug("결제처리 실패!");
+			ra.addFlashAttribute("message", "서버에러, 결제처리 실패!");
+			return "redirect:/reserve/air/search/form.do";
+		}
+		//2.항공관련 세션 데이터 정리
+		session.removeAttribute("searchInfo");
+		session.removeAttribute("myRoundTrip");
+		session.removeAttribute("myReservation");
+		
+   	    //3.이동 페이지 결정 
+		model.addAttribute("msg", "항공권 결제가 완료되었습니다!");
+		model.addAttribute("plNo", planerNo);
+	  return "reserve/air/result";
 	}
 }
 

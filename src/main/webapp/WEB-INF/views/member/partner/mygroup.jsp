@@ -47,7 +47,7 @@
             		</c:when>
             		<c:otherwise>
             			<c:forEach items="${planerList }" var="planer" varStatus="stat">
-            				<c:if test="${planer.getSType() eq '동행참가' }">
+            				<c:if test="${planer.getSType() eq '동행참가' and planer.mategroupStatus ne '4단계'}">
 	            				<li>
 				                    <div class="meetAreaThumbnailCont">
 				                    	<c:choose>
@@ -55,7 +55,7 @@
 				                    			<img src="/resources/images/testimg/noimg.png" alt="플래너 리스트 썸네일 이미지" />
 				                    		</c:when>
 				                    		<c:otherwise>
-				                    			<img src="${planer.plThumburl }" alt="플래너 리스트 썸네일 이미지" />
+				                    			<img src="${planer.plThumburl }" alt="플래너 리스트 썸네일 이미지" onerror="this.onerror=null; this.src='/resources/images/testimg/noimg.png';" />
 				                    		</c:otherwise>
 				                    	</c:choose>
 				                    </div>
@@ -102,6 +102,9 @@
 							                        	<button type="button" class="btn btn-warning myTripPrivatePublicBtn">비공개</button>
 							                        </c:if>
 					                        	</c:when>
+					                        	<c:when test="${planer.mategroupStatus eq '4단계' }">
+							                        <button type="button" class="btn btn-secondary myTripStatusPlanerBtn">여행종료</button>
+					                        	</c:when>
 					                        	<c:otherwise>
 					                        		<button type="button" class="btn btn-secondary myTripStatusPlanerBtn">모집 마감</button>
 					                        	</c:otherwise>
@@ -116,16 +119,16 @@
 					                        </form>
 					                        
 					                        <c:if test="${planer.mategroupApply eq 'Y' }">
-					                        	<button type="button" class="btn btn-success myTripStatusJoinerBtn">승인</button>
+					                        	<button type="button" class="btn btn-success myTripConfirmBtn">승인</button>
 					                        </c:if>
 					                        <c:if test="${planer.mategroupApply eq 'N' }">
-					                        	<button type="button" class="btn btn-danger myTripStatusJoinerBtn">거절</button>
+					                        	<button type="button" class="btn btn-danger myTripRejectBtn">거절</button>
 					                        </c:if>
 					                        <c:if test="${planer.mategroupApply eq 'W' }">
-					                        	<button type="button" class="btn btn-warning myTripStatusJoinerBtn">대기</button>
+					                        	<button type="button" class="btn btn-warning myTripWaitrBtn">대기</button>
 					                        </c:if>
 					                        <c:if test="${planer.mategroupApply eq 'E' }">
-					                        	<button type="button" class="btn btn-dark myTripStatusJoinerBtn">모집 마감</button>
+					                        	<button type="button" class="btn btn-dark myTripEndBtn">모집 마감</button>
 					                        </c:if>
 					                        
 					                        <c:if test="${planer.mategroupApply ne 'C' }">
@@ -154,7 +157,15 @@
     	/* 공통 함수 */
     	var memId = '${sessionInfo.memId}';
     	$.ajaxPlannerListSearchFn(memId);
-    	$.myTripPrivatePublicChgFn();
+    	
+    	var rtAlertPPChgObj = {
+    		realsenId: '${sessionInfo.memId}',
+    		realsenName: '${sessionInfo.memName}',
+    		realsenPfimg: '${sessionInfo.memProfileimg}'
+    	};
+    	console.log("rtAlertPPChgObj : ", rtAlertPPChgObj);
+    	$.myTripPrivatePublicChgFn(rtAlertPPChgObj);
+    	
     	$.myTripDeleteFn();
     	$.excludeNonUserFn(memId);
     	$.myTripCancelFn();
